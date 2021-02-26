@@ -5,22 +5,7 @@ class Categoria_producto {
         this.descripcion = descripcion;
         this.estatus = estatus;
     }
-    crear() {
-
-    }
-    desactivar() {
-
-    }
-    activar() {
-
-    }
-    editar() {
-
-    }
-    ver() {
-
-    }
-    filtrar() {
-
-    }
+  
 }
+
+module.exports = Categoria_producto;

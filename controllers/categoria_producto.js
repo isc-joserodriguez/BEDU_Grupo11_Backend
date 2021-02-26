@@ -1,24 +1,26 @@
 // importamos el modelo de usuarios
 const Categoria_producto = require('../models/Categoria_producto')
-var CATEGORIAS = [new Categoria_producto(1, 'Desayunos', 'Es la cat de desayunos servida de 7-9am', 1),
-                new Categoria_producto(2, 'Jugos', 'Es la cat de jugos naturales', 1),
-                new Categoria_producto(3, 'Sodas', 'Es la cat de refrescos', 1)]
+var CATEGORIAS = [new Categoria_producto({id:1, nombre:'Desayunos', descripcion:'Es la cat de desayunos servida de 7-9am', estatus:1}),
+                new Categoria_producto({id:2, nombre:'Jugos', descripcion:'Es la cat de jugos naturales', estatus:1}),
+                new Categoria_producto({id:3, nombre:'Sodas', descripcion:'Es la cat de refrescos', estatus:1})]
 
 function crearCategoria_producto(req, res) {
   // Instanciaremos una nueva categoria utilizando la clase categoria_producto
   var categoria_producto = new Categoria_producto(req.body)
+  CATEGORIAS.push(categoria_producto)
   res.status(201).send(categoria_producto)
 }
 
 function verCategoria_producto(req, res) {
-  res.send(CATEGORIAS)
+  console.log(CATEGORIAS);
+    res.send(CATEGORIAS)
 }
 
 function editarCategoria_producto(req, res) {
   // simulando una categoria previamente existente que el cliente modifica
   let datos = req.body;
   let categoria_productoEdited = null;
-  for(let i=0; i<=CATEGORIAS.length;i++){
+  for(let i=0; i<CATEGORIAS.length;i++){
      if(CATEGORIAS[i].id===datos.id){
         for(campo in datos){
             CATEGORIAS[i][campo]=datos[campo];
@@ -26,37 +28,32 @@ function editarCategoria_producto(req, res) {
           }
      }
   }
-  res.status(200).send();
+  res.status(200).send(categoria_productoEdited);
 }
 
 function cambiarEstatusCategoria_producto(req, res) {
     let categoria_productoEdited = null;
-    for(let i=0; i<=CATEGORIAS.length;i++){
-         if(CATEGORIAS[i].id===req.params.id){
+    for(let i=0; i<CATEGORIAS.length;i++){
+        console.log(CATEGORIAS[i].id, req.body.id);
+         if(CATEGORIAS[i].id===req.body.id){
             categoria_productoEdited = CATEGORIAS[i];
-            categoria_productoEdited.status = req.body.estatus;
+            categoria_productoEdited.estatus = req.body.estatus;
          }
     }
     if(categoria_productoEdited){
-        res.estatus(200).send();
+        res.status(200).send(categoria_productoEdited);
     }
     else{
-        res.estatus(404).send({errorMessage: "Not found"});
+        res.status(404).send({errorMessage: "Not found"});
     }
   }
 
   
 
 function filtrarCategoria_producto(req,res) {
-    let campo = req.body.Object.keys()[0];
+    let campo = Object.keys(req.body)[0];
     let dato = req.body[campo];
-    let categorias = CATEGORIAS.filter(categoria => categoria.campo == dato);
-    /*for(let i=0; i<=CATEGORIAS.length;i++){
-            for(campo in datos){
-                CATEGORIAS[i][campo]=datos[campo];
-                categoria_productoEdited = CATEGORIAS[i];
-            }
-    }*/
+    let categorias = CATEGORIAS.filter(categoria => categoria[campo] == dato);
     res.status(200).send(categorias);
 }
 

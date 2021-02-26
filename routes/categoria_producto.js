@@ -9,10 +9,10 @@ const {
 } = require('../controllers/categoria_producto')
 
 router.get('/', verCategoria_producto)
-router.get('/', filtrarCategoria_producto)
+router.post('/filtrar', filtrarCategoria_producto)
 router.post('/', crearCategoria_producto)
-router.put('/', editarCategoria_producto)
-router.put('/:id', cambiarEstatusCategoria_producto)
+router.put('/editar', editarCategoria_producto)
+router.put('/cambiarEstatus', cambiarEstatusCategoria_producto)
 
 
 module.exports = router;

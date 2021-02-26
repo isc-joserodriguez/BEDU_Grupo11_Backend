@@ -2,34 +2,34 @@ const Usuario = require('../models').Usuario;
 
 /* Usuarios de ejemplo */
 const USUARIOS = [
-    new Usuario(1, 'Carlos Perez', 'CarlosPerez@test.com', '123456', 'Admin', true),
-    new Usuario(2, 'Eduardo Montoya', 'EduardoMontoya@test.com', '123456', 'Chef', true),
-    new Usuario(3, 'Nadia Torres', 'NadiaTorres@test.com', '123456', 'Chef', true),
-    new Usuario(4, 'Alexis Ramirez', 'AlexisRamirez@test.com', '123456', 'Chef', true),
-    new Usuario(5, 'Daniel Suarez', 'DanielSuarez@test.com', '123456', 'Chef', true),
-    new Usuario(6, 'Carla Robles', 'CarlaRobles@test.com', '123456', 'Chef', false),
-    new Usuario(7, 'Adilene Pedroza', 'AdilenePedroza@test.com', '123456', 'Mesero', true),
-    new Usuario(8, 'Ana Perez', 'AnaPerez@test.com', '123456', 'Mesero', true),
-    new Usuario(9, 'Cesar Loera', 'CesarLoera@test.com', '123456', 'Mesero', true),
-    new Usuario(10, 'Alejandro Jimenez', 'AlejandroJimenez@test.com', '123456', 'Mesero', true),
-    new Usuario(11, 'Daniel Llanos', 'DanielLlanos@test.com', '123456', 'Mesero', true),
-    new Usuario(12, 'Carlos Montoya', 'CarlosMontoya@test.com', '123456', 'Mesero', true),
-    new Usuario(13, 'Julio Montoya', 'JulioMontoya@test.com', '123456', 'Mesero', false),
-    new Usuario(14, 'Andres Vargas', 'AndresVargas@test.com', '123456', 'Cliente', true),
-    new Usuario(15, 'Citlali Llamas', 'CitlaliLlamas@test.com', '123456', 'Cliente', true),
-    new Usuario(16, 'Hugo Perez', 'HugoPerez@test.com', '123456', 'Cliente', true),
-    new Usuario(17, 'Octavio Ramirez', 'OctavioRamirez@test.com', '123456', 'Cliente', true),
-    new Usuario(18, 'Jorge Vizcaino', 'JorgeVizcaino@test.com', '123456', 'Cliente', true),
-    new Usuario(19, 'Odin Martinez', 'OdinMartinez@test.com', '123456', 'Cliente', true),
-    new Usuario(20, 'Alejandra Martinez', 'AlejandraMartinez@test.com', '123456', 'Cliente', false)
+    new Usuario({ id: 1, nombre: 'Carlos Perez', correo: 'CarlosPerez@test.com', password: '123456', tipo: 'Admin', estatus: true }),
+    new Usuario({ id: 2, nombre: 'Eduardo Montoya', correo: 'EduardoMontoya@test.com', password: '123456', tipo: 'Chef', estatus: true }),
+    new Usuario({ id: 3, nombre: 'Nadia Torres', correo: 'NadiaTorres@test.com', password: '123456', tipo: 'Chef', estatus: true }),
+    new Usuario({ id: 4, nombre: 'Alexis Ramirez', correo: 'AlexisRamirez@test.com', password: '123456', tipo: 'Chef', estatus: true }),
+    new Usuario({ id: 5, nombre: 'Daniel Suarez', correo: 'DanielSuarez@test.com', password: '123456', tipo: 'Chef', estatus: true }),
+    new Usuario({ id: 6, nombre: 'Carla Robles', correo: 'CarlaRobles@test.com', password: '123456', tipo: 'Chef', estatus: false }),
+    new Usuario({ id: 7, nombre: 'Adilene Pedroza', correo: 'AdilenePedroza@test.com', password: '123456', tipo: 'Mesero', estatus: true }),
+    new Usuario({ id: 8, nombre: 'Ana Perez', correo: 'AnaPerez@test.com', password: '123456', tipo: 'Mesero', estatus: true }),
+    new Usuario({ id: 9, nombre: 'Cesar Loera', correo: 'CesarLoera@test.com', password: '123456', tipo: 'Mesero', estatus: true }),
+    new Usuario({ id: 10, nombre: 'Alejandro Jimenez', correo: 'AlejandroJimenez@test.com', password: '123456', tipo: 'Mesero', estatus: true }),
+    new Usuario({ id: 11, nombre: 'Daniel Llanos', correo: 'DanielLlanos@test.com', password: '123456', tipo: 'Mesero', estatus: true }),
+    new Usuario({ id: 12, nombre: 'Carlos Montoya', correo: 'CarlosMontoya@test.com', password: '123456', tipo: 'Mesero', estatus: true }),
+    new Usuario({ id: 13, nombre: 'Julio Montoya', correo: 'JulioMontoya@test.com', password: '123456', tipo: 'Mesero', estatus: false }),
+    new Usuario({ id: 14, nombre: 'Andres Vargas', correo: 'AndresVargas@test.com', password: '123456', tipo: 'Cliente', estatus: true }),
+    new Usuario({ id: 15, nombre: 'Citlali Llamas', correo: 'CitlaliLlamas@test.com', password: '123456', tipo: 'Cliente', estatus: true }),
+    new Usuario({ id: 16, nombre: 'Hugo Perez', correo: 'HugoPerez@test.com', password: '123456', tipo: 'Cliente', estatus: true }),
+    new Usuario({ id: 17, nombre: 'Octavio Ramirez', correo: 'OctavioRamirez@test.com', password: '123456', tipo: 'Cliente', estatus: true }),
+    new Usuario({ id: 18, nombre: 'Jorge Vizcaino', correo: 'JorgeVizcaino@test.com', password: '123456', tipo: 'Cliente', estatus: true }),
+    new Usuario({ id: 19, nombre: 'Odin Martinez', correo: 'OdinMartinez@test.com', password: '123456', tipo: 'Cliente', estatus: true }),
+    new Usuario({ id: 20, nombre: 'Alejandra Martinez', correo: 'AlejandraMartinez@test.com', password: '123456', tipo: 'Cliente', estatus: false })
 ];
 /* Usuarios de ejemplo */
 
 /* 
 {
-    "id":20,
-    "nombre":"Alejandra Martinez",
-    "correo":"AlejandraMartinez@test.com",
+    "id":777,
+    "nombre":"Pedro Soza",
+    "correo":"PedroSoza@test.com",
     "password":"123456",
     "tipo":"Cliente",
     "estatus": false
@@ -58,8 +58,7 @@ const cerrarSesion = (req, res) => {
 
 const registrarse = (req, res) => {
     let newUsuario = new Usuario(req.body);
-    console.log(newUsuario);
-    //USUARIOS.push(newUsuario)
+    USUARIOS.push(newUsuario)
     res.status(200).send(newUsuario);
 }
 
@@ -83,7 +82,7 @@ const filtrar = (req, res) => {
     let users = USUARIOS.filter(user => user[campo] === valor);
 
     if (!!users[0]) {
-        res.status(200).send(userEdited);
+        res.status(200).send(users);
     } else {
         res.status(404).send({ errorMessage: 'Not Found: No se encontró al usuario' });
     }
@@ -92,13 +91,13 @@ const filtrar = (req, res) => {
 const editar = (req, res) => {
     let datos = req.body;
     let userEdited = null;
-    for (let i = 0; i <= USUARIOS.length; i++) {
+    for (let i = 0; i < USUARIOS.length; i++) {
         if (USUARIOS[i].id === datos.id) {
             for (campo in datos) {
                 USUARIOS[i][campo] = datos[campo];
                 userEdited = USUARIOS[i];
-                break;
             }
+            break;
         }
     }
 
@@ -112,7 +111,7 @@ const editar = (req, res) => {
 const cambiarRol = (req, res) => {
     let { id, tipo } = req.body
     let userEdited = null;
-    for (let i = 0; i <= USUARIOS.length; i++) {
+    for (let i = 0; i < USUARIOS.length; i++) {
         if (USUARIOS[i].id === id) {
             userEdited = USUARIOS[i];
             userEdited.tipo = tipo;
@@ -129,10 +128,10 @@ const cambiarRol = (req, res) => {
 const cambiarEstatus = (req, res) => {
     let userEdited = null;
     let { id, estatus } = req.body;
-    for (let i = 0; i <= USUARIOS.length; i++) {
+    for (let i = 0; i < USUARIOS.length; i++) {
         if (USUARIOS[i].id === id) {
             userEdited = USUARIOS[i];
-            userEdited.status = estatus;
+            userEdited.estatus = estatus;
             break;
         }
     }

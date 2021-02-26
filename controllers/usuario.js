@@ -25,6 +25,18 @@ const USUARIOS = [
 ];
 /* Usuarios de ejemplo */
 
+/* 
+{
+    "id":20,
+    "nombre":"Alejandra Martinez",
+    "correo":"AlejandraMartinez@test.com",
+    "password":"123456",
+    "tipo":"Cliente",
+    "estatus": false
+}
+
+ */
+
 const iniciarSesion = (req, res) => {
     let { correo, password } = req.body;
     let user = USUARIOS.filter(usuario => usuario.correo === correo && usuario.password === password);
@@ -34,6 +46,7 @@ const iniciarSesion = (req, res) => {
         res.status(401).send({ errorMessage: 'Unauthorized: Correo o password incorrecto' });
     }
 }
+
 const cerrarSesion = (req, res) => {
     res.status(200).send({ message: 'Sesion cerrada' });
     /* 
@@ -42,15 +55,21 @@ const cerrarSesion = (req, res) => {
     navegador y se hace en el cliente.
     */
 }
+
 const registrarse = (req, res) => {
     let newUsuario = new Usuario(req.body);
-    USUARIOS.push(newUsuario)
+    console.log(newUsuario);
+    //USUARIOS.push(newUsuario)
     res.status(200).send(newUsuario);
 }
 
-const ver = (req, res) => {
-    let { id } = req.body;
-    let user = USUARIOS.filter(usuario => usuario.id === id);
+const verUsuarios = (req, res) => {
+    res.status(200).send(USUARIOS);
+}
+
+const verUsuario = (req, res) => {
+    let { id } = req.params;
+    let user = USUARIOS.filter(usuario => usuario.id === +id);
     if (!!user[0]) {
         res.status(200).send(user[0]);
     } else {
@@ -59,42 +78,30 @@ const ver = (req, res) => {
 }
 
 const filtrar = (req, res) => {
-    /* Recibe parametro y busqueda por la que va a buscar */
-    let { valor, parametro } = req.body;
-    let users = []
-    switch (parametro) {
-        case 'NOMBRE':
-            users = USUARIOS.filter(user => user.nombre === valor);
-            break;
-        case 'CORREO':
-            users = USUARIOS.filter(user => user.correo === valor);
-            break;
-        case 'TIPO':
-            users = USUARIOS.filter(user => user.tipo === valor);
-            break;
-        case 'ESTATUS':
-            users = USUARIOS.filter(user => user.estatus === valor);
-            break;
-    }
-    if (!!user[0]) {
-        res.status(200).send(users);
+    let campo = Object.keys(req.body)[0];
+    let valor = req.body[campo]
+    let users = USUARIOS.filter(user => user[campo] === valor);
+
+    if (!!users[0]) {
+        res.status(200).send(userEdited);
     } else {
-        res.status(400).send({ errorMessage: 'Not Found: Esa busqueda no arrojó usuarios' });
+        res.status(404).send({ errorMessage: 'Not Found: No se encontró al usuario' });
     }
 }
 
 const editar = (req, res) => {
-    let datos= req.body;
+    let datos = req.body;
     let userEdited = null;
     for (let i = 0; i <= USUARIOS.length; i++) {
         if (USUARIOS[i].id === datos.id) {
-            for (campo in datos){
-                USUARIOS[i][campo]=datos[campo];
+            for (campo in datos) {
+                USUARIOS[i][campo] = datos[campo];
                 userEdited = USUARIOS[i];
+                break;
             }
         }
-    }    
-    
+    }
+
     if (!!userEdited) {
         res.status(200).send(userEdited);
     } else {
@@ -103,11 +110,13 @@ const editar = (req, res) => {
 }
 
 const cambiarRol = (req, res) => {
+    let { id, tipo } = req.body
     let userEdited = null;
     for (let i = 0; i <= USUARIOS.length; i++) {
-        if (USUARIOS[i].id === req.params.id) {
+        if (USUARIOS[i].id === id) {
             userEdited = USUARIOS[i];
-            userEdited.tipo = req.body.tipo;
+            userEdited.tipo = tipo;
+            break;
         }
     }
     if (!!userEdited) {
@@ -119,10 +128,12 @@ const cambiarRol = (req, res) => {
 
 const cambiarEstatus = (req, res) => {
     let userEdited = null;
+    let { id, estatus } = req.body;
     for (let i = 0; i <= USUARIOS.length; i++) {
-        if (USUARIOS[i].id === req.params.id) {
+        if (USUARIOS[i].id === id) {
             userEdited = USUARIOS[i];
-            userEdited.status = req.body.estatus;
+            userEdited.status = estatus;
+            break;
         }
     }
     if (!!userEdited) {
@@ -130,4 +141,16 @@ const cambiarEstatus = (req, res) => {
     } else {
         res.status(404).send({ errorMessage: 'Not Found: No se encontró al usuario' });
     }
+}
+
+module.exports = {
+    iniciarSesion,
+    cerrarSesion,
+    registrarse,
+    verUsuarios,
+    verUsuario,
+    filtrar,
+    editar,
+    cambiarRol,
+    cambiarEstatus
 }

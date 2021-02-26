@@ -2,6 +2,7 @@
 var express = require('express'),
     bodyParser = require('body-parser'),
     cors = require('cors');
+const router = require('./routes/usuarios');
 
 // Objeto global de la app
 var app = express();

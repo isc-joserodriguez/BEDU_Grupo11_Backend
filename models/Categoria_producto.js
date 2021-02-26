@@ -1,11 +1,26 @@
 class Categoria_producto {
-    constructor({id, nombre, descripcion, estatus}) {
+    constructor(id, nombre, descripcion, estatus) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.estatus = estatus;
     }
-  
-}
+    crear() {
 
-module.exports = Categoria_producto;
+    }
+    desactivar() {
+
+    }
+    activar() {
+
+    }
+    editar() {
+
+    }
+    ver() {
+
+    }
+    filtrar() {
+
+    }
+}

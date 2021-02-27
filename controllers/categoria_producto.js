@@ -12,7 +12,6 @@ function crearCategoria_producto(req, res) {
 }
 
 function verCategoria_producto(req, res) {
-  console.log(CATEGORIAS);
     res.send(CATEGORIAS)
 }
 
@@ -34,7 +33,6 @@ function editarCategoria_producto(req, res) {
 function cambiarEstatusCategoria_producto(req, res) {
     let categoria_productoEdited = null;
     for(let i=0; i<CATEGORIAS.length;i++){
-        console.log(CATEGORIAS[i].id, req.body.id);
          if(CATEGORIAS[i].id===req.body.id){
             categoria_productoEdited = CATEGORIAS[i];
             categoria_productoEdited.estatus = req.body.estatus;

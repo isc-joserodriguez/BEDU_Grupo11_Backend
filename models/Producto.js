@@ -1,3 +1,4 @@
+//Clase que representa un producto de venta en el restaurante
 class Producto {
     constructor(id, nombre, id_categoria, descripcion, estatus_disponibilidad) {
         this.id = id;
@@ -7,23 +8,7 @@ class Producto {
         this.costo = costo;
         this.estatus_disponibilidad = estatus_disponibilidad;
     }
-    crear() {
 
-    }
-    desactivar() {
-
-    }
-    activar() {
-
-    }
-    editar() {
-
-    }
-
-    ver() {
-
-    }
-    filtrar() {
-
-    }
 }
+
+module.exports = Producto;

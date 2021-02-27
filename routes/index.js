@@ -3,10 +3,11 @@ var router = require('express').Router();
 
 // definimos el comportamiento en la raíz del endpoint
 router.get('/', (req, res)=>{
-  res.send('api-Restaurante');
+  res.send('Welcome to Api-RESTaurant');
 });
 
+router.use('/usuarios', require('./usuarios'));
+router.use('/categoria_producto', require('./categoria_producto'));
 router.use('/productos', require('./productos'));
-
 // exportamos nuestro nuevo router
 module.exports = router;

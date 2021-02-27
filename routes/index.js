@@ -9,5 +9,6 @@ router.get('/', (req, res)=>{
 router.use('/usuarios', require('./usuarios'));
 router.use('/categoria_producto', require('./categoria_producto'));
 router.use('/productos', require('./productos'));
+router.use('/pedido', require('./pedido'));
 // exportamos nuestro nuevo router
 module.exports = router;

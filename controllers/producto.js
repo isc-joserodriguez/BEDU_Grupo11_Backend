@@ -14,10 +14,13 @@ var PRODUCTOS = [new Producto({id:1, nombre:'Chilaquiles', id_categoria:1, descr
 
 function crearProducto(req,res) {
     var producto = new Producto(req.body)
-    
-    PRODUCTOS.push(producto)
-    res.status(201).send(producto)
-    
+    if(!!producto.id){
+        PRODUCTOS.push(producto)
+        res.status(201).send(producto)
+    } 
+    else {
+        res.status(304).send({Message:'Not Modified: No se agregó producto vacío'});
+    }
 }
 
 function eliminarProducto(req,res) {
@@ -31,10 +34,6 @@ function eliminarProducto(req,res) {
      }
      if(productoEncontrado) {(res.status(200).send(productoEncontrado))}
      else { res.status(404).send({errorMessage:'Not Found: Producto no encontrado.'}); }
-
-
-    //PRODUCTOS.splice(req.body.id,1)
-    //res.status(200).send(`Producto ${req.params.id} eliminado.`)
 }
 
 function cambiarEstatusProducto(req, res) { //INACTIVO = 0    ACTIVO =1
@@ -87,8 +86,23 @@ function verProductos(req, res) {
 }
 
 
-function filtrarProducto(req, res) {
+function filtrarProducto(req, res) {  
+    let campo = Object.keys(req.body)[0];
+    let valor=req.body[campo];
+
+    let productosFiltrados= PRODUCTOS.filter(producto=>{
+        let regex= new RegExp(valor, 'gi');
+        return regex.test(producto[campo]);
+    });
+
+    if(!!productosFiltrados[0]){
+        res.status(200).send(productosFiltrados);
+    }else{
+        res.status(404).send({errorMessage:'NotFound: Busqueda no arrojó resultados'});
+    }
 }
+
+
 
 module.exports = {
     crearProducto,

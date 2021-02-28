@@ -7,8 +7,14 @@ var CATEGORIAS = [new Categoria_producto({id:1, nombre:'Desayunos', descripcion:
 function crearCategoria_producto(req, res) {
   // Instanciaremos una nueva categoria utilizando la clase categoria_producto
   var categoria_producto = new Categoria_producto(req.body)
-  CATEGORIAS.push(categoria_producto)
-  res.status(201).send(categoria_producto)
+  
+  if(!!categoria_producto.id){
+    CATEGORIAS.push(categoria_producto)
+    res.status(201).send(categoria_producto)
+} 
+else {
+    res.status(304).send({Message:'Not Modified: No se agregó producto vacío'});
+}
 }
 
 function verCategoria_producto(req, res) {
@@ -51,8 +57,16 @@ function cambiarEstatusCategoria_producto(req, res) {
 function filtrarCategoria_producto(req,res) {
     let campo = Object.keys(req.body)[0];
     let dato = req.body[campo];
-    let categorias = CATEGORIAS.filter(categoria => categoria[campo] == dato);
-    res.status(200).send(categorias);
+    let categoriasFiltradas = CATEGORIAS.filter(categoria => {
+      let regex= new RegExp(valor, 'gi');
+      return regex.test(categoria[campo]);
+    });
+    
+    if(!!categoriasFiltradas[0]){
+      res.status(200).send(productosFiltrados);
+  }else{
+      res.status(404).send({errorMessage:'NotFound: Busqueda no arrojó resultados'});
+  }
 }
 
 // exportamos las funciones definidas

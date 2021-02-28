@@ -10,7 +10,7 @@ const {
   verProducto,
   verProductos,
   filtrarProducto,
-} = require("../controllers/producto");
+} = require("../controllers/producto.controller");
 
 //Rutas definidas de las funciones
 router.get("/:id", verProducto);

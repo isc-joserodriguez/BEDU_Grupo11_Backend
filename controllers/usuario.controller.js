@@ -1,4 +1,4 @@
-const Usuario = require("../models").Usuario; //Importamos el modelo
+const { Usuario } = require("../models"); //Importamos el modelo
 
 /* Usuarios de ejemplo */
 const USUARIOS = [
@@ -8,7 +8,7 @@ const USUARIOS = [
     correo: "CarlosPerez@test.com",
     password: "123456",
     tipo: "Admin",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 2,
@@ -16,7 +16,7 @@ const USUARIOS = [
     correo: "EduardoMontoya@test.com",
     password: "123456",
     tipo: "Chef",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 3,
@@ -24,7 +24,7 @@ const USUARIOS = [
     correo: "NadiaTorres@test.com",
     password: "123456",
     tipo: "Chef",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 4,
@@ -32,7 +32,7 @@ const USUARIOS = [
     correo: "AlexisRamirez@test.com",
     password: "123456",
     tipo: "Chef",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 5,
@@ -40,7 +40,7 @@ const USUARIOS = [
     correo: "DanielSuarez@test.com",
     password: "123456",
     tipo: "Chef",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 6,
@@ -48,7 +48,7 @@ const USUARIOS = [
     correo: "CarlaRobles@test.com",
     password: "123456",
     tipo: "Chef",
-    estatus: false,
+    estatus: 0,
   }),
   new Usuario({
     id: 7,
@@ -56,7 +56,7 @@ const USUARIOS = [
     correo: "AdilenePedroza@test.com",
     password: "123456",
     tipo: "Mesero",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 8,
@@ -64,7 +64,7 @@ const USUARIOS = [
     correo: "AnaPerez@test.com",
     password: "123456",
     tipo: "Mesero",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 9,
@@ -72,7 +72,7 @@ const USUARIOS = [
     correo: "CesarLoera@test.com",
     password: "123456",
     tipo: "Mesero",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 10,
@@ -80,7 +80,7 @@ const USUARIOS = [
     correo: "AlejandroJimenez@test.com",
     password: "123456",
     tipo: "Mesero",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 11,
@@ -88,7 +88,7 @@ const USUARIOS = [
     correo: "DanielLlanos@test.com",
     password: "123456",
     tipo: "Mesero",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 12,
@@ -96,7 +96,7 @@ const USUARIOS = [
     correo: "CarlosMontoya@test.com",
     password: "123456",
     tipo: "Mesero",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 13,
@@ -104,7 +104,7 @@ const USUARIOS = [
     correo: "JulioMontoya@test.com",
     password: "123456",
     tipo: "Mesero",
-    estatus: false,
+    estatus: 0,
   }),
   new Usuario({
     id: 14,
@@ -112,7 +112,7 @@ const USUARIOS = [
     correo: "AndresVargas@test.com",
     password: "123456",
     tipo: "Cliente",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 15,
@@ -120,7 +120,7 @@ const USUARIOS = [
     correo: "CitlaliLlamas@test.com",
     password: "123456",
     tipo: "Cliente",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 16,
@@ -128,7 +128,7 @@ const USUARIOS = [
     correo: "HugoPerez@test.com",
     password: "123456",
     tipo: "Cliente",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 17,
@@ -136,7 +136,7 @@ const USUARIOS = [
     correo: "OctavioRamirez@test.com",
     password: "123456",
     tipo: "Cliente",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 18,
@@ -144,7 +144,7 @@ const USUARIOS = [
     correo: "JorgeVizcaino@test.com",
     password: "123456",
     tipo: "Cliente",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 19,
@@ -152,7 +152,7 @@ const USUARIOS = [
     correo: "OdinMartinez@test.com",
     password: "123456",
     tipo: "Cliente",
-    estatus: true,
+    estatus: 1,
   }),
   new Usuario({
     id: 20,
@@ -160,7 +160,7 @@ const USUARIOS = [
     correo: "AlejandraMartinez@test.com",
     password: "123456",
     tipo: "Cliente",
-    estatus: false,
+    estatus: 0,
   }),
 ];
 /* Usuarios de ejemplo */
@@ -172,7 +172,7 @@ const USUARIOS = [
     "correo":"PedroSoza@test.com",
     "password":"123456",
     "tipo":"Cliente",
-    "estatus": false
+    "estatus": 0
 }
 
  */
@@ -230,16 +230,16 @@ const verUsuario = (req, res) => {
 const filtrar = (req, res) => {
   let campo = Object.keys(req.body)[0]; //Obtiene el nombre del campo para filtrar
   let valor = req.body[campo];//Obtiene el valor por el que se va a filtrar
-  let users = USUARIOS.filter((user) =>{
-    let regex= new RegExp(valor, 'gi'); //Crea una expresión regular para evaluar
+  let users = USUARIOS.filter((user) => {
+    let regex = new RegExp(valor, 'gi'); //Crea una expresión regular para evaluar
     return regex.test(user[campo]);//Evalua el campo del usuario a filtrar con la expresión regular
   });
-  
-  if(!!categoriasFiltradas[0]){//Si no encuentra ningun usuario, regresa un error
-    res.status(200).send(productosFiltrados);
-}else{
-    res.status(404).send({errorMessage:'NotFound: Busqueda no arrojó resultados'});
-}
+
+  if (!!users[0]) {//Si no encuentra ningun usuario, regresa un error
+    res.status(200).send(users);
+  } else {
+    res.status(404).send({ errorMessage: 'NotFound: Busqueda no arrojó resultados' });
+  }
 };
 
 const editar = (req, res) => {

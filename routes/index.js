@@ -1,5 +1,5 @@
 // importamos las dependencias necesarias
-var router = require('express').Router();
+let router = require('express').Router();
 
 // definimos el comportamiento en la raíz del endpoint
 router.get('/', (req, res)=>{
@@ -7,9 +7,9 @@ router.get('/', (req, res)=>{
 });
 
 //Se ponen disponibles las rutas de nuestros endpoint
-router.use('/usuarios', require('./usuarios'));
-router.use('/categoria_producto', require('./categoria_producto'));
-router.use('/productos', require('./productos'));
-router.use('/pedido', require('./pedido'));
+router.use('/usuarios', require('./usuarios.router'));
+router.use('/categoria_producto', require('./categoria_producto.router'));
+router.use('/productos', require('./productos.router'));
+router.use('/pedido', require('./pedido.router'));
 
 module.exports = router;

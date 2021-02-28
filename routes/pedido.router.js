@@ -9,7 +9,7 @@ const {
   cambiarEstatusPedido,
   filtrarPedido,
   eliminarPedido
-} = require('../controllers/pedido')
+} = require('../controllers/pedido.controller')
 
 //Asignamos las rutas para cada método
 router.get('/:id', verPedido)

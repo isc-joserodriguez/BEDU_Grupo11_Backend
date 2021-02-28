@@ -12,7 +12,7 @@ const {
     editar,
     cambiarRol,
     cambiarEstatus
-} = require('../controllers/usuario');
+} = require('../controllers/usuario.controller');
 
 //Asignamos las rutas para cada método
 router.post('/login', iniciarSesion);

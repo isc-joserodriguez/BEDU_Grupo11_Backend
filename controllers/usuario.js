@@ -1,4 +1,4 @@
-const Usuario = require("../models").Usuario;
+const Usuario = require("../models").Usuario; //Importamos el modelo
 
 /* Usuarios de ejemplo */
 const USUARIOS = [
@@ -178,10 +178,10 @@ const USUARIOS = [
  */
 
 const iniciarSesion = (req, res) => {
-  let { correo, password } = req.body;
+  let { correo, password } = req.body; //Declara variables para correo y password
   let user = USUARIOS.filter(
     (usuario) => usuario.correo === correo && usuario.password === password
-  );
+  ); //Filtra al usuario con esas credenciales
   if (!!user[0]) {
     res.status(200).send(user[0]);
   } else {
@@ -201,9 +201,9 @@ const cerrarSesion = (req, res) => {
 };
 
 const registrarse = (req, res) => {
-  let newUsuario = new Usuario(req.body);
+  let newUsuario = new Usuario(req.body); //Crea el nuevo usuario por desestructuración
 
-  if (!!newUsuario.id) {
+  if (!!newUsuario.id) { //Si se envía un body vacío, no crea nada y regresa un error
     USUARIOS.push(newUsuario);
     res.status(200).send(newUsuario);
   } else {
@@ -213,13 +213,13 @@ const registrarse = (req, res) => {
   }
 };
 
-const verUsuarios = (req, res) => {
+const verUsuarios = (req, res) => { //Regresa todos los usuarios
   res.status(200).send(USUARIOS);
 };
 
 const verUsuario = (req, res) => {
   let { id } = req.params;
-  let user = USUARIOS.filter((usuario) => usuario.id === +id);
+  let user = USUARIOS.filter((usuario) => usuario.id === +id); //Filtra al usuario con cierto id
   if (!!user[0]) {
     res.status(200).send(user[0]);
   } else {
@@ -228,14 +228,14 @@ const verUsuario = (req, res) => {
 };
 
 const filtrar = (req, res) => {
-  let campo = Object.keys(req.body)[0];
-  let valor = req.body[campo];
+  let campo = Object.keys(req.body)[0]; //Obtiene el nombre del campo para filtrar
+  let valor = req.body[campo];//Obtiene el valor por el que se va a filtrar
   let users = USUARIOS.filter((user) =>{
-    let regex= new RegExp(valor, 'gi');
-    return regex.test(user[campo]);
+    let regex= new RegExp(valor, 'gi'); //Crea una expresión regular para evaluar
+    return regex.test(user[campo]);//Evalua el campo del usuario a filtrar con la expresión regular
   });
   
-  if(!!categoriasFiltradas[0]){
+  if(!!categoriasFiltradas[0]){//Si no encuentra ningun usuario, regresa un error
     res.status(200).send(productosFiltrados);
 }else{
     res.status(404).send({errorMessage:'NotFound: Busqueda no arrojó resultados'});
@@ -246,16 +246,16 @@ const editar = (req, res) => {
   let datos = req.body;
   let userEdited = null;
   for (let i = 0; i < USUARIOS.length; i++) {
-    if (USUARIOS[i].id === datos.id) {
-      for (campo in datos) {
-        USUARIOS[i][campo] = datos[campo];
-        userEdited = USUARIOS[i];
+    if (USUARIOS[i].id === +datos.id) {//Busca el usuario por id
+      for (campo in datos) { //Se hace un for in para obtener cada campo del body
+        USUARIOS[i][campo] = datos[campo]; //Se hace el cambio en el array por cada campo que reciba el body
+        userEdited = USUARIOS[i]; //Asignamos el nuevo Array para validar al final
       }
-      break;
+      break; //Una vez encontrado, salimos del for
     }
   }
 
-  if (!!userEdited) {
+  if (!!userEdited) { //Si se editó, se regresa envía el registro nuevo. Si no, manda error
     res.status(200).send(userEdited);
   } else {
     res
@@ -267,14 +267,14 @@ const editar = (req, res) => {
 const cambiarRol = (req, res) => {
   let { id, tipo } = req.body;
   let userEdited = null;
-  for (let i = 0; i < USUARIOS.length; i++) {
+  for (let i = 0; i < USUARIOS.length; i++) { //Busca el usuario
     if (USUARIOS[i].id === id) {
-      userEdited = USUARIOS[i];
-      userEdited.tipo = tipo;
+      USUARIOS[i].tipo = tipo; //Se le asigna el nuevo valor
+      userEdited = USUARIOS[i]; //Se guarda para validar después
       break;
     }
   }
-  if (!!userEdited) {
+  if (!!userEdited) { //Si se editó se regresa el nuevo registro, si no regresa un error.
     res.status(200).send(userEdited);
   } else {
     res
@@ -286,14 +286,14 @@ const cambiarRol = (req, res) => {
 const cambiarEstatus = (req, res) => {
   let userEdited = null;
   let { id, estatus } = req.body;
-  for (let i = 0; i < USUARIOS.length; i++) {
+  for (let i = 0; i < USUARIOS.length; i++) {//Busca el usuario
     if (USUARIOS[i].id === id) {
-      userEdited = USUARIOS[i];
-      userEdited.estatus = estatus;
+      USUARIOS[i].estatus = estatus;//Se le asigna el nuevo valor
+      userEdited = USUARIOS[i];//Se guarda para validar después
       break;
     }
   }
-  if (!!userEdited) {
+  if (!!userEdited) {//Si se editó se regresa el nuevo registro, si no regresa un error.
     res.status(200).send(userEdited);
   } else {
     res
@@ -302,6 +302,7 @@ const cambiarEstatus = (req, res) => {
   }
 };
 
+//Exportar métodos
 module.exports = {
   iniciarSesion,
   cerrarSesion,

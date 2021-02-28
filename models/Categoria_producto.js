@@ -1,3 +1,4 @@
+//Clase de categoria_producto para poder instanciar nuevos objetos de este tipo
 class Categoria_producto {
     constructor({id, nombre, descripcion, estatus}) {
         this.id = id;
@@ -7,5 +8,5 @@ class Categoria_producto {
     }
   
 }
-
+//Exportar modelo
 module.exports = Categoria_producto;

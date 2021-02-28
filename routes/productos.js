@@ -1,6 +1,7 @@
-// Estructura del CRUD
+//Instanciamos una nueva variable de Express
 const router = require("express").Router();
 
+//Importar funciones del controlador
 const {
   crearProducto,
   eliminarProducto,
@@ -11,6 +12,7 @@ const {
   filtrarProducto,
 } = require("../controllers/producto");
 
+//Rutas definidas de las funciones
 router.get("/:id", verProducto);
 router.get("/", verProductos);
 router.post("/filtrar", filtrarProducto);

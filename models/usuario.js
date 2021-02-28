@@ -1,3 +1,4 @@
+//Clase de usuario para poder instanciar nuevos objetos de este tipo
 class Usuario {
     constructor({id, nombre, correo, password, tipo, estatus}) {
         this.id = id;

@@ -1,16 +1,17 @@
+// importamos el modelo de pedido
 const Pedido = require("../models/Pedido");
-
+//creamos arreglo de objetos para los pedidos
 var PEDIDOS = [
   new Pedido({
     id: 1,
     id_cliente: 1,
     info_productos: [
-      {
+      { //ya que un pedido contiene productos se ponen como arregle de objetos del mismo
         id: 1,
         nombre: "Sincronizada",
         id_categoria: 1,
         descripcion: "Sincronizada con jamón",
-        estatus_disponibilidad: 1,
+        estatus: 1,
         cantidad: 1,
         notas: "Sin cebolla",
       },
@@ -19,7 +20,7 @@ var PEDIDOS = [
         nombre: "Hamburguesa",
         id_categoria: 2,
         descripcion: "Hamburguesa",
-        estatus_disponibilidad: 1,
+        estatus: 1,
         cantidad: 1,
         notas: "Sin Jitomate",
       },
@@ -37,7 +38,7 @@ var PEDIDOS = [
         nombre: "Pizza",
         id_categoria: 2,
         descripcion: "Pizza de peperoni",
-        estatus_disponibilidad: 1,
+        estatus: 1,
         cantidad: 1,
         notas: "Extra peperoni",
       },
@@ -46,7 +47,7 @@ var PEDIDOS = [
         nombre: "Torta",
         id_categoria: 1,
         descripcion: "Torta de jamon",
-        estatus_disponibilidad: 1,
+        estatus: 1,
         cantidad: 1,
         notas: "Sin Jitomate",
       },
@@ -64,7 +65,7 @@ var PEDIDOS = [
         nombre: "Pizza",
         id_categoria: 2,
         descripcion: "Pizza de peperoni",
-        estatus_disponibilidad: 1,
+        estatus: 1,
         cantidad: 1,
         notas: "Extra peperoni",
       },
@@ -73,7 +74,7 @@ var PEDIDOS = [
         nombre: "Sincronizada",
         id_categoria: 1,
         descripcion: "Sincronizada con jamón",
-        estatus_disponibilidad: 1,
+        estatus: 1,
         cantidad: 1,
         notas: "Sin cebolla",
       },
@@ -85,23 +86,23 @@ var PEDIDOS = [
 ];
 
 function crearPedido(req, res) {
-  // Instanciaremos una nueva categoria utilizando la clase pedido
+  // Instanciaremos un nuevo pedido utilizando la clase pedido
   var pedido = new Pedido(req.body);
-  if (!!pedido.id) {
-    PEDIDOS.push(pedido);
-    res.status(201).send(pedido);
+  if (!!pedido.id) { //Validar si el nuevo pedido tiene id
+    PEDIDOS.push(pedido); //agregar al arreglo
+    res.status(201).send(pedido); //enviarlo como respuesta al ser exitosa la llamada
   } else {
     res
       .status(304)
-      .send({ Message: "Not Modified: No se agregó producto vacío" });
+      .send({ Message: "Not Modified: No se agregó producto vacío" }); //ya que no se pueden agregar vacios se envia al siguiente mensaje
   }
 }
 
-function verPedido(req, res) {
+function verPedido(req, res) { //envia los datos del pedido seleccionado
   let pedidoSelected = null;
   for (let i = 0; i < PEDIDOS.length; i++) {
-    if (PEDIDOS[i].id === +req.params.id) {
-      pedidoSelected = PEDIDOS[i];
+    if (PEDIDOS[i].id === +req.params.id) { //busca por id, el + es para convertir el id
+      pedidoSelected = PEDIDOS[i]; //cuando lo encuentra lo guarda para mostrarlo como info
       break;
     }
   }
@@ -109,18 +110,17 @@ function verPedido(req, res) {
 }
 
 function verHistorialPedido(req, res) {
-  res.status(200).send(PEDIDOS);
+  res.status(200).send(PEDIDOS); //envia todos los datos de pedidos
 }
 
 function editarPedido(req, res) {
-  //ver caso de objetos de productos
-  // simulando una categoria previamente existente que el cliente modifica
-  let { id, info_productos } = req.body;
-  let pedidoEdited = null;
+  // simulando un pedido previamente existente que el cliente modifica
+  let { id, info_productos } = req.body; //guarda el id del pedido a editar y su arreglo de objetos de productos
+  let pedidoEdited = null; //variable para guardar el pedido editado
   for (let i = 0; i < PEDIDOS.length; i++) {
-    if (PEDIDOS[i].id === id) {
-      PEDIDOS[i].info_productos = info_productos;
-      pedidoEdited = PEDIDOS[i];
+    if (PEDIDOS[i].id === id) { //cuando encuentre el pedido acorde a su id
+      PEDIDOS[i].info_productos = info_productos; //cambia el valor indicado por el nuevo
+      pedidoEdited = PEDIDOS[i]; //guarda este objeto modificado para ser mostrado en la respuesta
       break;
     }
   }
@@ -130,14 +130,14 @@ function editarPedido(req, res) {
     res.status(404).send({ errorMessage: "Not Found: Pedido no encontrado." });
   }
 }
-//aqui aplica nuestro cancelar(){}
+//aqui aplica nuestro Cancelar(){} 
 function cambiarEstatusPedido(req, res) {
   //ACTIVOS=1, CANCELADOS=0
-  let pedidoEdited = null;
+  let pedidoEdited = null; //variable para guardar el pedido editado
   for (let i = 0; i < PEDIDOS.length; i++) {
-    if (PEDIDOS[i].id === req.body.id) {
-      pedidoEdited = PEDIDOS[i];
-      pedidoEdited.estatus = req.body.estatus;
+    if (PEDIDOS[i].id === req.body.id) { //cuando encuentre el pedido acorde a su id
+      PEDIDOS[i].estatus = req.body.estatus; //modifica para poner el nuevo estatus
+      pedidoEdited.estatus = PEDIDOS[i]; //guarda el objeto para ser mostrado en la respuesta
       break;
     }
   }
@@ -149,18 +149,19 @@ function cambiarEstatusPedido(req, res) {
 }
 
 function filtrarPedido(req, res) {
-  let campo = Object.keys(req.body)[0];
-  let dato = req.body[campo];
+  let campo = Object.keys(req.body)[0];//Obtiene el nombre del campo para filtrar
+  let dato = req.body[campo];//Obtiene el valor por el que se va a filtrar
   let pedidos = PEDIDOS.filter((pedido) => {
-    let noEncontrado = true;
-    pedido.info_productos.forEach((producto) => {
-      let regex= new RegExp(valor, 'gi');
-      noEncontrado = noEncontrado && !regex.test(producto[campo]);
+    let noEncontrado = true; //Se crea una variable temporal para determinar si fue encontrado algún producto
+    pedido.info_productos.forEach((producto) => { //En cada pedido, revisa los productos
+      let regex= new RegExp(dato, 'gi');//Crea una expresión regular para evaluar
+      noEncontrado = noEncontrado && !regex.test(producto[campo]);//Evalua el campo del producto a filtrar con la expresión regular. 
+              //Se hace un AND para que con la primera iteración que encuentre, no cambie el resultado en las siguientes iteraciones
     });
     return !noEncontrado;
   });
   
-  if(!!categoriasFiltradas[0]){
+  if(!!categoriasFiltradas[0]){//Si no encuentra ningun pedido, regresa un error
     res.status(200).send(productosFiltrados);
 }else{
     res.status(404).send({errorMessage:'NotFound: Busqueda no arrojó resultados'});
@@ -168,25 +169,25 @@ function filtrarPedido(req, res) {
 }
 
 function eliminarPedido(req, res) {
-  let pedidoEliminado = null;
+  let pedidoEliminado = null; //aqu'i guardara' la info del eliminado
   let encontrado = false;
 
-  for (let i = 0; i < PEDIDOS.length; i++) {
-    if (PEDIDOS[i].id === +req.params.id) {
-      if (!PEDIDOS[i].estatus) pedidoEliminado = PEDIDOS.splice(i, 1);
-      encontrado = true;
+  for (let i = 0; i < PEDIDOS.length; i++) { 
+    if (PEDIDOS[i].id === +req.params.id) { //cuando encuentre el pedido acorde a su id
+      if (!PEDIDOS[i].estatus) pedidoEliminado = PEDIDOS.splice(i, 1); //si el pedido est'a cancelado (estatus=0) se eliminara del arreglo y se guarda su info
+      encontrado = true; //cambia bandera a encontrado
       break;
     }
   }
-  if (!!pedidoEliminado) {
-    res.status(200).send(pedidoEliminado[0]);
-  } else if (encontrado) {
+  if (!!pedidoEliminado) { //si hay un eliminado
+    res.status(200).send(pedidoEliminado[0]); //se muestra como parte de la respuesta
+  } else if (encontrado) { //fue encontrado pero no eliminado
     res
       .status(409)
       .send({
         errorMessage: "Conflict: No se puede eliminar un pedido no cancelado",
       });
-  } else {
+  } else { //no encontrado
     res
       .status(404)
       .send({ errorMessage: "Not found: No se encontró el pedido" });

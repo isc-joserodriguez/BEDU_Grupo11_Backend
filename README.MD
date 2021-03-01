@@ -895,7 +895,7 @@ Body:
 
 ##### Filtrar
 
-`PUT: http://localhost:3000/v1/pedido/cambiarEstatus`
+`POST: http://localhost:3000/v1/pedido/filtrar`
 
 Body:
 

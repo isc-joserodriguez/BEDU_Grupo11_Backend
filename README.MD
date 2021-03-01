@@ -895,7 +895,7 @@ Body:
 
 ##### Filtrar
 
-`PUT: http://localhost:3000/v1/pedido/cambiarEstatus`
+`POST: http://localhost:3000/v1/pedido/filtrar`
 
 Body:
 
@@ -1118,7 +1118,7 @@ Body:
 }
 ```
 
-![Mockup](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/docs/img/usuariosChageStatus.png)
+![Mockup](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/docs/img/usuariosChangeStatus.png)
 
 <a name="usuario_example_changeRole"></a>
 
@@ -1135,7 +1135,7 @@ Body:
 }
 ```
 
-![Mockup](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/docs/img/usuariosChageRole.png)
+![Mockup](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/docs/img/usuariosChangeRole.png)
 
 <a name="usuario_example_filter"></a>
 

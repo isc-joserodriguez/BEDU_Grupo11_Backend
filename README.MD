@@ -5,7 +5,10 @@
 ## Contenido
 
 - [Postwork Fase 02 Módulo 02 Sesión 03](./postwork-sesion03-models)
-- [Proyecto Final - API-RESTaurant](./)
+<!-- - [Proyecto Final - API-RESTaurant](./) -->
+- [Postwork Fase 02 Módulo 02 Sesión 04 - Descripción ](#sesion04-descripcion)
+  - [Objetivo](#sesion04-objetivo)
+  - [Desarrollo](#sesion04-desarrollo)
   - [Controllers](#Controllers)
     - [categoria_producto](#categoria_producto_controller)
     - [pedido](#pedido_controller)
@@ -57,6 +60,22 @@
       - [Filtrar](#usuario_example_filter)
 - [Autores](#autores)
 <!-- - [Video Proyecto](https://youtu.be/etMsdDg5bM4) -->
+
+<a name="sesion04-descripcion"></a>
+
+## Postwork Fase 02 Módulo 02 Sesión 04 - Descripción
+
+<a name="sesion04-objetivo"></a>
+
+### Objetivo
+
+- Comprender los conceptos fundamentales de las técnicas para el manejo de sesiones y autenticación en una API.
+
+<a name="sesion04-desarrollo"></a>
+
+### Desarrollo:
+
+- Crea las clases que conformarán tu modelo, los controladores y rutas que te permitirán interactuar con ellos.
 
 <a name="Controllers"></a>
 

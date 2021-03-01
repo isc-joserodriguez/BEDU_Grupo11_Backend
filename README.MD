@@ -77,11 +77,15 @@
 
 Realiza los siguientes ejercicios sobre su proyecto del módulo:
 
-- ✅ Creen la estructura de la API para su proyecto con base en la vista en el Work.
-- ✅ Organicen los Modelos creados en el postwork anterior, en el directorio models de tu proyecto.
-- ✅ Definan los controladores de cada uno de sus modelos, simulando el comportamiento del CRUD para  cada uno.
-- ✅ Definan la estructura de rutas para cada modelo.
-- ✅ Hagan push en su repo, en la rama main con los cambios realizados en este postwork.
+✅ Creen la estructura de la API para su proyecto con base en la vista en el Work.
+
+✅ Organicen los Modelos creados en el postwork anterior, en el directorio models de tu proyecto.
+
+✅ Definan los controladores de cada uno de sus modelos, simulando el comportamiento del CRUD para  cada uno.
+
+✅ Definan la estructura de rutas para cada modelo.
+
+✅ Hagan push en su repo, en la rama main con los cambios realizados en este postwork.
 
 <a name="Controllers"></a>
 

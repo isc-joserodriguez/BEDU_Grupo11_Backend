@@ -710,6 +710,8 @@ router.put("/toggleEstatus", cambiarEstatus);
 
 #### categoria_producto
 
+---
+
 <a name="categoria_producto_example_new"></a>
 
 ##### Nuevo
@@ -800,6 +802,8 @@ Body:
 <a name="pedido_example"></a>
 
 #### pedido
+
+---
 
 <a name="pedido_example_new"></a>
 
@@ -920,6 +924,8 @@ Body:
 
 #### producto
 
+---
+
 <a name="producto_example_new"></a>
 
 ##### Nuevo
@@ -1022,6 +1028,8 @@ Body:
 <a name="usuario_example"></a>
 
 #### usuario
+
+---
 
 <a name="usuario_example_new"></a>
 
@@ -1130,8 +1138,8 @@ Body:
 
 ```json
 {
-    "id":13,
-    "tipo":"Admin"
+  "id": 13,
+  "tipo": "Admin"
 }
 ```
 
@@ -1141,13 +1149,13 @@ Body:
 
 ##### Filtrar
 
-`PUT: http://localhost:3000/v1/usuarios/filtrar`
+`POST: http://localhost:3000/v1/usuarios/filtrar`
 
 Body:
 
 ```json
 {
-  "tipo":"Mesero"
+  "tipo": "Mesero"
 }
 ```
 

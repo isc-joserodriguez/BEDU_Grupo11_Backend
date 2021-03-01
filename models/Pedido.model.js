@@ -8,7 +8,6 @@ class Pedido {
         this.estatus = estatus;
         this.fecha = fecha;
     }
-    
 }
 //Exportar modelo
 module.exports = Pedido;

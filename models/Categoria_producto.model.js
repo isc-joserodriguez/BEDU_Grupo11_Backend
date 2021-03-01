@@ -6,7 +6,6 @@ class Categoria_producto {
         this.descripcion = descripcion;
         this.estatus = estatus;
     }
-  
 }
 //Exportar modelo
 module.exports = Categoria_producto;

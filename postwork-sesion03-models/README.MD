@@ -16,3 +16,5 @@ Utilizando lo aprendido en la sesión 3, realicen los siguientes ejercicios como
 3. Utilicen historias de usuario para ayudarte a responder las preguntas del inciso anterior.
 4. Definan en JavaScript las clases que representen cada entidad de su proyecto.
 5. Crear un repositorio en Git de su proyecto, en donde se debe de subir todo el código.
+
+[Documento](https://github.com/joanrodriguezhe/BEDU_Grupo11_Backend/blob/master/postwork-sesion03-models/Postwork03.pdf)

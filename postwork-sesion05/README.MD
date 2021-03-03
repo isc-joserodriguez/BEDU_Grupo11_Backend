@@ -3,9 +3,9 @@
 Realicen los siguientes ejercicios sobre su proyecto del módulo:
 
 1. Con base en las entidades definidas hasta ahora en tu proyecto, define el diagrama entidad relación de éstas.
-   ![Diagrama](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/postwork-sesion05/DiagramaER-Grupo11.png)
+   ![Diagrama](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/postwork-sesion05/DiagramaER_Grupo11.png)
 2. Traduzcan el diagrama del inciso anterior en un modelo relacional.
-   ![Modelo](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/postwork-sesion05/ModeloRelacional-Grupo11.png)
+   ![Modelo](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/postwork-sesion05/ModeloRelacional_Grupo11.png)
 3. Implementen este modelo como una base de datos relacional en MySQL, guarden todos los comandos que usaron para la creación de la base de datos y tablas en un archivo con nombre `database.sql` y súbanlo a su repositorio.
 
    [database.sql](./database.sql)

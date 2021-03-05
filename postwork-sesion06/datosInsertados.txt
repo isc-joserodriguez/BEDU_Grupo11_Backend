@@ -1,0 +1,59 @@
+//use ApiRestaurante
+
+db.usuarios.insertMany(
+  [
+    { _id: 1, nombre: "Carlos Perez", correo: "CarlosPerez@test.com", password: "123456", tipo: "Admin", estatus: 1 },
+    { _id: 2, nombre: "Eduardo Montoya", correo: "EduardoMontoya@test.com", password: "123456", tipo: "Chef", estatus: 1 },
+    { _id: 3, nombre: "Nadia Torres", correo: "NadiaTorres@test.com", password: "123456", tipo: "Chef", estatus: 1 },
+    { _id: 4, nombre: "Alexis Ramirez", correo: "AlexisRamirez@test.com", password: "123456", tipo: "Chef", estatus: 1 },
+    { _id: 5, nombre: "Daniel Suarez", correo: "DanielSuarez@test.com", password: "123456", tipo: "Chef", estatus: 1 },
+    { _id: 6, nombre: "Carla Robles", correo: "CarlaRobles@test.com", password: "123456", tipo: "Chef", estatus: 0 },
+    { _id: 7, nombre: "Adilene Pedroza", correo: "AdilenePedroza@test.com", password: "123456", tipo: "Mesero", estatus: 1 },
+    { _id: 8, nombre: "Ana Perez", correo: "AnaPerez@test.com", password: "123456", tipo: "Mesero", estatus: 1 },
+    { _id: 9, nombre: "Cesar Loera", correo: "CesarLoera@test.com", password: "123456", tipo: "Mesero", estatus: 1 },
+    { _id: 10, nombre: "Alejandro Jimenez", correo: "AlejandroJimenez@test.com", password: "123456", tipo: "Mesero", estatus: 1 },
+    { _id: 11, nombre: "Daniel Llanos", correo: "DanielLlanos@test.com", password: "123456", tipo: "Mesero", estatus: 1 },
+    { _id: 12, nombre: "Carlos Montoya", correo: "CarlosMontoya@test.com", password: "123456", tipo: "Mesero", estatus: 1 },
+    { _id: 13, nombre: "Julio Montoya", correo: "JulioMontoya@test.com", password: "123456", tipo: "Mesero", estatus: 0 },
+    { _id: 14, nombre: "Andres Vargas", correo: "AndresVargas@test.com", password: "123456", tipo: "Cliente", estatus: 1 },
+    { _id: 15, nombre: "Citlali Llamas", correo: "CitlaliLlamas@test.com", password: "123456", tipo: "Cliente", estatus: 1 },
+    { _id: 16, nombre: "Hugo Perez", correo: "HugoPerez@test.com", password: "123456", tipo: "Cliente", estatus: 1 },
+    { _id: 17, nombre: "Octavio Ramirez", correo: "OctavioRamirez@test.com", password: "123456", tipo: "Cliente", estatus: 1 },
+    { _id: 18, nombre: "Jorge Vizcaino", correo: "JorgeVizcaino@test.com", password: "123456", tipo: "Cliente", estatus: 1 },
+    { _id: 19, nombre: "Odin Martinez", correo: "OdinMartinez@test.com", password: "123456", tipo: "Cliente", estatus: 1 },
+    { _id: 20, nombre: "Alejandra Martinez", correo: "AlejandraMartinez@test.com", password: "123456", tipo: "Cliente", estatus: 0 },
+  ]
+)
+
+db.categorias.insertMany(
+  [
+    { _id: 1, nombre: 'Desayuno', descripcion: 'Es la categoria de desayunos servida de 7-9am', estatus: 1 },
+    { _id: 2, nombre: 'Jugo', descripcion: 'Es la categoria de jugos naturales', estatus: 1 },
+    { _id: 3, nombre: 'Soda', descripcion: 'Es la categoria de refrescos', estatus: 1 },
+    { _id: 4, nombre: 'Comida', descripcion: 'Es la categoria de comidas', estatus: 1 },
+    { _id: 5, nombre: 'Postre', descripcion: 'Es la categoria de postres', estatus: 1 },
+    { _id: 6, nombre: 'Cena', descripcion: 'Es la categoria de cenas', estatus: 1 }
+  ]
+)
+
+db.productos.insertMany([
+  { _id: 1, nombre: 'Chilaquiles', id_categoria: 1, descripcion: 'Chilaquiles con pollo en salsa verde y queso doble crema', costo: 75, estatus: 1 },
+  { _id: 2, nombre: 'Jugo de naranja', id_categoria: 2, descripcion: 'Jugo de naranja 500 ml', costo: 30, estatus: 1 },
+  { _id: 3, nombre: 'Sprite', id_categoria: 3, descripcion: 'Sprite en lata 355ml', costo: 20, estatus: 1 },
+  { _id: 4, nombre: 'Huevos al gusto', id_categoria: 1, descripcion: 'Huevos al gusto (omelette, revueltos, estrellados)', costo: 60, estatus: 1 },
+  { _id: 5, nombre: 'Jugo de mandarina', id_categoria: 2, descripcion: 'Jugo de mandarina 500 ml', costo: 30, estatus: 1 },
+  { _id: 6, nombre: 'Mirinda', id_categoria: 3, descripcion: 'Mirinda en lata 355ml', costo: 20, estatus: 1 },
+  { _id: 7, nombre: 'Molletes', id_categoria: 1, descripcion: 'Molletes con queso manchego (2 piezas)', costo: 50, estatus: 1 },
+  { _id: 8, nombre: 'Jugo de betabel', id_categoria: 2, descripcion: 'Jugo de betabel 500 ml', costo: 30, estatus: 1 },
+  { _id: 9, nombre: 'Manzanita Sol', id_categoria: 3, descripcion: 'Manzanita Sol en lata 355ml', costo: 20, estatus: 1 }
+])
+
+db.pedidos.insertMany([
+  { _id: 1, id_cliente: 14, info_productos: [1, 3], costo: 120, estatus: 1, fecha: ISODate("2021-02-20") },
+  { _id: 2, id_cliente: 16, info_productos: [4, 5], costo: 75, estatus: 0, fecha: ISODate("2021-01-11") },
+  { _id: 3, id_cliente: 20, info_productos: [5, 2, 1], costo: 90, estatus: 1, fecha: ISODate("2020-12-10") },
+  { _id: 4, id_cliente: 14, info_productos: [5, 1], costo: 60, estatus: 1, fecha: ISODate("2020-12-10") },
+  { _id: 5, id_cliente: 18, info_productos: [1, 8], costo: 120, estatus: 1, fecha: ISODate("2020-12-01") },
+  { _id: 6, id_cliente: 17, info_productos: [7, 1, 4, 7], costo: 75, estatus: 0, fecha: ISODate("2020-12-03") },
+  { _id: 7, id_cliente: 19, info_productos: [2, 4, 6, 3, 8], costo: 90, estatus: 1, fecha: ISODate("2020-11-05") },
+])

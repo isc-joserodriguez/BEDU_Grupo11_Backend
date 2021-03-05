@@ -8,14 +8,19 @@ Realicen los siguientes ejercicios sobre su proyecto del módulo:
 2. Discutan en equipo las siguientes preguntas y escriban las conclusiones a las que llegaron en un archivo para entregar:
 
 - ¿Cuáles son las ventajas de usar el modelo relacional en nuestro proyecto?
+
     Actualmente hay muchos recursos disponible, debido a la larga trayectoria que tiene. Esto hace que esté estandarizado y que muchas veces cuando se llegan a tener problemas, puede ser fácil resolverlo consultando en la comunidad debido a que muchas veces ya está documentado.
 - ¿Cuáles son las limitantes de usar el modelo relacional en nuestro proyecto?
+
     En nuestro caso, tuvimos que hacer ciertas modificaciones a nuestros modelos de Usuario y Pedido porque tenemos unas relaciones multiples para tipos de usuarios que interactuan de manera independiente con el pedido, de tal forma que la representación en el modelo relacional puede llegar a ser complicada o dificil de mantener.
 - ¿Qué ventajas ofrece el modelo no relacional a nuestro proyecto?
+
     Tenemos más flexibilidad para trabajar con los pedidos debido a que no debemos preocuparnos de que el sistema nos agregue o no los ID de mesero o chef (ya que pensamos agregarlos una vez que uno de estos usuarios interactúe cpm el pedido). También las relaciones multiples que tenemos, pueden llegar a ser más fáciles de representar.
 - ¿Qué desventajas tiene el uso del modelo no relacional en nuestro proyecto?
+
     Al no existir relaciones reales, puede llegar a ser complicado las consultas de las diferentes colecciones de datos.
 - ¿Qué implementación de base de datos de las que hicimos representa mejor las especificaciones de las entidades del proyecto y por qué?
+
     Creemos que el modelo no relacional se adapta mejor a nuestro proyecto debido a las diferentes complicaciones que tuvimos con el relacional. Por otro lado, también nos permite trabajar con los diferentes campos sin necesidad de agregarlos todos y a la hora de consultar, no nos regresa los "campos vacíos" como null y en la implementación puede llegar a ser más sencillo el manejo de los datos.
 
 3. Después de elegir el modelo de base de datos que mejor se acopla a las necesidades de su proyecto, comiencen a poblar su Base de datos. Recuerden que deben de tener un total de 50 registros. Solo es necesario poblar la base de datos con el modelo que usaran.

@@ -8,7 +8,7 @@ router.get('/', (req, res)=>{
 
 //Se ponen disponibles las rutas de nuestros endpoint
 router.use('/usuarios', require('./usuarios.router'));
-router.use('/categoria_producto', require('./categoria_producto.router'));
+router.use('/categoria', require('./categoria.router'));
 router.use('/productos', require('./productos.router'));
 router.use('/pedido', require('./pedido.router'));
 

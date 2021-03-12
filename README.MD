@@ -10,28 +10,28 @@
   - [Objetivo](#sesion04-objetivo)
   - [Desarrollo](#sesion04-desarrollo)
   - [Controllers](#Controllers)
-    - [categoria_producto](#categoria_producto_controller)
+    - [categoria](#categoria_controller)
     - [pedido](#pedido_controller)
     - [producto](#producto_controller)
     - [usuario](#usuario_controller)
   - [Models](#Models)
-    - [categoria_producto](#categoria_producto_model)
+    - [categoria](#categoria_model)
     - [pedido](#pedido_model)
     - [producto](#producto_model)
     - [usuario](#usuario_model)
   - [Routes](#Routes)
-    - [categoria_producto](#categoria_producto_route)
+    - [categoria](#categoria_route)
     - [pedido](#pedido_route)
     - [producto](#producto_route)
     - [usuario](#usuario_route)
   - [Ejemplos](#Examples)
-    - [categoria_producto](#categoria_producto_example)
-      - [Nuevo](#categoria_producto_example_new)
-      - [Ver todos](#categoria_producto_example_getAll)
-      - [Ver por ID](#categoria_producto_example_getById)
-      - [Editar](#categoria_producto_example_edit)
-      - [Cambiar Estatus](#categoria_producto_example_changeStatus)
-      - [Filtrar](#categoria_producto_example_filter)
+    - [categoria](#categoria_example)
+      - [Nuevo](#categoria_example_new)
+      - [Ver todos](#categoria_example_getAll)
+      - [Ver por ID](#categoria_example_getById)
+      - [Editar](#categoria_example_edit)
+      - [Cambiar Estatus](#categoria_example_changeStatus)
+      - [Filtrar](#categoria_example_filter)
     - [pedido](#pedido_example)
       - [Nuevo](#pedido_example_new)
       - [Ver todos](#pedido_example_getAll)
@@ -91,19 +91,19 @@ Realiza los siguientes ejercicios sobre su proyecto del módulo:
 
 ### Controllers
 
-<a name="categoria_producto_controller"></a>
+<a name="categoria_controller"></a>
 
-#### categoria_producto
+#### categoria
 
 ```js
-const crearCategoria_producto = (req, res) => {
-  // Instanciaremos una nueva categoria utilizando la clase categoria_producto
-  let categoria_producto = new Categoria_producto(req.body);
+const crearCategoria = (req, res) => {
+  // Instanciaremos una nueva categoria utilizando la clase categoria
+  let categoria = new Categoria(req.body);
 
-  if (!!categoria_producto.id) {
+  if (!!categoria.id) {
     //Validar si la nueva categoria tiene id
-    CATEGORIAS.push(categoria_producto); //agregar al arreglo
-    res.status(201).send(categoria_producto); //enviarla como respuesta al ser exitosa la llamada
+    CATEGORIAS.push(categoria); //agregar al arreglo
+    res.status(201).send(categoria); //enviarla como respuesta al ser exitosa la llamada
   } else {
     res
       .status(304)
@@ -125,21 +125,21 @@ const verCategoria = (req, res) => {
   }
 };
 
-const editarCategoria_producto = (req, res) => {
+const editarCategoria = (req, res) => {
   // toda la informacion necesaria va en req.body
   let datos = req.body;
-  let categoria_productoEdited = null; //variable para guardar la categoria editada
+  let categoriaEdited = null; //variable para guardar la categoria editada
   for (let i = 0; i < CATEGORIAS.length; i++) {
     if (CATEGORIAS[i].id === datos.id) {
       //cuando encuentre la categoria acorde a su id
       for (campo in datos) {
         CATEGORIAS[i][campo] = datos[campo]; //cambia el valor de la propiedad del objeto indicado por el nuevo
-        categoria_productoEdited = CATEGORIAS[i]; //guarda este objeto modificado para ser mostrado en la respuesta
+        categoriaEdited = CATEGORIAS[i]; //guarda este objeto modificado para ser mostrado en la respuesta
       }
     }
   }
-  if (categoria_productoEdited) {
-    res.status(200).send(categoria_productoEdited);
+  if (categoriaEdited) {
+    res.status(200).send(categoriaEdited);
   } else {
     res
       .status(404)
@@ -147,23 +147,23 @@ const editarCategoria_producto = (req, res) => {
   }
 };
 
-const cambiarEstatusCategoria_producto = (req, res) => {
-  let categoria_productoEdited = null; //variable para guardar la categoria editada
+const cambiarEstatusCategoria = (req, res) => {
+  let categoriaEdited = null; //variable para guardar la categoria editada
   for (let i = 0; i < CATEGORIAS.length; i++) {
     if (CATEGORIAS[i].id === req.body.id) {
       //cuando encuentre la categoria acorde a su id
       CATEGORIAS[i].estatus = req.body.estatus; //se cambia el estatus de la seleccion acorde al estatus nuevo que se le envia
-      categoria_productoEdited = CATEGORIAS[i]; //guarda el objeto
+      categoriaEdited = CATEGORIAS[i]; //guarda el objeto
     }
   }
-  if (categoria_productoEdited) {
-    res.status(200).send(categoria_productoEdited);
+  if (categoriaEdited) {
+    res.status(200).send(categoriaEdited);
   } else {
     res.status(404).send({ errorMessage: "Not found" });
   }
 };
 
-const filtrarCategoria_producto = (req, res) => {
+const filtrarCategoria = (req, res) => {
   let campo = Object.keys(req.body)[0]; //toma el nombre de la propiedad del objeto por la que se va a filtrar
   let dato = req.body[campo]; //guarda el valor de esta propiedad (valor a buscar)
   let categoriasFiltradas = CATEGORIAS.filter((categoria) => {
@@ -597,12 +597,12 @@ const cambiarEstatus = (req, res) => {
 
 ### Models
 
-<a name="categoria_producto_model"></a>
+<a name="categoria_model"></a>
 
-#### categoria_producto
+#### categoria
 
 ```js
-class Categoria_producto {
+class Categoria {
   constructor({ id, nombre, descripcion, estatus }) {
     this.id = id;
     this.nombre = nombre;
@@ -674,17 +674,17 @@ class Usuario {
 
 ### Routes
 
-<a name="categoria_producto_route"></a>
+<a name="categoria_route"></a>
 
-#### categoria_producto
+#### categoria
 
 ```js
 router.get("/", verCategorias);
 router.get("/:id", verCategoria);
-router.post("/filtrar", filtrarCategoria_producto);
-router.post("/", crearCategoria_producto);
-router.put("/editar", editarCategoria_producto);
-router.put("/cambiarEstatus", cambiarEstatusCategoria_producto);
+router.post("/filtrar", filtrarCategoria);
+router.post("/", crearCategoria);
+router.put("/editar", editarCategoria);
+router.put("/cambiarEstatus", cambiarEstatusCategoria);
 ```
 
 <a name="pedido_route"></a>
@@ -735,17 +735,17 @@ router.put("/toggleEstatus", cambiarEstatus);
 
 ### Ejemplos
 
-<a name="categoria_producto_example"></a>
+<a name="categoria_example"></a>
 
-#### categoria_producto
+#### categoria
 
 ---
 
-<a name="categoria_producto_example_new"></a>
+<a name="categoria_example_new"></a>
 
 ##### Nuevo
 
-`POST: http://localhost:3000/v1/categoria_producto/`
+`POST: http://localhost:3000/v1/categoria/`
 
 Body:
 
@@ -760,27 +760,27 @@ Body:
 
 ![Mockup](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/docs/img/categoriasNew.png)
 
-<a name="categoria_producto_example_getAll"></a>
+<a name="categoria_example_getAll"></a>
 
 ##### Ver todos
 
-`GET: http://localhost:3000/v1/categoria_producto/`
+`GET: http://localhost:3000/v1/categoria/`
 
 ![Mockup](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/docs/img/categoriasGetAll.png)
 
-<a name="categoria_producto_example_getById"></a>
+<a name="categoria_example_getById"></a>
 
 ##### Ver por ID
 
-`GET: http://localhost:3000/v1/categoria_producto/2`
+`GET: http://localhost:3000/v1/categoria/2`
 
 ![Mockup](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/docs/img/categoriasGetById.png)
 
-<a name="categoria_producto_example_edit"></a>
+<a name="categoria_example_edit"></a>
 
 ##### Editar
 
-`PUT: http://localhost:3000/v1/categoria_producto/editar`
+`PUT: http://localhost:3000/v1/categoria/editar`
 
 Body:
 
@@ -795,11 +795,11 @@ Body:
 
 ![Mockup](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/docs/img/categoriasEdit.png)
 
-<a name="categoria_producto_example_changeStatus"></a>
+<a name="categoria_example_changeStatus"></a>
 
 ##### Cambiar Estatus
 
-`PUT: http://localhost:3000/v1/categoria_producto/cambiarEstatus`
+`PUT: http://localhost:3000/v1/categoria/cambiarEstatus`
 
 Body:
 
@@ -812,11 +812,11 @@ Body:
 
 ![Mockup](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/docs/img/categoriasChangeStatus.png)
 
-<a name="categoria_producto_example_filter"></a>
+<a name="categoria_example_filter"></a>
 
 ##### Filtrar
 
-`POST: http://localhost:3000/v1/categoria_producto/filtrar/`
+`POST: http://localhost:3000/v1/categoria/filtrar/`
 
 Body:
 

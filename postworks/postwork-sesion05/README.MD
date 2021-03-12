@@ -12,9 +12,9 @@ Realicen los siguientes ejercicios sobre su proyecto del módulo:
 
 4. Tomen un ScreenShot de la descripción de las tablas en su base de datos en MySQL. Recuerden que el comando para describir una tabla es:
 
-## categoria_producto
+## categoria
 
-![Diagrama](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/postwork-sesion05/describesTables/categoria_producto.png)
+![Diagrama](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/postwork-sesion05/describesTables/categoria.png)
 
 ## pedido
 

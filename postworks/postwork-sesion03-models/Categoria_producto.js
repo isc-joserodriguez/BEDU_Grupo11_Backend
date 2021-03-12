@@ -1,4 +1,4 @@
-class Categoria_producto {
+class Categoria {
     constructor(id, nombre, descripcion, estatus) {
         this.id = id;
         this.nombre = nombre;

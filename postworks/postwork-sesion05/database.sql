@@ -11,9 +11,9 @@ CREATE TABLE usuario (
     tipo INT NOT NULL,
     estatus BOOLEAN NOT NULL
 );
---Creamos tabla de Categoria_producto
-CREATE TABLE categoria_producto (
-    id_categoria_producto INT PRIMARY KEY,
+--Creamos tabla de Categoria
+CREATE TABLE categoria (
+    id_categoria INT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     descripcion VARCHAR(70) NOT NULL,
     estatus BOOLEAN NOT NULL
@@ -27,7 +27,7 @@ CREATE TABLE producto (
     costo DOUBLE NOT NULL,
     estatus BOOLEAN NOT NULL,
     PRIMARY KEY(id_producto),
-    FOREIGN KEY(id_categoria) REFERENCES categoria_producto(id_categoria_producto)
+    FOREIGN KEY(id_categoria) REFERENCES categoria(id_categoria)
 );
 --Creamos tabla de pedido
 CREATE TABLE pedido (
@@ -51,7 +51,7 @@ CREATE TABLE producto_pedido (
     FOREIGN KEY(id_pedido) REFERENCES pedido(id_pedido),
     FOREIGN KEY(id_producto) REFERENCES producto(id_producto)
 );
-describe categoria_producto;
+describe categoria;
 describe pedido;
 describe producto_pedido;
 describe producto;

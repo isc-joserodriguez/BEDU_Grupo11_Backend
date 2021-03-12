@@ -1,89 +1,5 @@
 // importamos el modelo de pedido
-const { Pedido } = require("../models");
-//creamos arreglo de objetos para los pedidos
-const PEDIDOS = [
-  new Pedido({
-    id: 1,
-    id_cliente: 1,
-    info_productos: [
-      { //ya que un pedido contiene productos se ponen como arregle de objetos del mismo
-        id: 1,
-        nombre: "Sincronizada",
-        id_categoria: 1,
-        descripcion: "Sincronizada con jamón",
-        estatus: 1,
-        cantidad: 1,
-        notas: "Sin cebolla",
-      },
-      {
-        id: 3,
-        nombre: "Hamburguesa",
-        id_categoria: 2,
-        descripcion: "Hamburguesa",
-        estatus: 1,
-        cantidad: 1,
-        notas: "Sin Jitomate",
-      },
-    ],
-    costo: "$120",
-    estatus: 1,
-    fecha: new Date(1633202400000),
-  }),
-  new Pedido({
-    id: 2,
-    id_cliente: 2,
-    info_productos: [
-      {
-        id: 4,
-        nombre: "Pizza",
-        id_categoria: 2,
-        descripcion: "Pizza de peperoni",
-        estatus: 1,
-        cantidad: 1,
-        notas: "Extra peperoni",
-      },
-      {
-        id: 5,
-        nombre: "Torta",
-        id_categoria: 1,
-        descripcion: "Torta de jamon",
-        estatus: 1,
-        cantidad: 1,
-        notas: "Sin Jitomate",
-      },
-    ],
-    costo: "$75",
-    estatus: 0,
-    fecha: new Date(1634087400000),
-  }),
-  new Pedido({
-    id: 3,
-    id_cliente: 1,
-    info_productos: [
-      {
-        id: 5,
-        nombre: "Pizza",
-        id_categoria: 2,
-        descripcion: "Pizza de peperoni",
-        estatus: 1,
-        cantidad: 1,
-        notas: "Extra peperoni",
-      },
-      {
-        id: 1,
-        nombre: "Sincronizada",
-        id_categoria: 1,
-        descripcion: "Sincronizada con jamón",
-        estatus: 1,
-        cantidad: 1,
-        notas: "Sin cebolla",
-      },
-    ],
-    costo: "$90",
-    estatus: 1,
-    fecha: new Date(1634087400000),
-  }),
-];
+const { Pedido } = require('../models');
 
 const crearPedido = (req, res) => {
   // Instanciaremos un nuevo pedido utilizando la clase pedido
@@ -94,7 +10,7 @@ const crearPedido = (req, res) => {
   } else {
     res
       .status(304)
-      .send({ Message: "Not Modified: No se agregó producto vacío" }); //ya que no se pueden agregar vacios se envia al siguiente mensaje
+      .send({ Message: 'Not Modified: No se agregó producto vacío' }); //ya que no se pueden agregar vacios se envia al siguiente mensaje
   }
 }
 
@@ -131,7 +47,7 @@ const editarPedido = (req, res) => {
   if (pedidoEdited) {
     res.status(200).send(pedidoEdited);
   } else {
-    res.status(404).send({ errorMessage: "Not Found: Pedido no encontrado." });
+    res.status(404).send({ errorMessage: 'Not Found: Pedido no encontrado.' });
   }
 }
 //aqui aplica nuestro Cancelar(){} 
@@ -148,7 +64,7 @@ const cambiarEstatusPedido = (req, res) => {
   if (pedidoEdited) {
     res.status(200).send(pedidoEdited);
   } else {
-    res.status(404).send({ errorMessage: "Not found" });
+    res.status(404).send({ errorMessage: 'Not found' });
   }
 }
 
@@ -189,12 +105,12 @@ const eliminarPedido = (req, res) => {
     res
       .status(409)
       .send({
-        errorMessage: "Conflict: No se puede eliminar un pedido no cancelado",
+        errorMessage: 'Conflict: No se puede eliminar un pedido no cancelado',
       });
   } else { //no encontrado
     res
       .status(404)
-      .send({ errorMessage: "Not found: No se encontró el pedido" });
+      .send({ errorMessage: 'Not found: No se encontró el pedido' });
   }
 }
 

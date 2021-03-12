@@ -469,15 +469,6 @@ const iniciarSesion = (req, res) => {
   }
 };
 
-const cerrarSesion = (req, res) => {
-  res.status(200).send({ message: "Sesion cerrada" });
-  /* 
-    OJO: Esta función se puso para el cierre de sesión, pero después pensamos en 
-    que no se necesita ya que el cierre de sesión es sólo limpiar el token del 
-    navegador y se hace en el cliente.
-    */
-};
-
 const registrarse = (req, res) => {
   let newUsuario = new Usuario(req.body); //Crea el nuevo usuario por desestructuración
 
@@ -721,7 +712,6 @@ router.delete("/:id", eliminarProducto);
 
 ```js
 router.post("/login", iniciarSesion);
-router.get("/logout", cerrarSesion);
 router.post("/signup", registrarse);
 router.get("/", verUsuarios);
 router.get("/:id", verUsuario);

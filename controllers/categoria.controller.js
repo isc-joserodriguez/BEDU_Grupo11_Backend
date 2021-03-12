@@ -30,7 +30,7 @@ const verCategoria = (req, res) => {
   if (!!categoria[0]) {
     res.status(200).send(categoria[0]);
   } else {
-    res.status(400).send({ errorMessage: "Not Found: No existe el usuario" });
+    res.status(400).send({ errorMessage: 'Not Found: No existe el usuario' });
   }
 };
 
@@ -66,7 +66,7 @@ const cambiarEstatusCategoria = (req, res) => {
     res.status(200).send(categoriaEdited);
   }
   else {
-    res.status(404).send({ errorMessage: "Not found" });
+    res.status(404).send({ errorMessage: 'Not found' });
   }
 }
 

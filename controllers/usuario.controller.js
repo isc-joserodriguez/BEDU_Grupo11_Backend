@@ -1,217 +1,41 @@
-const { Usuario } = require("../models"); //Importamos el modelo
+const mongoose = require('mongoose')
+const Usuario = mongoose.model('Usuario')
+const passport = require('passport');
 
-/* Usuarios de ejemplo */
-const USUARIOS = [
-  new Usuario({
-    id: 1,
-    nombre: "Carlos Perez",
-    correo: "CarlosPerez@test.com",
-    password: "123456",
-    tipo: "Admin",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 2,
-    nombre: "Eduardo Montoya",
-    correo: "EduardoMontoya@test.com",
-    password: "123456",
-    tipo: "Chef",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 3,
-    nombre: "Nadia Torres",
-    correo: "NadiaTorres@test.com",
-    password: "123456",
-    tipo: "Chef",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 4,
-    nombre: "Alexis Ramirez",
-    correo: "AlexisRamirez@test.com",
-    password: "123456",
-    tipo: "Chef",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 5,
-    nombre: "Daniel Suarez",
-    correo: "DanielSuarez@test.com",
-    password: "123456",
-    tipo: "Chef",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 6,
-    nombre: "Carla Robles",
-    correo: "CarlaRobles@test.com",
-    password: "123456",
-    tipo: "Chef",
-    estatus: 0,
-  }),
-  new Usuario({
-    id: 7,
-    nombre: "Adilene Pedroza",
-    correo: "AdilenePedroza@test.com",
-    password: "123456",
-    tipo: "Mesero",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 8,
-    nombre: "Ana Perez",
-    correo: "AnaPerez@test.com",
-    password: "123456",
-    tipo: "Mesero",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 9,
-    nombre: "Cesar Loera",
-    correo: "CesarLoera@test.com",
-    password: "123456",
-    tipo: "Mesero",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 10,
-    nombre: "Alejandro Jimenez",
-    correo: "AlejandroJimenez@test.com",
-    password: "123456",
-    tipo: "Mesero",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 11,
-    nombre: "Daniel Llanos",
-    correo: "DanielLlanos@test.com",
-    password: "123456",
-    tipo: "Mesero",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 12,
-    nombre: "Carlos Montoya",
-    correo: "CarlosMontoya@test.com",
-    password: "123456",
-    tipo: "Mesero",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 13,
-    nombre: "Julio Montoya",
-    correo: "JulioMontoya@test.com",
-    password: "123456",
-    tipo: "Mesero",
-    estatus: 0,
-  }),
-  new Usuario({
-    id: 14,
-    nombre: "Andres Vargas",
-    correo: "AndresVargas@test.com",
-    password: "123456",
-    tipo: "Cliente",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 15,
-    nombre: "Citlali Llamas",
-    correo: "CitlaliLlamas@test.com",
-    password: "123456",
-    tipo: "Cliente",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 16,
-    nombre: "Hugo Perez",
-    correo: "HugoPerez@test.com",
-    password: "123456",
-    tipo: "Cliente",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 17,
-    nombre: "Octavio Ramirez",
-    correo: "OctavioRamirez@test.com",
-    password: "123456",
-    tipo: "Cliente",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 18,
-    nombre: "Jorge Vizcaino",
-    correo: "JorgeVizcaino@test.com",
-    password: "123456",
-    tipo: "Cliente",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 19,
-    nombre: "Odin Martinez",
-    correo: "OdinMartinez@test.com",
-    password: "123456",
-    tipo: "Cliente",
-    estatus: 1,
-  }),
-  new Usuario({
-    id: 20,
-    nombre: "Alejandra Martinez",
-    correo: "AlejandraMartinez@test.com",
-    password: "123456",
-    tipo: "Cliente",
-    estatus: 0,
-  }),
-];
-/* Usuarios de ejemplo */
+const registrarse = (req, res, next) => {
+  let newUsuario = req.body;
+  let { password } = req.body;
 
-/* 
-{
-    "id":777,
-    "nombre":"Pedro Soza",
-    "correo":"PedroSoza@test.com",
-    "password":"123456",
-    "tipo":"Cliente",
-    "estatus": 0
+  delete newUsuario.password
+  const usuario = new Usuario(newUsuario)
+  usuario.hashPassword(password)
+
+  usuario.save().then(user => {
+    return res.status(201).json(user.toAuthJSON())
+  }).catch(next)
+};
+
+const iniciarSesion = (req, res, next) => {
+  if (!req.body.email) {
+    return res.status(422).json({ errors: { email: 'no puede estar vacío' } });
+  }
+
+  if (!req.body.password) {
+    return res.status(422).json({ errors: { password: 'no puede estar vacío' } });
+  }
+  passport.authenticate('local', { session: false }, function (err, user, info) {
+    if (err) { return next(err); }
+
+    if (user) {
+      user.token = user.generarJWT();
+      return res.json({ user: user.toAuthJSON() });
+    } else {
+      return res.status(422).json(info);
+    }
+  })(req, res, next);
 }
 
- */
-
-const iniciarSesion = (req, res) => {
-  let { correo, password } = req.body; //Declara variables para correo y password
-  let user = USUARIOS.filter(
-    (usuario) => usuario.correo === correo && usuario.password === password
-  ); //Filtra al usuario con esas credenciales
-  if (!!user[0]) {
-    res.status(200).send(user[0]);
-  } else {
-    res
-      .status(401)
-      .send({ errorMessage: "Unauthorized: Correo o password incorrecto" });
-  }
-};
-
-const cerrarSesion = (req, res) => {
-  res.status(200).send({ message: "Sesion cerrada" });
-  /* 
-    OJO: Esta función se puso para el cierre de sesión, pero después pensamos en 
-    que no se necesita ya que el cierre de sesión es sólo limpiar el token del 
-    navegador y se hace en el cliente.
-    */
-};
-
-const registrarse = (req, res) => {
-  let newUsuario = new Usuario(req.body); //Crea el nuevo usuario por desestructuración
-
-  if (!!newUsuario.id) { //Si se envía un body vacío, no crea nada y regresa un error
-    USUARIOS.push(newUsuario);
-    res.status(200).send(newUsuario);
-  } else {
-    res
-      .status(304)
-      .send({ Message: "Not Modified: No se agregó producto vacío" });
-  }
-};
+//
 
 const verUsuarios = (req, res) => { //Regresa todos los usuarios
   res.status(200).send(USUARIOS);
@@ -223,7 +47,7 @@ const verUsuario = (req, res) => {
   if (!!user[0]) {
     res.status(200).send(user[0]);
   } else {
-    res.status(400).send({ errorMessage: "Not Found: No existe el usuario" });
+    res.status(400).send({ errorMessage: 'Not Found: No existe el usuario' });
   }
 };
 
@@ -260,7 +84,7 @@ const editar = (req, res) => {
   } else {
     res
       .status(404)
-      .send({ errorMessage: "Not Found: No se encontró al usuario" });
+      .send({ errorMessage: 'Not Found: No se encontró al usuario' });
   }
 };
 
@@ -279,7 +103,7 @@ const cambiarRol = (req, res) => {
   } else {
     res
       .status(404)
-      .send({ errorMessage: "Not Found: No se encontró al usuario" });
+      .send({ errorMessage: 'Not Found: No se encontró al usuario' });
   }
 };
 
@@ -298,14 +122,13 @@ const cambiarEstatus = (req, res) => {
   } else {
     res
       .status(404)
-      .send({ errorMessage: "Not Found: No se encontró al usuario" });
+      .send({ errorMessage: 'Not Found: No se encontró al usuario' });
   }
 };
 
 //Exportar métodos
 module.exports = {
   iniciarSesion,
-  cerrarSesion,
   registrarse,
   verUsuarios,
   verUsuario,

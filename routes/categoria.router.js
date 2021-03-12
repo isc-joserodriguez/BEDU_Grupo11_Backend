@@ -1,5 +1,6 @@
 //Instanciamos una nueva variable de Express
 const router = require('express').Router();
+const auth = require('../middlewares/auth');
 //Importamos los métodos del controlador
 const {
   crearCategoria,
@@ -10,11 +11,12 @@ const {
   filtrarCategoria
 } = require('../controllers/categoria.controller');
 //Asignamos las rutas para cada método
-router.get('/', verCategorias);
-router.get('/:id', verCategoria);
-router.post('/filtrar', filtrarCategoria);
-router.post('/', crearCategoria);
-router.put('/editar', editarCategoria);
-router.put('/cambiarEstatus', cambiarEstatusCategoria);
+router.get('/', auth.requerido, verCategorias);
+router.get('/:id', auth.requerido, verCategoria);
+router.post('/filtrar',auth.requerido,  filtrarCategoria);
+router.post('/',auth.requerido,  crearCategoria);
+router.put('/editar/:id',auth.requerido,  editarCategoria);
+router.put('/cambiarEstatus', auth.requerido, cambiarEstatusCategoria);
+
 
 module.exports = router;

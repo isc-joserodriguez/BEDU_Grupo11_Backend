@@ -4,7 +4,6 @@ const router = require('express').Router();
 //Importamos los métodos del controlador
 const {
     iniciarSesion,
-    cerrarSesion,
     registrarse,
     verUsuarios,
     verUsuario,
@@ -16,7 +15,6 @@ const {
 
 //Asignamos las rutas para cada método
 router.post('/login', iniciarSesion);
-router.get('/logout', cerrarSesion);
 router.post('/signup', registrarse);
 router.get('/', verUsuarios);
 router.get('/:id', verUsuario);

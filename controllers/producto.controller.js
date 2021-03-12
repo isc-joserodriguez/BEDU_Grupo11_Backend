@@ -1,18 +1,5 @@
 //Importamos el modelo de producto
-const { Producto } = require('../models')
-
-//Productos ejemplo
-const PRODUCTOS = [
-    new Producto({ id: 1, nombre: 'Chilaquiles', id_categoria: 1, descripcion: 'Chilaquiles con pollo en salsa verde y queso doble crema', costo: 75, estatus: 1 }),
-    new Producto({ id: 2, nombre: 'Jugo de naranja', id_categoria: 2, descripcion: 'Jugo de naranja 500 ml', costo: 30, estatus: 1 }),
-    new Producto({ id: 3, nombre: 'Sprite', id_categoria: 3, descripcion: 'Sprite en lata 355ml', costo: 20, estatus: 1 }),
-    new Producto({ id: 4, nombre: 'Huevos al gusto', id_categoria: 1, descripcion: 'Huevos al gusto (omelette, revueltos, estrellados)', costo: 60, estatus: 1 }),
-    new Producto({ id: 5, nombre: 'Jugo de mandarina', id_categoria: 2, descripcion: 'Jugo de mandarina 500 ml', costo: 30, estatus: 1 }),
-    new Producto({ id: 6, nombre: 'Mirinda', id_categoria: 3, descripcion: 'Mirinda en lata 355ml', costo: 20, estatus: 1 }),
-    new Producto({ id: 7, nombre: 'Molletes', id_categoria: 1, descripcion: 'Molletes con queso manchego (2 piezas)', costo: 50, estatus: 1 }),
-    new Producto({ id: 8, nombre: 'Jugo de betabel', id_categoria: 2, descripcion: 'Jugo de betabel 500 ml', costo: 30, estatus: 1 }),
-    new Producto({ id: 9, nombre: 'Manzanita Sol', id_categoria: 3, descripcion: 'Manzanita Sol en lata 355ml', costo: 20, estatus: 1 }),
-]
+const { Producto } = require('../models');
 
 //Crear producto nuevo
 const crearProducto = (req, res) => {
@@ -43,7 +30,7 @@ const eliminarProducto = (req, res) => {
     if (productoEncontrado) {
         res.status(200).send(productoEncontrado)  //Mensaje producto eliminado
     } else if (encontrado) {
-        res.status(409).send({ errorMessage: "Conflict: No se puede eliminar un producto activo" })
+        res.status(409).send({ errorMessage: 'Conflict: No se puede eliminar un producto activo' })
     } else {
         res.status(404).send({ errorMessage: 'Not Found: Producto no encontrado.' });//Mensaje error: no encontrado
     }

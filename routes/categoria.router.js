@@ -16,7 +16,7 @@ router.get('/:id', auth.requerido, verCategoria);
 router.post('/filtrar',auth.requerido,  filtrarCategoria);
 router.post('/',auth.requerido,  crearCategoria);
 router.put('/editar/:id',auth.requerido,  editarCategoria);
-router.put('/cambiarEstatus', auth.requerido, cambiarEstatusCategoria);
+router.put('/cambiarEstatus/:id', auth.requerido, cambiarEstatusCategoria);
 
 
 module.exports = router;

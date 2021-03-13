@@ -1,10 +1,11 @@
 //Instanciamos una nueva variable de Express
 const router = require('express').Router();
+const auth = require('../middlewares/auth');
 //Importamos los métodos del controlador
 const {
   crearPedido,
   verPedido,
-  verHistorialPedido,
+  verHistorialPedidos,
   editarPedido,
   cambiarEstatusPedido,
   filtrarPedido,
@@ -12,13 +13,13 @@ const {
 } = require('../controllers/pedido.controller')
 
 //Asignamos las rutas para cada método
-router.get('/:id', verPedido)
-router.get('/', verHistorialPedido)
-router.post('/filtrar', filtrarPedido)
-router.post('/', crearPedido)
-router.put('/editar', editarPedido)
-router.put('/cambiarEstatus', cambiarEstatusPedido)
-router.delete('/:id',eliminarPedido)
+router.get('/:id', auth.requerido, verPedido)
+router.get('/', auth.requerido, verHistorialPedidos)
+router.post('/filtrar', auth.requerido, filtrarPedido)
+router.post('/', auth.requerido, crearPedido)
+router.put('/editar', auth.requerido, editarPedido)
+router.put('/cambiarEstatus', auth.requerido, cambiarEstatusPedido)
+router.delete('/:id', auth.requerido,eliminarPedido)
 
 
 module.exports = router;

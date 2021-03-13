@@ -1,124 +1,167 @@
-// importamos el modelo de pedido
-const { Pedido } = require('../models');
+const mongoose = require("mongoose"); // exportacion de mongoose
+const Pedido = mongoose.model("Pedido");
+const Producto = mongoose.model("Producto");
 
-const crearPedido = (req, res) => {
-  // Instanciaremos un nuevo pedido utilizando la clase pedido
+const crearPedido = (req, res, next) => {
+  if (req.usuario.type !== "admin") return res.status(401).send("sin permisos");
+
   let pedido = new Pedido(req.body);
-  if (!!pedido.id) { //Validar si el nuevo pedido tiene id
-    PEDIDOS.push(pedido); //agregar al arreglo
-    res.status(201).send(pedido); //enviarlo como respuesta al ser exitosa la llamada
-  } else {
-    res
-      .status(304)
-      .send({ Message: 'Not Modified: No se agregó producto vacío' }); //ya que no se pueden agregar vacios se envia al siguiente mensaje
-  }
-}
+  pedido
+    .save()
+    .then((pedido) => {
+      //Guardando nuevo usuario en MongoDB.
+      return res.status(201).json(pedido);
+    })
+    .catch(next);
+};
 
-const verPedido = (req, res) => { //envia los datos del pedido seleccionado
-  let pedidoSelected = null;
-  for (let i = 0; i < PEDIDOS.length; i++) {
-    if (PEDIDOS[i].id === +req.params.id) { //busca por id, el + es para convertir el id
-      pedidoSelected = PEDIDOS[i]; //cuando lo encuentra lo guarda para mostrarlo como info
+const verPedido = (req, res, next) => {
+  //envia los datos del pedido seleccionado
+  Pedido.findById(req.params.id)
+    .then((pedido, err) => {
+      pedido.info.map((id) => {
+        return mongoose.Types.ObjectId(id);
+      });
+      Producto.find({ _id: { $in: pedido.info } }).then((prods) => {
+        pedido.info = prods;
+        return res.json(pedido);
+      });
+    })
+    .catch(next);
+};
+
+const verHistorialPedidos = (req, res, next) => {
+  let filter = {};
+  switch (req.usuario.type) {
+    case "client":
+      if (req.usuario.id !== req.params.id)
+        return res.status(401).send("No autorizado");
+      filter = { client: req.params.id };
       break;
-    }
-  }
-  if (pedidoSelected) {
-    res.status(200).send(pedidoSelected);
-  } else {
-    res.status(404).send({ errorMessage: 'Pedido no encontrado' });
-  }
-}
-
-const verHistorialPedido = (req, res) => {
-  res.status(200).send(PEDIDOS); //envia todos los datos de pedidos
-}
-
-const editarPedido = (req, res) => {
-  // simulando un pedido previamente existente que el cliente modifica
-  let { id, info_productos } = req.body; //guarda el id del pedido a editar y su arreglo de objetos de productos
-  let pedidoEdited = null; //variable para guardar el pedido editado
-  for (let i = 0; i < PEDIDOS.length; i++) {
-    if (PEDIDOS[i].id === id) { //cuando encuentre el pedido acorde a su id
-      PEDIDOS[i].info_productos = info_productos; //cambia el valor indicado por el nuevo
-      pedidoEdited = PEDIDOS[i]; //guarda este objeto modificado para ser mostrado en la respuesta
+    case "chef":
+      filter = { chef: req.params.id };
       break;
-    }
-  }
-  if (pedidoEdited) {
-    res.status(200).send(pedidoEdited);
-  } else {
-    res.status(404).send({ errorMessage: 'Not Found: Pedido no encontrado.' });
-  }
-}
-//aqui aplica nuestro Cancelar(){} 
-const cambiarEstatusPedido = (req, res) => {
-  //ACTIVOS=1, CANCELADOS=0
-  let pedidoEdited = null; //variable para guardar el pedido editado
-  for (let i = 0; i < PEDIDOS.length; i++) {
-    if (PEDIDOS[i].id === req.body.id) { //cuando encuentre el pedido acorde a su id
-      PEDIDOS[i].estatus = req.body.estatus; //modifica para poner el nuevo estatus
-      pedidoEdited = PEDIDOS[i]; //guarda el objeto para ser mostrado en la respuesta
+    case "mesero":
+      filter = { mesero: req.params.id };
       break;
-    }
   }
-  if (pedidoEdited) {
-    res.status(200).send(pedidoEdited);
-  } else {
-    res.status(404).send({ errorMessage: 'Not found' });
+  Pedido.find(filter)
+    .then((pedido, err) => {
+      if (!pedido || err) {
+        return res.sendStatus(401);
+      }
+      return res.json(pedido);
+    })
+    .catch(next);
+};
+
+const editarPedido = (req, res, next) => {
+  let filter = {};
+  switch (req.usuario.type) {
+    case "client":
+      filter = { _id: req.params.id, client: req.usuario.id };
+      break;
+    case "admin":
+      filter = { _id: req.params.id };
+      break;
+    case "chef":
+      filter = { _id: req.params.id, $or: [{ chef: req.usuario.id }, { chef: null }] }; //Null o idPropio
+      break;
+    case "mesero":
+      filter = { _id: req.params.id, $or: [{ mesero: req.usuario.id }, { mesero: null }] }; //Null o idPropio
+      break;
   }
+  let datos = req.body;
+  Pedido.findOneAndUpdate(filter, { $set: datos }, { new: true })
+    .then((pedido) => {
+      if (!pedido) {
+        return res.sendStatus(401);
+      }
+      return res.json(pedido);
+    })
+    .catch(next);
+};
+
+function cambiarEstatusPedido(req, res, next) { //pendiente
+  if (req.usuario.type !== "admin") {
+    return res.status(401).send("sin permisos");
+  }
+  //db.collection.findOneAndUpdate({busqueda},{nuevos:datos},{new:true})
+  Pedido.findOneAndUpdate(
+    { _id: req.params.id },
+    { $set: { status: req.body.status } },
+    { new: true }
+  )
+    .then((pedido) => {
+      if (!pedido) {
+        return res.sendStatus(401);
+      }
+      res.status(201).json(pedido);
+    })
+    .catch(next);
 }
 
-const filtrarPedido = (req, res) => {
-  let campo = Object.keys(req.body)[0];//Obtiene el nombre del campo para filtrar
-  let dato = req.body[campo];//Obtiene el valor por el que se va a filtrar
-  let pedidos = PEDIDOS.filter((pedido) => {
-    let noEncontrado = true; //Se crea una variable temporal para determinar si fue encontrado algún producto
-    pedido.info_productos.forEach((producto) => { //En cada pedido, revisa los productos
-      let regex = new RegExp(dato, 'gi');//Crea una expresión regular para evaluar
-      noEncontrado = noEncontrado && !regex.test(producto[campo]);//Evalua el campo del producto a filtrar con la expresión regular. 
-      //Se hace un AND para que con la primera iteración que encuentre, no cambie el resultado en las siguientes iteraciones
-    });
-    return !noEncontrado;
+const filtrarPedido = (req, res, next) => {
+  let filter = {};
+  if (req.body.fechaIni || req.body.fechaFin) {
+    filter.createdAt = {};
+    if (req.body.fechaIni)
+      filter.createdAt["$gte"] = new Date(req.body.fechaIni);
+    if (req.body.fechaFin)
+      filter.createdAt["$lt"] = new Date(req.body.fechaFin);
+  }
+  if (req.body.idCliente) filter.client = mongoose.Types.ObjectId(idCliente);
+  if (req.body.idPedido) filter._id = mongoose.Types.ObjectId(idPedido);
+  if (req.body.idChef) filter.chef = mongoose.Types.ObjectId(idChef);
+  if (req.body.idMesero) filter.mesero = mongoose.Types.ObjectId(idMesero);
+
+  Pedido.find(filter).then((pedidos, err) => {
+    return res.send(pedidos);
+  });
+};
+
+const eliminarPedido = (req, res, next) => {
+  if (req.usuario.type !== "admin") {
+    return res.status(401).send("sin permisos");
+  }
+  Pedido.findOneAndDelete({ _id: req.params.id, status: 0 }).then(pedido => { //Elimina sólo los cancelados
+    //Buscando y eliminando pedido en MongoDB.
+    res.status(200).send(`Pedido ${req.params.id} eliminado: ${pedido}`);
   });
 
-  if (!!pedidos[0]) {//Si no encuentra ningun pedido, regresa un error
-    res.status(200).send(pedidos);
-  } else {
-    res.status(404).send({ errorMessage: 'NotFound: Busqueda no arrojó resultados' });
-  }
-}
-
-const eliminarPedido = (req, res) => {
+  /*
   let pedidoEliminado = null; //aqu'i guardara' la info del eliminado
   let encontrado = false;
 
   for (let i = 0; i < PEDIDOS.length; i++) {
-    if (PEDIDOS[i].id === +req.params.id) { //cuando encuentre el pedido acorde a su id
+    if (PEDIDOS[i].id === +req.params.id) {
+      //cuando encuentre el pedido acorde a su id
       if (!PEDIDOS[i].estatus) pedidoEliminado = PEDIDOS.splice(i, 1); //si el pedido est'a cancelado (estatus=0) se eliminara del arreglo y se guarda su info
       encontrado = true; //cambia bandera a encontrado
       break;
     }
   }
-  if (!!pedidoEliminado) { //si hay un eliminado
+  if (!!pedidoEliminado) {
+    //si hay un eliminado
     res.status(200).send(pedidoEliminado[0]); //se muestra como parte de la respuesta
-  } else if (encontrado) { //fue encontrado pero no eliminado
-    res
-      .status(409)
-      .send({
-        errorMessage: 'Conflict: No se puede eliminar un pedido no cancelado',
-      });
-  } else { //no encontrado
+  } else if (encontrado) {
+    //fue encontrado pero no eliminado
+    res.status(409).send({
+      errorMessage: "Conflict: No se puede eliminar un pedido no cancelado",
+    });
+  } else {
+    //no encontrado
     res
       .status(404)
-      .send({ errorMessage: 'Not found: No se encontró el pedido' });
-  }
-}
+      .send({ errorMessage: "Not found: No se encontró el pedido" });
+  }*/
+};
 
 // exportamos las funciones definidas
 module.exports = {
   crearPedido,
   verPedido,
-  verHistorialPedido,
+  verHistorialPedidos,
   editarPedido,
   cambiarEstatusPedido,
   filtrarPedido,

@@ -65,10 +65,10 @@ const editarPedido = (req, res, next) => {
       filter = { _id: req.params.id };
       break;
     case "chef":
-      filter = { _id: req.params.id, chef: req.usuario.id };
+      filter = { _id: req.params.id, $or: [{ chef: req.usuario.id }, { chef: null }] }; //Null o idPropio
       break;
     case "mesero":
-      filter = { _id: req.params.id, mesero: req.usuario.id };
+      filter = { _id: req.params.id, $or: [{ mesero: req.usuario.id }, { mesero: null }] }; //Null o idPropio
       break;
   }
   let datos = req.body;
@@ -82,15 +82,14 @@ const editarPedido = (req, res, next) => {
     .catch(next);
 };
 
-function cambiarEstatusPedido(req, res, next) {
-  //-----------listo
+function cambiarEstatusPedido(req, res, next) { //pendiente
   if (req.usuario.type !== "admin") {
     return res.status(401).send("sin permisos");
   }
   //db.collection.findOneAndUpdate({busqueda},{nuevos:datos},{new:true})
   Pedido.findOneAndUpdate(
     { _id: req.params.id },
-    { $set: req.body },
+    { $set: { status: req.body.status } },
     { new: true }
   )
     .then((pedido) => {
@@ -125,9 +124,9 @@ const eliminarPedido = (req, res, next) => {
   if (req.usuario.type !== "admin") {
     return res.status(401).send("sin permisos");
   }
-  Pedido.findOneAndDelete({ _id: req.params.id }).then((p) => {
+  Pedido.findOneAndDelete({ _id: req.params.id, status: 0 }).then(pedido => { //Elimina sólo los cancelados
     //Buscando y eliminando pedido en MongoDB.
-    res.status(200).send(`Pedido ${req.params.id} eliminado: ${p}`);
+    res.status(200).send(`Pedido ${req.params.id} eliminado: ${pedido}`);
   });
 
   /*

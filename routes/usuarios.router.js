@@ -1,5 +1,6 @@
 //Instanciamos una nueva variable de Express
 const router = require('express').Router();
+const auth = require('../middlewares/auth');
 
 //Importamos los métodos del controlador
 const {
@@ -16,11 +17,12 @@ const {
 //Asignamos las rutas para cada método
 router.post('/login', iniciarSesion);
 router.post('/signup', registrarse);
-router.get('/', verUsuarios);
-router.get('/:id', verUsuario);
-router.post('/filtrar', filtrar);
-router.put('/edit', editar);
-router.put('/changeRole', cambiarRol);
-router.put('/toggleEstatus', cambiarEstatus);
+
+router.get('/', auth.requerido, verUsuarios);
+router.get('/:id', auth.requerido, verUsuario);
+router.post('/filtrar', auth.requerido, filtrar);
+router.put('/changeRole/:id', auth.requerido, cambiarRol);
+router.put('/toggleEstatus/:id', auth.requerido, cambiarEstatus);
+router.put('/:id', auth.requerido, editar);
 
 module.exports = router;

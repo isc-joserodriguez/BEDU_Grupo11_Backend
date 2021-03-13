@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const Usuario = mongoose.model('Usuario')
+const mongoose = require('mongoose');
+const Usuario = mongoose.model('Usuario');
 const passport = require('passport');
 
 const registrarse = (req, res, next) => {
@@ -35,95 +35,69 @@ const iniciarSesion = (req, res, next) => {
   })(req, res, next);
 }
 
-//
-
-const verUsuarios = (req, res) => { //Regresa todos los usuarios
-  res.status(200).send(USUARIOS);
+const verUsuarios = (req, res, next) => {
+  if (req.usuario.type === 'cliente') res.status(401).send('No autorizado');
+  Usuario.find().then((users, err) => {
+    if (!users || err) {
+      return res.sendStatus(401)
+    }
+    return res.json(users);
+  }).catch(next);
 };
 
-const verUsuario = (req, res) => {
-  let { id } = req.params;
-  let user = USUARIOS.filter((usuario) => usuario.id === +id); //Filtra al usuario con cierto id
-  if (!!user[0]) {
-    res.status(200).send(user[0]);
-  } else {
-    res.status(400).send({ errorMessage: 'Not Found: No existe el usuario' });
-  }
+const verUsuario = (req, res, next) => {
+  if (req.usuario.type === 'cliente' && req.usuario.id !== req.params.id) res.status(401).send('No autorizado');
+  Usuario.findById(req.params.id).then((user, err) => {
+    if (!user || err) {
+      return res.sendStatus(401)
+    }
+    return res.json(user);
+  }).catch(next);
 };
 
-const filtrar = (req, res) => {
+const filtrar = (req, res, next) => {
+  if (req.usuario.type === 'cliente') res.status(401).send('No autorizado');
   let campo = Object.keys(req.body)[0]; //Obtiene el nombre del campo para filtrar
   let valor = req.body[campo];//Obtiene el valor por el que se va a filtrar
-  let users = USUARIOS.filter((user) => {
-    let regex = new RegExp(valor, 'gi'); //Crea una expresión regular para evaluar
-    return regex.test(user[campo]);//Evalua el campo del usuario a filtrar con la expresión regular
-  });
-
-  if (!!users[0]) {//Si no encuentra ningun usuario, regresa un error
-    res.status(200).send(users);
-  } else {
-    res.status(404).send({ errorMessage: 'NotFound: Busqueda no arrojó resultados' });
-  }
+  let filter = {}
+  filter[campo] = new RegExp(`${valor}`, 'i');
+  Usuario.find(filter).then((users, err) => {
+    if (!users || err) {
+      return res.sendStatus(401)
+    }
+    return res.json(users);
+  }).catch(next);
 };
 
-const editar = (req, res) => {
+const editar = (req, res, next) => {
+  if (req.usuario.type === 'cliente' && req.usuario.id !== req.params.id) res.status(401).send('No autorizado');
   let datos = req.body;
-  let userEdited = null;
-  for (let i = 0; i < USUARIOS.length; i++) {
-    if (USUARIOS[i].id === +datos.id) {//Busca el usuario por id
-      for (campo in datos) { //Se hace un for in para obtener cada campo del body
-        USUARIOS[i][campo] = datos[campo]; //Se hace el cambio en el array por cada campo que reciba el body
-        userEdited = USUARIOS[i]; //Asignamos el nuevo Array para validar al final
-      }
-      break; //Una vez encontrado, salimos del for
+  Usuario.findOneAndUpdate({ _id: req.params.id }, { $set: datos }, { new: true }).then((users) => {
+    if (!users) {
+      return res.sendStatus(401)
     }
-  }
-
-  if (!!userEdited) { //Si se editó, se regresa envía el registro nuevo. Si no, manda error
-    res.status(200).send(userEdited);
-  } else {
-    res
-      .status(404)
-      .send({ errorMessage: 'Not Found: No se encontró al usuario' });
-  }
+    return res.json(users);
+  }).catch(next);
 };
 
-const cambiarRol = (req, res) => {
-  let { id, tipo } = req.body;
-  let userEdited = null;
-  for (let i = 0; i < USUARIOS.length; i++) { //Busca el usuario
-    if (USUARIOS[i].id === id) {
-      USUARIOS[i].tipo = tipo; //Se le asigna el nuevo valor
-      userEdited = USUARIOS[i]; //Se guarda para validar después
-      break;
+const cambiarRol = (req, res, next) => {
+  if (req.usuario.type !== 'admin') res.status(401).send('No autorizado');
+  Usuario.findOneAndUpdate({ _id: req.params.id }, { $set: { type: req.body.type } }, { new: true }).then((users) => {
+    if (!users) {
+      return res.sendStatus(401)
     }
-  }
-  if (!!userEdited) { //Si se editó se regresa el nuevo registro, si no regresa un error.
-    res.status(200).send(userEdited);
-  } else {
-    res
-      .status(404)
-      .send({ errorMessage: 'Not Found: No se encontró al usuario' });
-  }
+    return res.json(users);
+  }).catch(next);
 };
 
-const cambiarEstatus = (req, res) => {
-  let userEdited = null;
-  let { id, estatus } = req.body;
-  for (let i = 0; i < USUARIOS.length; i++) {//Busca el usuario
-    if (USUARIOS[i].id === id) {
-      USUARIOS[i].estatus = estatus;//Se le asigna el nuevo valor
-      userEdited = USUARIOS[i];//Se guarda para validar después
-      break;
+const cambiarEstatus = (req, res, next) => {
+  //if (req.usuario.type !== 'admin') res.status(401).send('No autorizado');
+  Usuario.findOneAndUpdate({ _id: req.params.id }, { $set: { status: req.body.status } }, { new: true }).then((users) => {
+    if (!users) {
+      return res.sendStatus(401)
     }
-  }
-  if (!!userEdited) {//Si se editó se regresa el nuevo registro, si no regresa un error.
-    res.status(200).send(userEdited);
-  } else {
-    res
-      .status(404)
-      .send({ errorMessage: 'Not Found: No se encontró al usuario' });
-  }
+    return res.json(users);
+  }).catch(next);
 };
 
 //Exportar métodos

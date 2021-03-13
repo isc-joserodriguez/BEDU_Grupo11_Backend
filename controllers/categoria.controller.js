@@ -44,25 +44,21 @@ function editarCategoria(req, res, next) {
   if(req.usuario.type!=="admin"){
     return res.status(401).send("sin permisos")
   }
-  Categoria.updateOne({_id:req.params.id},{$set:req.body}).then(categ => {//pendiente de revisar/arreglar
+  //db.collection.findOneAndUpdate({busqueda},{nuevos:datos},{new:true})
+  Categoria.findOneAndUpdate({_id:req.params.id},{$set:req.body},{new:true}).then(categ => {
     if (!categ) { return res.sendStatus(401); }
     res.status(201).json(categ)
   }).catch(next)
 }
 
-function cambiarEstatusCategoria(req, res, next) {//pendiente de probar
+function cambiarEstatusCategoria(req, res, next) {
   if(req.usuario.type!=="admin"){
     return res.status(401).send("sin permisos")
   }
-  console.log(req.categoria)
-  Categoria.findById(req.categoria.id).then(categ => {
+  //db.collection.findOneAndUpdate({busqueda},{nuevos:datos},{new:true})
+  Categoria.findOneAndUpdate({_id:req.params.id},{$set:req.body},{new:true}).then(categ => {
     if (!categ) { return res.sendStatus(401); }
-    let nuevaInfo = req.body
-    if (typeof nuevaInfo.status !== 'undefined')
-      categ.status = nuevaInfo.status
-    categ.save().then(updatedCateg => {                                   //Guardando usuario modificado en MongoDB.
-      res.status(201).json(updatedCateg.publicData())
-    }).catch(next)
+    res.status(201).json(categ)
   }).catch(next)
 }
 

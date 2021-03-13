@@ -1,3 +1,100 @@
+
+const mongoose = require("mongoose")
+const Producto = mongoose.model("Producto")
+
+function crearProducto(req, res, next) {
+    const producto = new Producto(req.body)
+    producto.save().then(producto => {                                         //Guardando nuevo usuario en MongoDB.
+      res.status(201).send(producto)
+    }).catch(next)
+  }
+
+function eliminarProducto(req, res) {
+    Producto.findOneAndDelete({ _id: req.params.id }).then(p => {         //Buscando y eliminando usuario en MongoDB.
+    res.status(200).send(`Producto ${req.params.id} eliminado: ${p}`);
+    })
+  }
+
+function verProducto(req, res, next) {                              
+    Producto.findById(req.params.id, (err, producto) => {
+      if (!producto || err) {
+        return res.sendStatus(401)
+      }
+      return res.json(producto.publicData());
+    }).catch(next);
+  }
+
+function verProductos(req, res, next) {                              
+    Producto.find().then(productos => { res.send(productos)}).catch(next)
+}
+
+function editarProducto(req, res, next) {
+  
+    /*Producto.findById(req.params.id).then(producto => {
+      if (!producto) { return res.sendStatus(401); }
+      let nuevaInfo = req.body
+      if (typeof nuevaInfo.nombre !== 'undefined')
+        producto.nombre = nuevaInfo.nombre
+      if (typeof nuevaInfo.id_categoria !== 'undefined')
+        producto.id_categoria = nuevaInfo.id_categoria
+      if (typeof nuevaInfo.descripcion !== 'undefined')
+        producto.descripcion = nuevaInfo.descripcion
+      if (typeof nuevaInfo.costo !== 'undefined')
+        producto.costo = nuevaInfo.costo
+      if (typeof nuevaInfo.estatus !== 'undefined')
+        producto.estatus = nuevaInfo.estatus
+      producto.save().then(updatedProduct => {                              
+        res.status(201).json(updatedProduct.publicData())
+      }).catch(next)
+    }).catch(next)*/
+
+    Producto.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true }).then((producto) => {
+      if (!producto) {
+        return res.sendStatus(401)
+      }
+      return res.json(producto);
+    }).catch(next);
+
+
+  }
+
+function cambiarEstatusProducto(req, res, next) {
+     Producto.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true }).then((producto) => {
+      if (!producto) {
+        return res.sendStatus(401)
+      }
+      return res.json(producto);
+    }).catch(next);
+  }
+
+//Filtrar productos
+function filtrarProducto(req, res, next) { 
+  let campo = Object.keys(req.body)[0]; //toma el nombre de la propiedad del objeto por la que se va a filtrar
+  let dato = req.body[campo]; //guarda el valor de esta propiedad (valor a buscar)
+  let filter = {}
+  filter[campo]= (typeof dato === 'number') ? dato : new RegExp(`${dato}`, "i");
+
+  Producto.find(filter).then ((producto,err) => {
+       console.log(err);
+    if (!producto || err) { 
+      return res.sendStatus(401)
+    }
+    return res.json(producto);
+  }).catch(next);
+}
+     
+  module.exports = {
+    crearProducto,
+    eliminarProducto,
+    cambiarEstatusProducto,
+    editarProducto,
+    verProducto,
+    verProductos,
+    filtrarProducto
+}
+
+
+/*
 //Importamos el modelo de producto
 const { Producto } = require('../models');
 
@@ -115,3 +212,4 @@ module.exports = {
     verProductos,
     filtrarProducto
 }
+*/

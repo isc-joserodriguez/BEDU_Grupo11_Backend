@@ -1,13 +1,19 @@
-//Clase de pedido para poder instanciar nuevos objetos de este tipo
-class Pedido {
-    constructor({id, id_cliente, info_productos, costo, estatus,fecha=new Date()}) {
-        this.id = id;
-        this.id_cliente = id_cliente;
-        this.info_productos = info_productos;
-        this.costo = costo;
-        this.estatus = estatus;
-        this.fecha = fecha;
+const mongoose = require('mongoose');  // exportacion de mongoose
+
+//Definiendo cada campo con sus tipo sde datos y las validaciones sobre este.
+const PedidoSchema = new mongoose.Schema(
+    {
+        client: { type: mongoose.ObjectId, required: [true, "no puede estar vacío"], index: true },
+        chef:{type:mongoose.ObjectId, default:null},
+        mesero:{type:mongoose.ObjectId, default:null},
+        info: { type: Array, required: [true, "no puede estar vacío"] },
+        cost: { type: Number, required: [true, "no puede estar vacío"] },
+        status: { type: Number, required: [true, "no puede estar vacío"] }
+    },
+    {
+        timestamps: true
     }
-}
-//Exportar modelo
-module.exports = Pedido;
+);
+
+
+mongoose.model("Pedido", PedidoSchema);    //Define el modelo Usuario, utilizando el esquema UsuarioSchema.

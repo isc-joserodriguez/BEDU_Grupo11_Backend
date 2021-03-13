@@ -1,74 +1,110 @@
-// importamos el modelo de pedido
-const { Pedido } = require('../models');
+const mongoose = require('mongoose');  // exportacion de mongoose
+const Pedido = mongoose.model('Pedido');
 
-const crearPedido = (req, res) => {
-  // Instanciaremos un nuevo pedido utilizando la clase pedido
-  let pedido = new Pedido(req.body);
-  if (!!pedido.id) { //Validar si el nuevo pedido tiene id
-    PEDIDOS.push(pedido); //agregar al arreglo
-    res.status(201).send(pedido); //enviarlo como respuesta al ser exitosa la llamada
-  } else {
-    res
-      .status(304)
-      .send({ Message: 'Not Modified: No se agregó producto vacío' }); //ya que no se pueden agregar vacios se envia al siguiente mensaje
-  }
+const crearPedido = (req, res, next) => {
+  if(req.usuario.type!=="admin") return res.status(401).send("sin permisos")
+  
+  let pedido = new Pedido(req.body)
+    pedido.save().then(pedido => {    //Guardando nuevo usuario en MongoDB.
+      return res.status(201).json(pedido)
+    }).catch(next);
 }
 
-const verPedido = (req, res) => { //envia los datos del pedido seleccionado
-  let pedidoSelected = null;
-  for (let i = 0; i < PEDIDOS.length; i++) {
-    if (PEDIDOS[i].id === +req.params.id) { //busca por id, el + es para convertir el id
-      pedidoSelected = PEDIDOS[i]; //cuando lo encuentra lo guarda para mostrarlo como info
+/* Verbo   Ruta            Body        Respuesta 
+POST    skdfljhskdlfh   {sdfadfa}   
+PUT      */
+
+//Pedido 604c33f09de26c34e254b386
+
+const verPedido = (req, res, next) => { //envia los datos del pedido seleccionado
+  Pedido.findById(req.params.id).populate('producto', 'nombre id_categoria descripcion costo').then((pedido,err) => {
+    console.log('verPEd');
+    if (!pedido || err) {
+      return res.sendStatus(401)
+    }
+    return res.json(pedido);
+  }).catch(next);
+}
+
+/* 
+604ae551102f226520d85cb0
+604ae5dc102f226520d85cb2
+604ae5e5102f226520d85cb3
+604ae7e0261f1367a35f216c
+ */
+
+const verHistorialPedidos = (req, res, next) => {
+  let filter={};
+  switch(req.usuario.type){
+    case 'client':
+      if(req.usuario.id !== req.params.id) return res.status(401).send('No autorizado');
+      filter={client:req.params.id}
+      break;
+    case 'chef':
+      filter={chef:req.params.id}
+      break;
+    case 'mesero':
+      filter={mesero:req.params.id}
       break;
     }
-  }
-  if (pedidoSelected) {
-    res.status(200).send(pedidoSelected);
-  } else {
-    res.status(404).send({ errorMessage: 'Pedido no encontrado' });
-  }
+  Pedido.find(filter).then((pedido,err) => {
+    if (!pedido || err) {
+      return res.sendStatus(401)
+    }
+    return res.json(pedido);
+  }).catch(next);
 }
 
-const verHistorialPedido = (req, res) => {
-  res.status(200).send(PEDIDOS); //envia todos los datos de pedidos
-}
-
-const editarPedido = (req, res) => {
-  // simulando un pedido previamente existente que el cliente modifica
-  let { id, info_productos } = req.body; //guarda el id del pedido a editar y su arreglo de objetos de productos
-  let pedidoEdited = null; //variable para guardar el pedido editado
-  for (let i = 0; i < PEDIDOS.length; i++) {
-    if (PEDIDOS[i].id === id) { //cuando encuentre el pedido acorde a su id
-      PEDIDOS[i].info_productos = info_productos; //cambia el valor indicado por el nuevo
-      pedidoEdited = PEDIDOS[i]; //guarda este objeto modificado para ser mostrado en la respuesta
+const editarPedido = (req, res, next) => {
+  let filter={};
+  switch(req.usuario.type){
+    case 'client':
+      filter={_id:req.params.id,client:req.usuario.id}
+      break;
+    case 'admin':
+      filter={_id:req.params.id}
+      break;
+    case 'chef':
+      filter={_id:req.params.id,chef:req.usuario.id}
+      break;
+    case 'mesero':
+      filter={_id:req.params.id,mesero:req.usuario.id}
       break;
     }
-  }
-  if (pedidoEdited) {
-    res.status(200).send(pedidoEdited);
-  } else {
-    res.status(404).send({ errorMessage: 'Not Found: Pedido no encontrado.' });
-  }
-}
-//aqui aplica nuestro Cancelar(){} 
-const cambiarEstatusPedido = (req, res) => {
-  //ACTIVOS=1, CANCELADOS=0
-  let pedidoEdited = null; //variable para guardar el pedido editado
-  for (let i = 0; i < PEDIDOS.length; i++) {
-    if (PEDIDOS[i].id === req.body.id) { //cuando encuentre el pedido acorde a su id
-      PEDIDOS[i].estatus = req.body.estatus; //modifica para poner el nuevo estatus
-      pedidoEdited = PEDIDOS[i]; //guarda el objeto para ser mostrado en la respuesta
-      break;
+    let datos = req.body;
+    Pedido.findOneAndUpdate(filter, { $set: datos }, { new: true }).then((pedido) => {
+    if (!pedido) {
+      return res.sendStatus(401)
     }
-  }
-  if (pedidoEdited) {
-    res.status(200).send(pedidoEdited);
-  } else {
-    res.status(404).send({ errorMessage: 'Not found' });
-  }
+    return res.json(pedido);
+  }).catch(next);
 }
 
-const filtrarPedido = (req, res) => {
+
+
+
+function cambiarEstatusPedido(req, res, next) {//-----------listo
+  if(req.usuario.type!=="admin"){
+    return res.status(401).send("sin permisos")
+  }
+  //db.collection.findOneAndUpdate({busqueda},{nuevos:datos},{new:true})
+  Pedido.findOneAndUpdate({_id:req.params.id},{$set:req.body},{new:true}).then(pedido => {
+    if (!pedido) { return res.sendStatus(401); }
+    res.status(201).json(pedido)
+  }).catch(next)
+}
+
+
+const filtrarPedido = (req, res, next) => {
+
+  /* 
+  fechaIni
+  fechaFin
+  idCliente
+  idPedido
+  idMesero
+  idChef
+   */
   let campo = Object.keys(req.body)[0];//Obtiene el nombre del campo para filtrar
   let dato = req.body[campo];//Obtiene el valor por el que se va a filtrar
   let pedidos = PEDIDOS.filter((pedido) => {
@@ -88,7 +124,7 @@ const filtrarPedido = (req, res) => {
   }
 }
 
-const eliminarPedido = (req, res) => {
+const eliminarPedido = (req, res, next) => {
   let pedidoEliminado = null; //aqu'i guardara' la info del eliminado
   let encontrado = false;
 
@@ -118,7 +154,7 @@ const eliminarPedido = (req, res) => {
 module.exports = {
   crearPedido,
   verPedido,
-  verHistorialPedido,
+  verHistorialPedidos,
   editarPedido,
   cambiarEstatusPedido,
   filtrarPedido,

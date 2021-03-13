@@ -21,6 +21,8 @@ mongoose.connect(
 mongoose.set('debug', true);
 require('./models/Usuario.model');
 require('./models/Categoria.model');
+require('./models/Producto.model');
+require('./models/Pedido.model');
 require('./config/passport');
 // Aquí se importarán los modelos Mascota y Solicitud cuando estén listos
 

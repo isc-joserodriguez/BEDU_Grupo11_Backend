@@ -6,7 +6,7 @@
 
 - [Postwork Fase 02 Módulo 02 Sesión 03](./postwork-sesion03-models)
 <!-- - [Proyecto Final - API-RESTaurant](./) -->
-- [Postwork Fase 02 Módulo 02 Sesión 04 - Descripción ](#sesion04-descripcion)
+- [Postwork Fase 02 Módulo 02 Sesión 04 - Descripción ](#sesion04-description)
   - [Objetivo](#sesion04-objetivo)
   - [Desarrollo](#sesion04-desarrollo)
   - [Controllers](#Controllers)
@@ -61,7 +61,7 @@
 - [Autores](#autores)
 <!-- - [Video Proyecto](https://youtu.be/etMsdDg5bM4) -->
 
-<a name="sesion04-descripcion"></a>
+<a name="sesion04-description"></a>
 
 ## Postwork Fase 02 Módulo 02 Sesión 04 - Descripción
 
@@ -164,7 +164,7 @@ const cambiarEstatusCategoria = (req, res) => {
 };
 
 const filtrarCategoria = (req, res) => {
-  let campo = Object.keys(req.body)[0]; //toma el nombre de la propiedad del objeto por la que se va a filtrar
+  let campo = Object.keys(req.body)[0]; //toma el name de la propiedad del objeto por la que se va a filtrar
   let dato = req.body[campo]; //guarda el valor de esta propiedad (valor a buscar)
   let categoriasFiltradas = CATEGORIAS.filter((categoria) => {
     let regex = new RegExp(dato, "gi"); //utiliza expresion regular para hacer busqueda global e ignorar capitalizacion de letras
@@ -258,7 +258,7 @@ const cambiarEstatusPedido = (req, res) => {
 };
 
 const filtrarPedido = (req, res) => {
-  let campo = Object.keys(req.body)[0]; //Obtiene el nombre del campo para filtrar
+  let campo = Object.keys(req.body)[0]; //Obtiene el name del campo para filtrar
   let dato = req.body[campo]; //Obtiene el valor por el que se va a filtrar
   let pedidos = PEDIDOS.filter((pedido) => {
     let noEncontrado = true; //Se crea una variable temporal para determinar si fue encontrado algún producto
@@ -499,7 +499,7 @@ const verUsuario = (req, res) => {
 };
 
 const filtrar = (req, res) => {
-  let campo = Object.keys(req.body)[0]; //Obtiene el nombre del campo para filtrar
+  let campo = Object.keys(req.body)[0]; //Obtiene el name del campo para filtrar
   let valor = req.body[campo]; //Obtiene el valor por el que se va a filtrar
   let users = USUARIOS.filter((user) => {
     let regex = new RegExp(valor, "gi"); //Crea una expresión regular para evaluar
@@ -594,10 +594,10 @@ const cambiarEstatus = (req, res) => {
 
 ```js
 class Categoria {
-  constructor({ id, nombre, descripcion, estatus }) {
+  constructor({ id, name, description, estatus }) {
     this.id = id;
-    this.nombre = nombre;
-    this.descripcion = descripcion;
+    this.name = name;
+    this.description = description;
     this.estatus = estatus;
   }
 }
@@ -613,14 +613,14 @@ class Pedido {
     id,
     id_cliente,
     info_productos,
-    costo,
+    cost,
     estatus,
     fecha = new Date(),
   }) {
     this.id = id;
     this.id_cliente = id_cliente;
     this.info_productos = info_productos;
-    this.costo = costo;
+    this.cost = cost;
     this.estatus = estatus;
     this.fecha = fecha;
   }
@@ -633,12 +633,12 @@ class Pedido {
 
 ```js
 class Producto {
-  constructor({ id, nombre, id_categoria, descripcion, costo, estatus }) {
+  constructor({ id, name, idCategoria, description, cost, estatus }) {
     this.id = id;
-    this.nombre = nombre;
-    this.id_categoria = id_categoria;
-    this.descripcion = descripcion;
-    this.costo = costo;
+    this.name = name;
+    this.idCategoria = idCategoria;
+    this.description = description;
+    this.cost = cost;
     this.estatus = estatus;
   }
 }
@@ -650,9 +650,9 @@ class Producto {
 
 ```js
 class Usuario {
-  constructor({ id, nombre, correo, password, tipo, estatus }) {
+  constructor({ id, name, correo, password, tipo, estatus }) {
     this.id = id;
-    this.nombre = nombre;
+    this.name = name;
     this.correo = correo;
     this.password = password;
     this.tipo = tipo;
@@ -742,8 +742,8 @@ Body:
 ```json
 {
   "id": 777,
-  "nombre": "Comidas rápidas",
-  "descripcion": "Es la cat de Comidas rápidas",
+  "name": "Comidas rápidas",
+  "description": "Es la cat de Comidas rápidas",
   "estatus": 1
 }
 ```
@@ -777,8 +777,8 @@ Body:
 ```json
 {
   "id": 1,
-  "nombre": "Jugos",
-  "descripcion": "Es la cat de Jugos",
+  "name": "Jugos",
+  "description": "Es la cat de Jugos",
   "estatus": 0
 }
 ```
@@ -812,7 +812,7 @@ Body:
 
 ```json
 {
-  "nombre": "sodas"
+  "name": "sodas"
 }
 ```
 
@@ -839,15 +839,15 @@ Body:
   "info_productos": [
     {
       "id": 1,
-      "nombre": "Limonada",
-      "id_categoria": 1,
-      "descripcion": "Limonada de limon",
+      "name": "Limonada",
+      "idCategoria": 1,
+      "description": "Limonada de limon",
       "estatus_disponibilidad": 1,
       "cantidad": 1,
       "notas": "Sin semilla"
     }
   ],
-  "costo": "$60",
+  "cost": "$60",
   "estatus": 1
 }
 ```
@@ -884,9 +884,9 @@ Body:
   "info_productos": [
     {
       "id": 10,
-      "nombre": "Manzana",
-      "id_categoria": 1,
-      "descripcion": "Manzana",
+      "name": "Manzana",
+      "idCategoria": 1,
+      "description": "Manzana",
       "estatus_disponibilidad": 1,
       "cantidad": 1,
       "notas": "Sin semilla"
@@ -956,10 +956,10 @@ Body:
 ```json
 {
   "id": 777,
-  "nombre": "Coca-Cola",
-  "id_categoria": 1,
-  "descripcion": "Refresco sabor cola",
-  "costo": 20,
+  "name": "Coca-Cola",
+  "idCategoria": 1,
+  "description": "Refresco sabor cola",
+  "cost": 20,
   "estatus": 1
 }
 ```
@@ -993,10 +993,10 @@ Body:
 ```json
 {
   "id": 1,
-  "nombre": "Coca-Cola",
-  "id_categoria": 1,
-  "descripcion": "Refresco sabor cola",
-  "costo": 20,
+  "name": "Coca-Cola",
+  "idCategoria": 1,
+  "description": "Refresco sabor cola",
+  "cost": 20,
   "estatus": 1
 }
 ```
@@ -1032,7 +1032,7 @@ Body:
 
 ```json
 {
-  "nombre": "jugo"
+  "name": "jugo"
 }
 ```
 
@@ -1061,7 +1061,7 @@ Body:
 ```json
 {
   "id": 777,
-  "nombre": "Pedro Soza",
+  "name": "Pedro Soza",
   "correo": "PedroSoza@test.com",
   "password": "123456",
   "tipo": "Cliente",
@@ -1123,7 +1123,7 @@ Body:
 ```json
 {
   "id": 13,
-  "nombre": "Pedro Soza",
+  "name": "Pedro Soza",
   "correo": "PedroSoza@test.com"
 }
 ```

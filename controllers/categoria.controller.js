@@ -22,7 +22,7 @@ const crearCategoria = (req, res, next) => {
           message: "Sólo el administrador puede crear una nueva categoría"
         }
       );
-    return res.status(201).json(
+    return res.status(201).send(
       {
         ...codeResponses[201],
         detail: categ

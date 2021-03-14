@@ -1,6 +1,7 @@
 // Importamos las bibliotecas necesarias
+const swaggerUi = require('swagger-ui-express'),
+  swaggerDocument = require('./swagger.json');
 require('dotenv').config();
-
 let express = require('express'),
   bodyParser = require('body-parser'),
   cors = require('cors');
@@ -31,6 +32,8 @@ require('./config/passport');
 
 // Agregamos el código de nuestro router (routes/index.js)
 app.use('/v1', require('./routes'));
+//Agregamos el swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Manejando los errores 404
 app.use(function (req, res, next) {

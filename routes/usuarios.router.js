@@ -15,14 +15,14 @@ const {
 } = require('../controllers/usuario.controller');
 
 //Asignamos las rutas para cada método
-router.post('/login', iniciarSesion);
-router.post('/signup', registrarse);
+router.post('/login', iniciarSesion);//listo
+router.post('/signup', registrarse);//listo
 
-router.get('/', auth.requerido, verUsuarios);
-router.get('/:id', auth.requerido, verUsuario);
-router.post('/filtrar', auth.requerido, filtrar);
-router.put('/changeRole/:id', auth.requerido, cambiarRol);
-router.put('/toggleEstatus/:id', auth.requerido, cambiarEstatus);
-router.put('/:id', auth.requerido, editar);
+router.get('/', auth.requerido, verUsuarios);//listo
+router.get('/:id', auth.requerido, verUsuario);//listo
+router.post('/filtrar', auth.requerido, filtrar);//listo
+router.put('/changeRole/:id', auth.requerido, cambiarRol); //listo
+router.put('/toggleEstatus/:id', auth.requerido, cambiarEstatus);//listo
+router.put('/:id', auth.requerido, editar);//listo
 
 module.exports = router;

@@ -24,15 +24,15 @@
       "description": "API para los usuarios del sistema (Administrador/Chef/Mesero/Cliente)."
     },
     {
-      "name": "Categorias",
+      "name": "Categoria",
       "description": "API para las categorias de los productos."
     },
     {
-      "name": "Productos",
+      "name": "Producto",
       "description": "API para los productos del menú."
     },
     {
-      "name": "Pedidos",
+      "name": "Pedido",
       "description": "API para pedidos de los clientes."
     }
   ],
@@ -40,6 +40,62 @@
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "paths": {
+    "/usuarios/signup": {
+      "post": {
+        "tags": ["Usuario"],
+        "description": "Registro de usuarios.",
+        "parameters": [
+          {
+            "name": "Datos del usuario",
+            "in": "body",
+            "description": "Credenciales para el registro",
+            "schema": {
+              "$ref": "#/definitions/Signup"
+            }
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/login": {
+      "post": {
+        "tags": ["Usuario"],
+        "description": "Inicio de sesión de usuarios.",
+        "parameters": [
+          {
+            "name": "Usuario",
+            "in": "body",
+            "description": "Credenciales para el inicio de sesión",
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            }
+          },
+          "400": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            }
+          }
+        }
+      }
+    },
     "/usuarios": {
       "get": {
         "security": [{ "bearerAuth": [] }],
@@ -83,35 +139,645 @@
         }
       }
     },
-    "/usuarios/login": {
+    "/usuarios/filtrar": {
       "post": {
+        "security": [{ "bearerAuth": [] }],
         "tags": ["Usuario"],
-        "description": "Inicio de sesión de usuarios.",
+        "description": "Muestra los usuarios que concuerden con la busqueda de un parametro dado.",
         "parameters": [
           {
-            "name": "Usuario",
+            "name": "filtro",
             "in": "body",
-            "description": "Credenciales para el inicio de sesión",
-            "schema": {
-              "$ref": "#/definitions/Login"
-            }
+            "description": "Dato del campo a buscar para su filtrado"
           }
         ],
-
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Usuarios"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Usuarios"
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/changeRole/{idUsuario}": {
+      "put": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Usuario"],
+        "description": "Cambia el rol de un usuario especifico.",
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "description": "Usuario dado por un ID especifico."
+          },
+          {
+            "name": "rolNuevo",
+            "in": "body",
+            "description": "Edita el rol de un usuario de determinado ID."
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Usuario"
             }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/toggleEstatus/{idUsuario}": {
+      "put": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Usuario"],
+        "description": "Cambiar estatus de usuario.",
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "body",
+            "description": "ID del usuario a modificar."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            }
+          },
+          "404": {
+            "description": "Usuario no encontrado",
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            }
+          }
+        }
+      }
+    },
+    "/usuario/editar/{idUsuario}": {
+      "put": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Usuario"],
+        "description": "Edita un usuario especifico.",
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "description": "Usuario dado por un ID especifico."
+          },
+          {
+            "name": "usuarioEditado",
+            "in": "body",
+            "description": "Edita un usuario de determinado ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            }
+          }
+        }
+      }
+    },
+    "/categoria": {
+      "get": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Categoria"],
+        "description": "Muestra a todas las categorias del sistema.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Categorias"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Categoria"],
+        "description": "Crea una categoria nueva.",
+        "parameters": [
+          {
+            "name": "categoria",
+            "in": "body",
+            "description": "Crea nueva categoria."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Categoria"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Categoria"
+            }
+          }
+        }
+      }
+    },
+    "/categoria/{idCategoria}": {
+      "get": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Categoria"],
+        "description": "Muestra una categoria con un determinado ID.",
+        "parameters": [
+          {
+            "name": "idCategoria",
+            "in": "path",
+            "description": "ID de categoria a mostrar."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Categoria"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Categoria"
+            }
+          }
+        }
+      }
+    },
+    "/categoria/filtrar": {
+      "post": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Categoria"],
+        "description": "Muestra las categorias que concuerden con la busqueda de un parametro dado.",
+        "parameters": [
+          {
+            "name": "filtro",
+            "in": "body",
+            "description": "Dato del campo a buscar para su filtrado"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Categorias"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Categorias"
+            }
+          }
+        }
+      }
+    },
+    "/categoria/editar/{idCategoria}": {
+      "put": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Categoria"],
+        "description": "Edita una categoria especifica.",
+        "parameters": [
+          {
+            "name": "idCategoria",
+            "in": "path",
+            "description": "Categoria dada por un ID especifico."
+          },
+          {
+            "name": "categoriaEditada",
+            "in": "body",
+            "description": "Edita una categoria de determinado ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Categoria"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Categoria"
+            }
+          }
+        }
+      }
+    },
+    "/categoria/cambiarEstatus/{idCategoria}": {
+      "put": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Categoria"],
+        "description": "Cambia el estatus de una categoria especifica.",
+        "parameters": [
+          {
+            "name": "idCategoria",
+            "in": "path",
+            "description": "Categoria dada por un ID especifico."
+          },
+          {
+            "name": "estatusNuevo",
+            "in": "body",
+            "description": "Edita el estatus de una categoria de determinado ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Categoria"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Categoria"
+            }
+          }
+        }
+      }
+    },
+    "/productos/": {
+      "get": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Producto"],
+        "description": "Muestra todos los productos del sistema.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Productos"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Producto"],
+        "description": "Crea un producto en el sistema.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Productos"
+            }
+          }
+        }
+      }
+    },
+    "/productos/{idProducto}": {
+      "get": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Producto"],
+        "description": "Muestra un producto con determinado ID.",
+        "parameters": [
+          {
+            "name": "idProducto",
+            "in": "path",
+            "description": "ID del producto a mostrar."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Producto"
+            }
+          },
+          "404": {
+            "description": "Producto no encontrado",
+            "schema": {
+              "$ref": "#/definitions/Producto"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Producto"],
+        "description": "Eliminar un determinado producto.",
+        "parameters": [
+          {
+            "name": "idProducto",
+            "in": "body",
+            "description": "ID del producto a eliminar."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Producto"
+            }
+          },
+          "404": {
+            "description": "Producto no encontrado",
+            "schema": {
+              "$ref": "#/definitions/Producto"
+            }
+          }
+        }
+      }
+    },
+    "/productos/filtrar/": {
+      "post": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Producto"],
+        "description": "Filtra los productos del sistema.",
+        "parameters": [
+          {
+            "name": "filtro",
+            "in": "body",
+            "description": "Dato del campo a buscar para su filtrado"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Productos"
+            }
+          }
+        }
+      }
+    },
+    "/productos/cambiarEstatus/{idProducto}": {
+      "put": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Producto"],
+        "description": "Cambia el estatus de un determinado producto.",
+        "parameters": [
+          {
+            "name": "idProducto",
+            "in": "path",
+            "description": "ID del producto al que se le cambiará el estatus."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Producto"
+            }
+          },
+          "404": {
+            "description": "Producto no encontrado",
+            "schema": {
+              "$ref": "#/definitions/Producto"
+            }
+          }
+        }
+      }
+    },
+    "/productos/editar/{idProducto}": {
+      "put": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Producto"],
+        "description": "Editar un determinado producto.",
+        "parameters": [
+          {
+            "name": "idProducto",
+            "in": "body",
+            "description": "ID del producto a editar."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Producto"
+            }
+          },
+          "404": {
+            "description": "Producto no encontrado",
+            "schema": {
+              "$ref": "#/definitions/Producto"
+            }
+          }
+        }
+      }
+    },
+    "/pedido/{idPedido}": {
+      "get": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Pedido"],
+        "description": "Muestra un pedido con un determinado ID.",
+        "parameters": [
+          {
+            "name": "idPedido",
+            "in": "path",
+            "description": "ID de pedido a mostrar."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Pedido"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Pedido"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Pedido"],
+        "description": "Elimina un pedido especifico.",
+        "parameters": [
+          {
+            "name": "idPedido",
+            "in": "path",
+            "description": "Pedido dado por un ID especifico."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Pedido"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Pedido"
+            }
+          }
+        }
+      }
+    },
+    "/pedido": {
+      "get": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Pedido"],
+        "description": "Muestra todos los pedidos del sistema.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Pedidos"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Pedido"],
+        "description": "Crea un pedido nuevo.",
+        "parameters": [
+          {
+            "name": "pedido",
+            "in": "body",
+            "description": "Crea nuevo pedido."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Pedido"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Pedido"
+            }
+          }
+        }
+      }
+    },
+    "/pedido/filtrar": {
+      "post": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Pedido"],
+        "description": "Muestra los pedidos que concuerden con la busqueda de un parametro dado.",
+        "parameters": [
+          {
+            "name": "filtro",
+            "in": "body",
+            "description": "Dato del campo a buscar para su filtrado"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Pedidos"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Pedidos"
+            }
+          }
+        }
+      }
+    },
+    "/pedido/editar/{idPedido}": {
+      "put": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Pedido"],
+        "description": "Edita un pedido especifico.",
+        "parameters": [
+          {
+            "name": "idPedido",
+            "in": "path",
+            "description": "Pedido dado por un ID especifico."
+          },
+          {
+            "name": "pedidoEditado",
+            "in": "body",
+            "description": "Edita un pedido de determinado ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Pedido"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Pedido"
+            }
+          }
+        }
+      }
+    },
+    "/pedido/cambiarEstatus/{idPedido}": {
+      "put": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Pedido"],
+        "description": "Cambia el estatus de un pedido especifico.",
+        "parameters": [
+          {
+            "name": "idPedido",
+            "in": "path",
+            "description": "Pedido dado por un ID especifico."
+          },
+          {
+            "name": "estatusNuevo",
+            "in": "body",
+            "description": "Edita el estatus de un pedido de determinado ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Pedido"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Pedido"
+            }
           }
         }
       }
     }
   },
+
   "definitions": {
     "Usuario": {
-      "required": ["firstName", "lastName", "email", "type", "status"],
+      "required": ["firstName", "lastName", "email", "type"],
       "properties": {
         "_id": {
           "type": "ObjectId",
@@ -143,7 +809,9 @@
     },
     "Usuarios": {
       "type": "array",
-      "$ref": "#/definitions/Usuario"
+      "items": {
+        "$ref": "#/definitions/Usuario"
+      }
     },
     "Login": {
       "required": ["email", "password"],
@@ -155,7 +823,125 @@
           "type": "string"
         }
       }
+    },
+    "Signup": {
+      "required": ["firstName", "lastName", "email", "password", "type"],
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "Categoria": {
+      "required": ["name", "description"],
+      "properties": {
+        "_id": {
+          "type": "ObjectId",
+          "uniqueItems": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "hash": {
+          "type": "string"
+        },
+        "salt": {
+          "type": "string"
+        }
+      }
+    },
+    "Categorias": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Categoria"
+      }
+    },
+    "Producto": {
+      "required": ["name", "idCategoria", "description", "cost"],
+      "properties": {
+        "_id": {
+          "type": "ObjectId",
+          "uniqueItems": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "idCategoria": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "description": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "integer",
+          "uniqueItems": true
+        }
+      }
+    },
+    "Productos": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Producto"
+      }
+    },
+    "Pedido": {
+      "required": ["idCliente", "info"],
+      "properties": {
+        "idCliente": {
+          "type": "ObjectId",
+          "uniqueItems": true
+        },
+        "idChef": {
+          "type": "ObjectId",
+          "uniqueItems": true
+        },
+        "idMesero": {
+          "type": "ObjectId",
+          "uniqueItems": true
+        },
+        "info": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Productos"
+          }
+        },
+        "cost": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "integer",
+          "uniqueItems": true
+        }
+      }
+    },
+    "Pedidos": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Pedido"
+      }
     }
-
   }
 }

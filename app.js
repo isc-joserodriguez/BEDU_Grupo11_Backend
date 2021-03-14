@@ -1,6 +1,6 @@
 // Importamos las bibliotecas necesarias
 const swaggerUi = require('swagger-ui-express'),
-  swaggerDocument = require('./swagger.json');
+  swaggerDocument = require('./swagger');
 require('dotenv').config();
 let express = require('express'),
   bodyParser = require('body-parser'),

@@ -3,54 +3,87 @@ const Pedido = mongoose.model("Pedido");
 const Producto = mongoose.model("Producto");
 
 const crearPedido = (req, res, next) => {
-  if (req.usuario.type !== "admin") return res.status(401).send("sin permisos");
+  if (req.usuario.type !== "admin")
+    return res.status(401).send({
+      ...codeResponses[401],
+      message: "Solo un usuario administrador puede crear un pedido"
+    });
 
   let pedido = new Pedido(req.body);
-  pedido
-    .save()
-    .then((pedido) => {
-      //Guardando nuevo usuario en MongoDB.
-      return res.status(201).json(pedido);
-    })
-    .catch(next);
+  pedido.save().then((pedido, error) => {
+    if (error)
+      return res.status(400).send({
+        ...codeResponses[400],
+        message: error
+      });
+    return res.status(201).json({
+      ...codeResponses[201],
+      detail: pedido
+    });
+  }).catch(next);
 };
 
 const verPedido = (req, res, next) => {
   //envia los datos del pedido seleccionado
-  Pedido.findById(req.params.id)
-    .then((pedido, err) => {
-      pedido.info.map((id) => {
-        return mongoose.Types.ObjectId(id);
+  Pedido.findById(req.params.id).then((pedido, error) => {
+    if (error)
+      return res.status(400).send({
+        ...codeResponses[400],
+        message: error
       });
-      Producto.find({ _id: { $in: pedido.info } }).then((prods) => {
-        pedido.info = prods;
-        return res.json(pedido);
+    pedido.info.map((id) => {
+      return mongoose.Types.ObjectId(id);
+    });
+    Producto.find({ _id: { $in: pedido.info } }).then((productos, error) => {
+      if (error)
+        return res.status(400).send({
+          ...codeResponses[400],
+          message: error
+        });
+      pedido.info = productos;
+      return res.status(200).send({
+        ...codeResponses[200],
+        detail: pedido
       });
-    })
-    .catch(next);
+    });
+  }).catch(next);
 };
 
 const verHistorialPedidos = (req, res, next) => {
   let filter = {};
   switch (req.usuario.type) {
-    case "client":
+    case "cliente":
       if (req.usuario.id !== req.params.id)
-        return res.status(401).send("No autorizado");
-      filter = { client: req.params.id };
+        return res.status(401).send({
+          ...codeResponses[401],
+          message: "Un usuario cliente solo puede ver su historial de pedidos"
+        });
+      filter = { idCliente: req.params.id };
       break;
     case "chef":
-      filter = { chef: req.params.id };
+      filter = { idChef: req.params.id };
       break;
     case "mesero":
-      filter = { mesero: req.params.id };
+      filter = { idMesero: req.params.id };
       break;
   }
   Pedido.find(filter)
     .then((pedido, err) => {
-      if (!pedido || err) {
-        return res.sendStatus(401);
+      if (!pedido) {
+        return res.status(404).send({
+          ...codeResponses[404],
+          message: "No se encontraron pedidos con esas descripciones."
+        });
+      } else if (err) {
+        return res.status(400).send({
+          ...codeResponses[400],
+          message: err
+        });
       }
-      return res.json(pedido);
+      return res.status(200).send({
+        ...codeResponses[200],
+        detail: pedido
+      });
     })
     .catch(next);
 };
@@ -58,47 +91,101 @@ const verHistorialPedidos = (req, res, next) => {
 const editarPedido = (req, res, next) => {
   let filter = {};
   switch (req.usuario.type) {
-    case "client":
-      filter = { _id: req.params.id, client: req.usuario.id };
+    case "cliente":
+      filter = { _id: req.params.id, idCliente: req.usuario.id, status: 1 };
       break;
     case "admin":
-      filter = { _id: req.params.id };
-      break;
-    case "chef":
-      filter = { _id: req.params.id, $or: [{ chef: req.usuario.id }, { chef: null }] }; //Null o idPropio
-      break;
-    case "mesero":
-      filter = { _id: req.params.id, $or: [{ mesero: req.usuario.id }, { mesero: null }] }; //Null o idPropio
+      filter = { _id: req.params.id, status: 1 };
       break;
   }
   let datos = req.body;
   Pedido.findOneAndUpdate(filter, { $set: datos }, { new: true })
-    .then((pedido) => {
+    .then((pedido, error) => {
       if (!pedido) {
-        return res.sendStatus(401);
+        return res.status(404).send({
+          ...codeResponses[404],
+          message: "No hay coincidencia de pedido para editar."
+        });
+      } else if (error) {
+        return res.status(400).send({
+          ...codeResponses[400],
+          message: error
+        });
       }
-      return res.json(pedido);
+      return res.status(200).send({
+        ...codeResponses[200],
+        detail: pedido
+      });
     })
     .catch(next);
 };
 
-function cambiarEstatusPedido(req, res, next) { //pendiente
-  if (req.usuario.type !== "admin") {
-    return res.status(401).send("sin permisos");
-  }
-  //db.collection.findOneAndUpdate({busqueda},{nuevos:datos},{new:true})
-  Pedido.findOneAndUpdate(
-    { _id: req.params.id },
-    { $set: { status: req.body.status } },
-    { new: true }
-  )
-    .then((pedido) => {
-      if (!pedido) {
-        return res.sendStatus(401);
+function cambiarEstatusPedido(req, res, next) {
+  if (req.usuario.type === "cliente")
+    return res.status(401).send({
+      ...codeResponses[401],
+      message: "Un usuario cliente no puede cambiar el estatus de un pedido."
+    });
+  let filter = { _id: req.params.id };
+  switch (req.usuario.type) {
+    case "admin":
+      if (req.body.status === 0) {
+        filter.status = 1;
       }
-      res.status(201).json(pedido);
-    })
-    .catch(next);
+      else if (req.body.status === 2) {
+        filter.status = 1;
+      }
+      else if (req.body.status === 3) {
+        filter.status = 2;
+      }
+      else if (req.body.status === 4) {
+        filter.status = 3;
+      }
+      break;
+    case "mesero":
+      if (req.body.status === 2 || req.body.status === 3) {
+        return res.status(401).send({
+          ...codeResponses[401],
+          message: "Un usuario mesero no puede cambiar el estatus de un pedido a preparando o preparado"
+        });
+      } else if (req.body.status === 4) {
+        filter.status = 3;
+      }
+      break;
+    case "chef":
+      if (req.body.status === 4 || req.body.status === 0) {
+        return res.status(401).send({
+          ...codeResponses[401],
+          message: "Un usuario chef no puede cambiar el estatus de un pedido a entregado"
+        });
+      }
+      else if (req.body.status === 2) {
+        filter.status = 1;
+      }
+      else if (req.body.status === 3) {
+        filter.status = 2;
+      }
+      break;
+  }
+
+  //db.collection.findOneAndUpdate({busqueda},{nuevos:datos},{new:true})
+  Pedido.findOneAndUpdate(filter, { $set: { status: req.body.status } }, { new: true }).then((pedido, error) => {
+    if (error) {
+      return res.status(400).send({
+        ...codeResponses[400],
+        message: error
+      });
+    } if (!pedido) {
+      return res.status(404).send({
+        ...codeResponses[404],
+        message: "No hay coincidencias."
+      });
+    }
+    res.status(200).json({
+      ...codeResponses[200],
+      detail: pedido
+    });
+  }).catch(next);
 }
 
 const filtrarPedido = (req, res, next) => {
@@ -110,51 +197,43 @@ const filtrarPedido = (req, res, next) => {
     if (req.body.fechaFin)
       filter.createdAt["$lt"] = new Date(req.body.fechaFin);
   }
-  if (req.body.idCliente) filter.client = mongoose.Types.ObjectId(idCliente);
+  if (req.body.idCliente) filter.idCliente = mongoose.Types.ObjectId(idCliente);
   if (req.body.idPedido) filter._id = mongoose.Types.ObjectId(idPedido);
-  if (req.body.idChef) filter.chef = mongoose.Types.ObjectId(idChef);
-  if (req.body.idMesero) filter.mesero = mongoose.Types.ObjectId(idMesero);
+  if (req.body.idChef) filter.idChef = mongoose.Types.ObjectId(idChef);
+  if (req.body.idMesero) filter.idMesero = mongoose.Types.ObjectId(idMesero);
 
-  Pedido.find(filter).then((pedidos, err) => {
-    return res.send(pedidos);
-  });
+  Pedido.find(filter).then((pedidos, error) => {
+    if (error)
+      return res.status(400).json({
+        ...codeResponses[400],
+        message: error
+      });
+    return res.status(200).json({
+      ...codeResponses[200],
+      detail: pedidos
+    });
+  }).catch(next);
 };
+
 
 const eliminarPedido = (req, res, next) => {
   if (req.usuario.type !== "admin") {
-    return res.status(401).send("sin permisos");
-  }
-  Pedido.findOneAndDelete({ _id: req.params.id, status: 0 }).then(pedido => { //Elimina sólo los cancelados
-    //Buscando y eliminando pedido en MongoDB.
-    res.status(200).send(`Pedido ${req.params.id} eliminado: ${pedido}`);
-  });
-
-  /*
-  let pedidoEliminado = null; //aqu'i guardara' la info del eliminado
-  let encontrado = false;
-
-  for (let i = 0; i < PEDIDOS.length; i++) {
-    if (PEDIDOS[i].id === +req.params.id) {
-      //cuando encuentre el pedido acorde a su id
-      if (!PEDIDOS[i].estatus) pedidoEliminado = PEDIDOS.splice(i, 1); //si el pedido est'a cancelado (estatus=0) se eliminara del arreglo y se guarda su info
-      encontrado = true; //cambia bandera a encontrado
-      break;
-    }
-  }
-  if (!!pedidoEliminado) {
-    //si hay un eliminado
-    res.status(200).send(pedidoEliminado[0]); //se muestra como parte de la respuesta
-  } else if (encontrado) {
-    //fue encontrado pero no eliminado
-    res.status(409).send({
-      errorMessage: "Conflict: No se puede eliminar un pedido no cancelado",
+    return res.status(401).send({
+      ...codeResponses[401],
+      message: "Solo un administrador eliminar un pedido"
     });
-  } else {
-    //no encontrado
-    res
-      .status(404)
-      .send({ errorMessage: "Not found: No se encontró el pedido" });
-  }*/
+  }
+  Pedido.findOneAndDelete({ _id: req.params.id, status: 0 }).then((pedido, error) => { //Elimina sólo los cancelados
+    if (error)
+      return res.status(400).send({
+        ...codeResponses[400],
+        message: error
+      });
+    return res.status(200).send({
+      ...codeResponses[200],
+      detail: pedido
+    });
+  }).catch(next);
 };
 
 // exportamos las funciones definidas

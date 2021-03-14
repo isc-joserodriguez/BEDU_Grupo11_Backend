@@ -18,13 +18,6 @@ const auth = {
         algorithms: ['HS256'],
         userProperty: 'usuario',
         getToken: getTokenFromHeader
-    }),
-    opcional: jwt({
-        secret: secret,
-        algorithms: ['HS256'],
-        userProperty: 'usuario',
-        credentialsRequired: false,
-        getToken: getTokenFromHeader
     })
 };
 

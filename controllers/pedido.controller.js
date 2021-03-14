@@ -16,7 +16,7 @@ const crearPedido = (req, res, next) => {
         ...codeResponses[400],
         message: error
       });
-    return res.status(201).json({
+    return res.status(201).send({
       ...codeResponses[201],
       detail: pedido
     });
@@ -69,15 +69,15 @@ const verHistorialPedidos = (req, res, next) => {
   }
   Pedido.find(filter)
     .then((pedido, err) => {
-      if (!pedido) {
-        return res.status(404).send({
-          ...codeResponses[404],
-          message: "No se encontraron pedidos con esas descripciones."
-        });
-      } else if (err) {
+      if (err) {
         return res.status(400).send({
           ...codeResponses[400],
           message: err
+        });
+      } else if (!pedido) {
+        return res.status(404).send({
+          ...codeResponses[404],
+          message: "No se encontraron pedidos con esas descripciones."
         });
       }
       return res.status(200).send({
@@ -101,15 +101,15 @@ const editarPedido = (req, res, next) => {
   let datos = req.body;
   Pedido.findOneAndUpdate(filter, { $set: datos }, { new: true })
     .then((pedido, error) => {
-      if (!pedido) {
-        return res.status(404).send({
-          ...codeResponses[404],
-          message: "No hay coincidencia de pedido para editar."
-        });
-      } else if (error) {
+      if (error) {
         return res.status(400).send({
           ...codeResponses[400],
           message: error
+        });
+      } else if (!pedido) {
+        return res.status(404).send({
+          ...codeResponses[404],
+          message: "No hay coincidencia de pedido para editar."
         });
       }
       return res.status(200).send({
@@ -175,13 +175,13 @@ function cambiarEstatusPedido(req, res, next) {
         ...codeResponses[400],
         message: error
       });
-    } if (!pedido) {
+    } else if (!pedido) {
       return res.status(404).send({
         ...codeResponses[404],
         message: "No hay coincidencias."
       });
     }
-    res.status(200).json({
+    res.status(200).send({
       ...codeResponses[200],
       detail: pedido
     });
@@ -204,11 +204,11 @@ const filtrarPedido = (req, res, next) => {
 
   Pedido.find(filter).then((pedidos, error) => {
     if (error)
-      return res.status(400).json({
+      return res.status(400).send({
         ...codeResponses[400],
         message: error
       });
-    return res.status(200).json({
+    return res.status(200).send({
       ...codeResponses[200],
       detail: pedidos
     });

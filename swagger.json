@@ -50,21 +50,26 @@
             "in": "body",
             "description": "Credenciales para el registro",
             "schema": {
-              "$ref": "#/definitions/Signup"
+              "$ref": "#/definitions/SignupInput"
             }
           }
         ],
-
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Usuario"
+            "description": "Se creó el usuario."
+        },
+          "400":{
+            "description": "Petición errónea."
             }
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+            "description": "Faltan campos para crear usuario."
           }
         }
-      }
-    },
+      },
     "/usuarios/login": {
       "post": {
         "tags": ["Usuario"],
@@ -82,16 +87,16 @@
 
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Usuario"
-            }
+            "description": "OK"
           },
           "400": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Usuario"
-            }
+            "description": "Peticion erronea"
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+            "description": "Error interno login."
           }
         }
       }
@@ -103,13 +108,19 @@
         "description": "Muestra a todos los usuarios del sistema.",
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Usuarios"
+            "description": "OK"
+          },
+          "400":{
+            "description": "Petición errónea."
             }
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+            "description": "Error interno - usuarios."
           }
         }
-      }
     },
     "/usuarios/{idUsuario}": {
       "get": {
@@ -125,16 +136,16 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Usuario"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Usuario"
-            }
+            "description": "Todo mal"
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+            "description": "Error interno - usuarios."
           }
         }
       }
@@ -153,16 +164,16 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Usuarios"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Usuarios"
-            }
+            "description": "Sin coincidencias-no encontrado"
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+            "description": "Error interno - usuarios."
           }
         }
       }
@@ -186,16 +197,16 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Usuario"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Usuario"
-            }
+            "description": "Sin coincidencias - usuario"
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+            "description": "Error interno - usuarios."
           }
         }
       }
@@ -214,21 +225,21 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Usuario"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Usuario no encontrado",
-            "schema": {
-              "$ref": "#/definitions/Usuario"
-            }
+            "description": "Usuario no encontrado"
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+            "description": "Error interno - usuarios."
           }
         }
       }
     },
-    "/usuario/editar/{idUsuario}": {
+    "/usuarios/editar/{idUsuario}": {
       "put": {
         "security": [{ "bearerAuth": [] }],
         "tags": ["Usuario"],
@@ -247,16 +258,16 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Usuario"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Usuario"
-            }
+            "description": "Todo mal"
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+            "description": "Error interno - usuarios."
           }
         }
       }
@@ -268,10 +279,16 @@
         "description": "Muestra a todas las categorias del sistema.",
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Categorias"
-            }
+            "description": "OK"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+              "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Faltan campos para crear categoria."
           }
         }
       },
@@ -288,16 +305,16 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Categoria"
-            }
+            "description": "OK"
           },
-          "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Categoria"
-            }
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+              "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Faltan campos para crear categoria."
           }
         }
       }
@@ -316,17 +333,20 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Categoria"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Categoria"
+            "description": "No encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+              "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Faltan campos para crear categoria."
             }
-          }
         }
       }
     },
@@ -344,16 +364,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Categorias"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Categorias"
-            }
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+              "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Faltan campos para crear categoria."
           }
         }
       }
@@ -377,16 +400,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Categoria"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Categoria"
-            }
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+              "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       }
@@ -410,16 +436,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Categoria"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Categoria"
-            }
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+              "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       }
@@ -431,10 +460,19 @@
         "description": "Muestra todos los productos del sistema.",
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Productos"
-            }
+            "description": "OK"
+          },
+          "404": {
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+              "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       },
@@ -444,10 +482,19 @@
         "description": "Crea un producto en el sistema.",
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Productos"
-            }
+            "description": "OK"
+          },
+          "404": {
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+              "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       }
@@ -466,16 +513,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Producto"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Producto no encontrado",
-            "schema": {
-              "$ref": "#/definitions/Producto"
-            }
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       },
@@ -492,16 +542,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Producto"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Producto no encontrado",
-            "schema": {
-              "$ref": "#/definitions/Producto"
-            }
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       }
@@ -520,10 +573,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Productos"
-            }
+            "description": "OK"
+          },
+          "404": {
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       }
@@ -542,16 +604,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Producto"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Producto no encontrado",
-            "schema": {
-              "$ref": "#/definitions/Producto"
-            }
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       }
@@ -570,16 +635,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Producto"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Producto no encontrado",
-            "schema": {
-              "$ref": "#/definitions/Producto"
-            }
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       }
@@ -598,19 +666,22 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Pedido"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Pedido"
-            }
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
-        }
-      },
+          }
+        },
       "delete": {
         "security": [{ "bearerAuth": [] }],
         "tags": ["Pedido"],
@@ -624,19 +695,22 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Pedido"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Pedido"
-            }
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
-      }
+    }
     },
     "/pedido": {
       "get": {
@@ -645,10 +719,19 @@
         "description": "Muestra todos los pedidos del sistema.",
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Pedidos"
-            }
+            "description": "OK"
+          },
+          "404": {
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       },
@@ -665,16 +748,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Pedido"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Pedido"
-            }
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       }
@@ -693,16 +779,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Pedidos"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Pedidos"
-            }
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       }
@@ -726,16 +815,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Pedido"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Pedido"
-            }
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       }
@@ -759,22 +851,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Pedido"
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "Todo mal",
-            "schema": {
-              "$ref": "#/definitions/Pedido"
-            }
+            "description": "No hay coincidencias - no encontrado"
+          },
+          "400":{
+              "description": "Petición errónea."
+          },
+          "401":{
+            "description": "No se cuenta con los permisos suficientes para la operacion."
+          },
+          "500":{
+              "description": "Error interno."
           }
         }
       }
     }
   },
-
   "definitions": {
     "Usuario": {
       "required": ["firstName", "lastName", "email", "type"],
@@ -824,7 +918,7 @@
         }
       }
     },
-    "Signup": {
+    "SignupInput": {
       "required": ["firstName", "lastName", "email", "password", "type"],
       "properties": {
         "firstName": {
@@ -837,9 +931,6 @@
           "type": "string"
         },
         "password": {
-          "type": "string"
-        },
-        "type": {
           "type": "string"
         }
       }

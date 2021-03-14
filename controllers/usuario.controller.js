@@ -1,39 +1,43 @@
 const mongoose = require('mongoose');
 const Usuario = mongoose.model('Usuario');
 const passport = require('passport');
+const codeResponses = require("../config").codeResponses;
 
 const registrarse = (req, res, next) => {
   let newUsuario = req.body;
-  let { password } = req.body;
+  let { password } = req.body; 
 
   delete newUsuario.password
   const usuario = new Usuario(newUsuario)
   usuario.hashPassword(password)
 
   usuario.save().then(user => {
-    return res.status(201).json({
+    return res.status(201).send({
       ...codeResponses[201],
       detail: user.toAuthJSON()
     })
-  }).catch(next)
+  }).catch(next);
 };
 
 const iniciarSesion = (req, res, next) => {
-  if (!req.body.email) {
-    return res.status(422).json({ errors: { email: 'No puede estar vacío' } });
-  }
-
-  if (!req.body.password) {
-    return res.status(422).json({ errors: { password: 'No puede estar vacío' } });
-  }
   passport.authenticate('local', { session: false }, function (err, user, info) {
     if (err) { return next(err); }
 
     if (user) {
       user.token = user.generarJWT();
-      return res.json({ user: user.toAuthJSON() });
+      return res.status(200).send(
+        {
+          ...codeResponses[200],
+          detail: user
+        }
+      );
     } else {
-      return res.status(422).json(info);
+      return res.status(400).send(
+        {
+          ...codeResponses[400],
+          message: info.errors
+        }
+      );
     }
   })(req, res, next);
 }
@@ -58,7 +62,7 @@ const verUsuarios = (req, res, next) => {
     }
     return res.status(200).send({
       ...codeResponses[200],
-      detail: json(users)
+      detail: users
     });
   }).catch(next);
 };
@@ -83,7 +87,7 @@ const verUsuario = (req, res, next) => {
     }
     return resstatus(200).send({
       ...codeResponses[200],
-      detail: json(user)
+      detail: user
     });
   }).catch(next);
 };
@@ -112,7 +116,7 @@ const filtrar = (req, res, next) => {
     }
     return resstatus(200).send({
       ...codeResponses[200],
-      detail: json(users)
+      detail: users
     });
   }).catch(next);
 };
@@ -132,7 +136,7 @@ const editar = (req, res, next) => {
     }
     return resstatus(200).send({
       ...codeResponses[200],
-      detail: json(users)
+      detail: users
     });
   }).catch(next);
 };
@@ -151,7 +155,7 @@ const cambiarRol = (req, res, next) => {
     }
     return resstatus(200).send({
       ...codeResponses[200],
-      detail: json(users)
+      detail: users
     });
   }).catch(next);
 };
@@ -167,7 +171,7 @@ const cambiarEstatus = (req, res, next) => {
     }
     return resstatus(200).send({
       ...codeResponses[200],
-      detail: json(users)
+      detail: users
     });
   }).catch(next);
 };

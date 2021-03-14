@@ -91,25 +91,6 @@ function editarProducto(req, res, next) {
       detail: producto
       });
   }).catch(next);
-  
-    /*Producto.findById(req.params.id).then(producto => {
-      if (!producto) { return res.sendStatus(401); }
-      let nuevaInfo = req.body
-      if (typeof nuevaInfo.name !== 'undefined')
-        producto.name = nuevaInfo.name
-      if (typeof nuevaInfo.idCategoria !== 'undefined')
-        producto.idCategoria = nuevaInfo.idCategoria
-      if (typeof nuevaInfo.description !== 'undefined')
-        producto.description = nuevaInfo.description
-      if (typeof nuevaInfo.cost !== 'undefined')
-        producto.cost = nuevaInfo.cost
-      if (typeof nuevaInfo.estatus !== 'undefined')
-        producto.estatus = nuevaInfo.estatus
-      producto.save().then(updatedProduct => {                              
-        res.status(201).json(updatedProduct)
-      }).catch(next)
-    }).catch(next)*/
-
   }
 
 function cambiarEstatusProducto(req, res, next) {

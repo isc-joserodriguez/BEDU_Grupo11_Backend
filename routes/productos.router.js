@@ -1,5 +1,6 @@
 //Instanciamos una nueva variable de Express
 const router = require('express').Router();
+const auth = require('../middlewares/auth');
 
 //Importar funciones del controlador
 const {
@@ -13,12 +14,12 @@ const {
 } = require('../controllers/producto.controller');
 
 //Rutas definidas de las funciones
-router.get('/:id', verProducto);
-router.get('/', verProductos);
-router.post('/filtrar', filtrarProducto);
-router.post('/', crearProducto);
-router.put('/cambiarEstatus/:id', cambiarEstatusProducto);
-router.put('/editar/:id', editarProducto);
-router.delete('/:id', eliminarProducto);
+router.get('/:id', auth.requerido, verProducto);
+router.get('/', auth.requerido, verProductos);
+router.post('/filtrar', auth.requerido, filtrarProducto);
+router.post('/', auth.requerido, crearProducto);
+router.put('/cambiarEstatus/:id', auth.requerido, cambiarEstatusProducto);
+router.put('/editar/:id', auth.requerido, editarProducto);
+router.delete('/:id', auth.requerido, eliminarProducto);
 
 module.exports = router;

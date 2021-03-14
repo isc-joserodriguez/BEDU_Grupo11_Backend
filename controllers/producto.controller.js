@@ -3,6 +3,14 @@ const Producto = mongoose.model("Producto")
 const codeResponses = require("../config").codeResponses;
 
 function crearProducto(req, res, next) {
+  if (req.usuario.type !== "admin") {
+    return res.status(401).send(
+      {
+        ...codeResponses[401],
+        message: "Sólo el administrador puede crear un producto"
+      }
+    );
+  }
     const producto = new Producto(req.body)
     producto.save().then(producto => {                                         //Guardando nuevo usuario en MongoDB.
       res.status(201).send(
@@ -14,6 +22,14 @@ function crearProducto(req, res, next) {
   }
 
 function eliminarProducto(req, res) {
+  if (req.usuario.type !== "admin") {
+    return res.status(401).send(
+      {
+        ...codeResponses[401],
+        message: "Sólo el administrador puede eliminar un producto"
+      }
+    );
+  }
     Producto.findOneAndDelete({ _id: req.params.id }).then(p => {         //Buscando y eliminando usuario en MongoDB.
       res.status(200).send(
         {

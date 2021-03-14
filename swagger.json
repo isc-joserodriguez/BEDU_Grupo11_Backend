@@ -1,0 +1,161 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "API RESTaurante",
+    "description": "API para restaurante"
+  },
+  "host": "localhost:3000",
+  "basePath": "/v1",
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "scheme": "bearer",
+      "in": "header"
+    }
+  },
+  "security": {
+    "bearerAuth": []
+  },
+  "tags": [
+    {
+      "name": "Usuario",
+      "description": "API para los usuarios del sistema (Administrador/Chef/Mesero/Cliente)."
+    },
+    {
+      "name": "Categorias",
+      "description": "API para las categorias de los productos."
+    },
+    {
+      "name": "Productos",
+      "description": "API para los productos del menú."
+    },
+    {
+      "name": "Pedidos",
+      "description": "API para pedidos de los clientes."
+    }
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/usuarios": {
+      "get": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Usuario"],
+        "description": "Muestra a todos los usuarios del sistema.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Usuarios"
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/{idUsuario}": {
+      "get": {
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Usuario"],
+        "description": "Muestra al un usuario con un determinado ID.",
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "description": "ID de usuario a mostrar."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            }
+          },
+          "404": {
+            "description": "Todo mal",
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/login": {
+      "post": {
+        "tags": ["Usuario"],
+        "description": "Inicio de sesión de usuarios.",
+        "parameters": [
+          {
+            "name": "Usuario",
+            "in": "body",
+            "description": "Credenciales para el inicio de sesión",
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Usuario": {
+      "required": ["firstName", "lastName", "email", "type", "status"],
+      "properties": {
+        "_id": {
+          "type": "ObjectId",
+          "uniqueItems": true
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "type": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "salt": {
+          "type": "string"
+        }
+      }
+    },
+    "Usuarios": {
+      "type": "array",
+      "$ref": "#/definitions/Usuario"
+    },
+    "Login": {
+      "required": ["email", "password"],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    }
+
+  }
+}

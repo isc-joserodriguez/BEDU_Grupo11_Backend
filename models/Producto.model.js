@@ -2,24 +2,22 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
 const ProductoSchema = new mongoose.Schema({
-    nombre: {
+    name: {
         type: String,
-        //unique: true, //este campo no se puede repetir
         required: [true, 'no puede estar vacío'],
-        match: [/^[a-zA-Z0-9]+$/, "es inválido"],
-        index: true,
+        index: true
     },
-    id_categoria: { type: Number, required: true },
-    descripcion: {
+    idCategoria: { type: mongoose.ObjectId, required: true },
+    description: {
         type: String,
         required: [true, 'no puede estar vacío'],
         index: true,
     },
-    costo: {
+    cost: {
         type: Number,
         required: [true, 'no puede estar vacío'],
     },
-    estatus: { type: Number },
+    status: { type: Number, default: 1 },
 },
     { timestamps: true }
 );
@@ -28,33 +26,19 @@ const ProductoSchema = new mongoose.Schema({
 ProductoSchema.plugin(uniqueValidator, { message: 'Ya existe ese producto' });
 
 
-ProductoSchema.methods.publicData = function () {
-    return {
-        id: this.id,
-        nombre: this.nombre,
-        id_categoria: this.id_categoria,
-        descripcion: this.descripcion,
-        costo: this.costo,
-        estatus: this.estatus,
-        createdAt: this.createdAt,
-        updatedAt: this.updatedAt
-    };
-};
-
-
 mongoose.model('Producto', ProductoSchema);
 
 
 /*
 //Clase que representa un producto de venta en el restaurante
 class Producto {
-    constructor({id, nombre, id_categoria, descripcion, costo, estatus}) {
+    constructor({id, name, idCategoria, description, cost, status}) {
         this.id = id;
-        this.nombre = nombre;
-        this.id_categoria = id_categoria;
-        this.descripcion = descripcion;
-        this.costo = costo;
-        this.estatus = estatus ;
+        this.name = name;
+        this.idCategoria = idCategoria;
+        this.description = description;
+        this.cost = cost;
+        this.status = status ;
     }
 }
 

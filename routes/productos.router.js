@@ -17,7 +17,7 @@ router.get('/:id', verProducto);
 router.get('/', verProductos);
 router.post('/filtrar', filtrarProducto);
 router.post('/', crearProducto);
-router.put('/cambiarEstatus', cambiarEstatusProducto);
+router.put('/cambiarEstatus/:id', cambiarEstatusProducto);
 router.put('/editar/:id', editarProducto);
 router.delete('/:id', eliminarProducto);
 

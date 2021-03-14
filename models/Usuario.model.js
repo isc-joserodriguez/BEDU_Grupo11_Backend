@@ -16,7 +16,7 @@ const UsuarioSchema = new mongoose.Schema({
         index: true,
     },
     type: { type: String, enum: ['cliente', 'mesero', 'chef', 'admin'], required: true },
-    status: { type: Number, required: true },
+    status: { type: Number, default: 1 },
     hash: String,
     salt: String
 },
@@ -62,19 +62,6 @@ UsuarioSchema.methods.toAuthJSON = function () {
         type: this.type,
         status: this.status,
         token: this.generarJWT()
-    };
-};
-
-UsuarioSchema.methods.publicData = function () {
-    return {
-        id: this.id,
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        type: this.type,
-        status: this.status,
-        createdAt: this.createdAt,
-        updatedAt: this.updatedAt
     };
 };
 

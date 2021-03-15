@@ -16,13 +16,13 @@ const {
 
 //Asignamos las rutas para cada método
 router.post('/login', iniciarSesion);//listo
-router.post('/signup', registrarse);//listo
+router.post('/signup',auth.opcional, registrarse);//listo
 
 router.get('/', auth.requerido, verUsuarios);//listo
 router.get('/:id', auth.requerido, verUsuario);//listo
 router.post('/filtrar', auth.requerido, filtrar);//listo
-router.put('/changeRole/:id', auth.requerido, cambiarRol); //listo
-router.put('/toggleEstatus/:id', auth.requerido, cambiarEstatus);//listo
-router.put('/:id', auth.requerido, editar);//listo
+router.put('/cambiarTipo/:id', auth.requerido, cambiarRol); //listo
+router.put('/cambiarEstatus/:id', auth.requerido, cambiarEstatus);//listo
+router.put('/editar/:id', auth.requerido, editar);//listo
 
 module.exports = router;

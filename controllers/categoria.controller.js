@@ -6,54 +6,46 @@ const codeResponses = require("../config").codeResponses;
 //--------------------------------------------------------------------
 const crearCategoria = (req, res, next) => {
   if (req.usuario.type !== "admin")
-    return res.status(401).send(
-      {
-        ...codeResponses[401],
-        message: "Sólo el administrador puede crear una nueva categoría"
-      }
-    );
-  // Instanciaremos una nueva categoria utilizando la clase categoria
-  let categoria = new Categoria(req.body)
-  categoria.save().then((categ, error) => {    //Guardando nuevo usuario en MongoDB.
-    if (error)
-      return res.status(401).send(
-        {
-          ...codeResponses[401],
-          message: "Sólo el administrador puede crear una nueva categoría"
-        }
-      );
-    return res.status(201).send(
-      {
-        ...codeResponses[201],
-        detail: categ
-      })
-  }).catch(next)
+    return res.status(401).send({
+      ...codeResponses[401],
+      message: "Sólo el administrador puede crear una nueva categoría"
+    });
+  // Instanciaremos una nueva categoria utilizando el modelo de categoría
+  let categoria = new Categoria(req.body);
+  categoria.save().then((categoria, error) => {
+    if (error) return res.status(400).send({ 
+      ...codeResponses[400],
+      message: error
+    });
+    return res.status(201).send({
+      ...codeResponses[201],
+      detail: categoria
+    });
+  }).catch(next);
 }
 
-function verCategoria(req, res, next) {                              //Obteniendo categoria desde MongoDB.
+function verCategoria(req, res, next) { //Obteniendo categoria desde MongoDB.
   if (req.usuario.type === "chef") {
-    return res.status(401).send(
-      {
-        ...codeResponses[401],
-        message: "No puedes ver esta opción."
-      }
-    );
+    return res.status(401).send({
+      ...codeResponses[401],
+      message: "No puedes ver esta opción."
+    });
   }
-  Categoria.findById(req.params.id).then((categ, error) => {
+  Categoria.findById(req.params.id).then((categoria, error) => {
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
       });
-    } else if (!categ) {
+    } else if (!categoria) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "Categoria no encontrada"
+        message: "La consulta no arrojó resultados.",
       });
     }
     return res.status(200).send({
       ...codeResponses[200],
-      detail: categ
+      detail: categoria
     });
   }).catch(next);
 }
@@ -67,53 +59,52 @@ function verCategorias(req, res, next) {
         message: "No puedes ver esta opción."
       }
     );
-  }                           //Obteniendo categorias desde MongoDB.
-  Categoria.find({})((categ, error) => {
+  }                           
+  Categoria.find().then((categorias, error) => { //Obteniendo categorias desde MongoDB.
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
       });
-    } else if (!categ) {
+    } else if (categorias.length===0) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "No hay categorias."
+        message: "La consulta no arrojó resultados.",
       });
     }
     return res.status(200).send({
       ...codeResponses[200],
-      detail: categ
+      detail: categorias
     });
   }).catch(next);
 }
 
 function editarCategoria(req, res, next) {
+  delete req.body.status;
   if (req.usuario.type !== "admin") {
     return res.status(401).send({
       ...codeResponses[401],
       message: "Sólo el administrador puede editar una categoría."
     });
   }
-  //db.collection.findOneAndUpdate({busqueda},{nuevos:datos},{new:true})
-  Categoria.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true }).then((categ, error) => {
+  Categoria.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true }).then((updatedCategoria, error) => {
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
       });
-    } else if (!categ) {
+    } else if (!updatedCategoria) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "No se encontró la categoría."
+        message: "La consulta no arrojó resultados.",
       });
     }
     return res.status(200).send({
       ...codeResponses[200],
-      detail: categ
+      detail: updatedCategoria
     });
-  }).catch(next)
+  }).catch(next);
 }
-
 function cambiarEstatusCategoria(req, res, next) {
   if (req.usuario.type !== "admin") {
     return res.status(401).send({
@@ -121,23 +112,23 @@ function cambiarEstatusCategoria(req, res, next) {
       message: "Sólo el administrador puede editar una categoría."
     });
   }
-  Categoria.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true }).then((categ, error) => {
+  Categoria.findOneAndUpdate({ _id: req.params.id }, { $set: {status:req.body.status} }, { new: true }).then((updatedCategoria, error) => {
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
       });
-    } else if (!categ) {
+    } else if (!updatedCategoria) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "No se encontró la categoría."
+        message: "La consulta no arrojó resultados.",
       });
     }
     return res.status(200).send({
       ...codeResponses[200],
-      detail: categ
+      detail: updatedCategoria
     });
-  }).catch(next)
+  }).catch(next);
 }
 
 function filtrarCategoria(req, res, next) {
@@ -147,26 +138,26 @@ function filtrarCategoria(req, res, next) {
       message: "No puedes ver esta opción."
     });
   }
-  let campo = Object.keys(req.body)[0]; //toma el name de la propiedad del objeto por la que se va a filtrar
-  let dato = req.body[campo]; //guarda el valor de esta propiedad (valor a buscar)                             //Obteniendo categoria desde MongoDB.
   let filter = {}
-  filter[campo] = new RegExp(`${dato}`, "i");
-
-  Categoria.find(filter).then((categ, err) => {
+  if(req.body.name) filter.name=new RegExp(`${req.body.name}`, 'i');
+  if(req.body.description) filter.description=new RegExp(`${req.body.description}`, 'i');
+  if(req.body.status || req.body.status===0) filter.status=req.body.status;
+  
+  Categoria.find(filter).then((filteredCategorias, error) => {
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
       });
-    } else if (!categ) {
+    } else if (filteredCategorias.length===0) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "No se encontró la categoría."
+        message: "La consulta no arrojó resultados.",
       });
     }
     return res.status(200).send({
       ...codeResponses[200],
-      detail: categ
+      detail: filteredCategorias
     });
   }).catch(next);
 }

@@ -19,10 +19,6 @@ module.exports = {
         },
         409: {
             response: "Conflict"
-        },
-        422:{
-            response: "Unprocessable Entity"
         }
-
     }
 };

@@ -15,7 +15,7 @@ const UsuarioSchema = new mongoose.Schema({
         match: [/\S+@\S+\.\S+/, 'es inválido'],
         index: true,
     },
-    type: { type: String, enum: ['cliente', 'mesero', 'chef', 'admin'], required: true },
+    type: { type: String, enum: ['cliente', 'mesero', 'chef', 'admin'], default: 'cliente' },
     status: { type: Number, default: 1 },
     hash: String,
     salt: String

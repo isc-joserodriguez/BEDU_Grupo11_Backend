@@ -200,6 +200,13 @@ Como cliente, filtrar productos para poder conocer el menú.
 - [Reposiorio](https://github.com/joanrodriguezhe/BEDU_Grupo11_Backend)
 - [Video en YouTube](https://youtu.be/2r2hJyf2w6s)
 - [API en Heroku](https://bedu-api-restaurante.herokuapp.com/v1/)
+  - Variables de Entorno
+  ```
+  MONGO_URI = URI de Conexión
+  NODE_ENV = producción/development
+  PORT = Puerto
+  SECRET = secret
+  ```
 - [Documentación de Swagger](https://bedu-api-restaurante.herokuapp.com/api-docs/)
   - Token de administrador (Expira en 60 días)
   ```
@@ -213,9 +220,4 @@ Como cliente, filtrar productos para poder conocer el menú.
 
 - ##### [Adrian-BT](https://github.com/Adrian-BT)
 - ##### [NathalyNDC](https://github.com/NathalyNDC)
-- ##### [EAeliasalejandro](https://github.com/EAeliasalejandro)
 - ##### [joanrodriguezhe](https://github.com/joanrodriguezhe)
-
-### [Ir a Repositorio](https://github.com/joanrodriguezhe/BEDU_Grupo11_Backend)
-
-### [Ir a tablero de Trello](https://trello.com/b/9SiK8HwQ/bedu)

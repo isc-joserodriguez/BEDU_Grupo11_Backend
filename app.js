@@ -1,10 +1,18 @@
 // Importamos las bibliotecas necesarias
-const swaggerUi = require('swagger-ui-express'),
-  swaggerDocument = require('./swagger');
+const swaggerUi = require('swagger-ui-express'), 
+swaggerDocument = require('./swagger'), 
+express = require('express'), 
+bodyParser = require('body-parser'),
+cors = require('cors'),
+mongoose = require('mongoose');
+
 require('dotenv').config();
-let express = require('express'),
-  bodyParser = require('body-parser'),
-  cors = require('cors');
+require('./models/Usuario.model');
+require('./models/Categoria.model');
+require('./models/Producto.model');
+require('./models/Pedido.model');
+require('./config/passport');
+
 // Objeto global de la app
 let app = express();
 
@@ -13,22 +21,11 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-/*********************** Mongoose Configuration *******************************/
-const mongoose = require('mongoose');
-
+//Conexión a Mongo
 mongoose.connect(
   process.env.MONGO_URI
 );
 mongoose.set('debug', true);
-require('./models/Usuario.model');
-require('./models/Categoria.model');
-require('./models/Producto.model');
-require('./models/Pedido.model');
-require('./config/passport');
-// Aquí se importarán los modelos Mascota y Solicitud cuando estén listos
-
-/*********************** Mongoose Configuration *******************************/
-
 
 // Agregamos el código de nuestro router (routes/index.js)
 app.use('/v1', require('./routes'));

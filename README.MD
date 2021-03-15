@@ -329,36 +329,6 @@ const crearProducto = (req, res) => {
   }
 };
 
-//Eliminar producto
-const eliminarProducto = (req, res) => {
-  let productoEncontrado = null;
-  let encontrado = false;
-  for (let i = 0; i < PRODUCTOS.length; i++) {
-    //Para cada elemento dentro del arreglo
-    if (PRODUCTOS[i].id === +req.params.id) {
-      //Buscar dentro de los productos por id
-      if (!PRODUCTOS[i].estatus) {
-        //Si está inactivo, se cancela
-        productoEncontrado = PRODUCTOS[i]; //Asignar a variable producto encontrado
-        PRODUCTOS.splice(i, 1); //Eliminar producto del arreglo
-      }
-      encontrado = true;
-      break;
-    }
-  }
-  if (productoEncontrado) {
-    res.status(200).send(productoEncontrado); //Mensaje producto eliminado
-  } else if (encontrado) {
-    res.status(409).send({
-      errorMessage: "Conflict: No se puede eliminar un producto activo",
-    });
-  } else {
-    res
-      .status(404)
-      .send({ errorMessage: "Not Found: Producto no encontrado." }); //Mensaje error: no encontrado
-  }
-};
-
 //Cambiar estatus de producto
 const cambiarEstatusProducto = (req, res) => {
   //INACTIVO = 0    ACTIVO =1
@@ -703,7 +673,6 @@ router.post("/filtrar", filtrarProducto);
 router.post("/", crearProducto);
 router.put("/cambiarEstatus", cambiarEstatusProducto);
 router.put("/editar", editarProducto);
-router.delete("/:id", eliminarProducto);
 ```
 
 <a name="usuario_route"></a>
@@ -717,8 +686,8 @@ router.get("/", verUsuarios);
 router.get("/:id", verUsuario);
 router.post("/filtrar", filtrar);
 router.put("/edit", editar);
-router.put("/changeRole", cambiarRol);
-router.put("/toggleEstatus", cambiarEstatus);
+router.put("/cambiarTipo", cambiarRol);
+router.put("/cambiarEstatus", cambiarEstatus);
 ```
 
 <a name="Examples"></a>
@@ -1134,7 +1103,7 @@ Body:
 
 ##### Cambiar Estatus
 
-`PUT: http://localhost:3000/v1/usuarios/toggleEstatus`
+`PUT: http://localhost:3000/v1/usuarios/cambiarEstatus`
 
 Body:
 
@@ -1151,7 +1120,7 @@ Body:
 
 ##### Cambiar Rol
 
-`PUT: http://localhost:3000/v1/usuarios/changeRole`
+`PUT: http://localhost:3000/v1/usuarios/cambiarTipo`
 
 Body:
 

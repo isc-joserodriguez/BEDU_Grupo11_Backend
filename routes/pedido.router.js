@@ -14,7 +14,7 @@ const {
 
 //Asignamos las rutas para cada método
 router.get('/:id', auth.requerido, verPedido)//N
-router.get('/', auth.requerido, verHistorialPedidos)//N
+router.get('/:num', auth.requerido, verHistorialPedidos)//N
 router.post('/filtrar', auth.requerido, filtrarPedido)//N
 router.post('/', auth.requerido, crearPedido)//N
 router.put('/editar/:id', auth.requerido, editarPedido)//N

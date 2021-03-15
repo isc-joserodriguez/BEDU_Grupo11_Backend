@@ -4,7 +4,6 @@ const Producto = mongoose.model("Producto");
 const codeResponses = require("../config").codeResponses;
 
 const crearPedido = (req, res, next) => {
-  console.log(req.usuario)
   if (req.usuario.type === "chef" || req.usuario.type === "mesero") return res.status(401).send({
     ...codeResponses[401],
     message: "No puedes crear un pedido."
@@ -79,7 +78,7 @@ const verHistorialPedidos = (req, res, next) => {
       filter = { idMesero: req.params.id };
       break;
   }
-  Pedido.find(filter).then((filteredPedidos, error) => {
+  Pedido.find(filter).limit(req.params.num).then((filteredPedidos, error) => {
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],

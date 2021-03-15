@@ -3,7 +3,7 @@
 Realicen los siguientes ejercicios sobre su proyecto del módulo:
 
 1. Implementen la base de datos de su proyecto utilizando MongoDB.
-   ![BD](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/postwork-sesion06/capturasMongo/bd.png)
+   ![BD](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/postWorks//postwork-sesion06/capturasMongo/bd.png)
 
 2. Discutan en equipo las siguientes preguntas y escriban las conclusiones a las que llegaron en un archivo para entregar:
 
@@ -30,19 +30,19 @@ Realicen los siguientes ejercicios sobre su proyecto del módulo:
      ```js
      db.pedidos.updateOne({ _id: 3 }, { $set: { id_mesero: 7 } });
      ```
-     ![1](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/postwork-sesion06/capturasMongo/1.png)
+     ![1](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/postWorks//postwork-sesion06/capturasMongo/1.png)
    - Consultar los pedidos de diciembre 2020
      ```js
      db.pedidos.find({
        fecha: { $gte: ISODate("2020-12-01"), $lt: ISODate("2020-12-31") },
      });
      ```
-     ![2](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/postwork-sesion06/capturasMongo/2.png)
+     ![2](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/postWorks//postwork-sesion06/capturasMongo/2.png)
    - Cambiar la categoria de un producto
      ```js
      db.productos.updateOne({ _id: 7 }, { $set: { id_categoria: 6 } });
      ```
-     ![3](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/postwork-sesion06/capturasMongo/3.png)
+     ![3](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/postWorks//postwork-sesion06/capturasMongo/3.png)
    - Agregar un producto a los pedidos con costo mayor a 100
      ```js
      db.pedidos.updateMany(
@@ -50,14 +50,14 @@ Realicen los siguientes ejercicios sobre su proyecto del módulo:
        { $push: { info_productos: 5 } }
      );
      ```
-     ![4](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/postwork-sesion06/capturasMongo/4.png)
+     ![4](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/postWorks//postwork-sesion06/capturasMongo/4.png)
    - Consultar un pedido cancelado que tenga menos de 3 productos
      ```js
      db.pedidos.find({ estatus: 0, "info_productos.3": { $exists: false } });
      ```
-     ![5](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/postwork-sesion06/capturasMongo/5.png)
+     ![5](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/postWorks//postwork-sesion06/capturasMongo/5.png)
    - Agregarle a todos los productos 5 pesos por impuestos
      ```js
      db.productos.updateMany({}, { $inc: { costo: 5 } });
      ```
-     ![6](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/master/postwork-sesion06/capturasMongo/6.png)
+     ![6](https://raw.githubusercontent.com/joanrodriguezhe/BEDU_Grupo11_Backend/postWorks//postwork-sesion06/capturasMongo/6.png)

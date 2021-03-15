@@ -4,7 +4,8 @@ const Producto = mongoose.model("Producto");
 const codeResponses = require("../config").codeResponses;
 
 const crearPedido = (req, res, next) => {
-  if (req.usuario.type !== "cliente" || req.usuario.type !== "admin") return res.status(401).send({
+  console.log(req.usuario)
+  if (req.usuario.type === "chef" || req.usuario.type === "mesero") return res.status(401).send({
     ...codeResponses[401],
     message: "No puedes crear un pedido."
   });

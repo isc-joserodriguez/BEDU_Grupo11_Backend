@@ -5,7 +5,7 @@
     "title": "API RESTaurante",
     "description": "API para restaurante"
   },
-  "host": "https://bedu-api-restaurante.herokuapp.com/:80",
+  "host": "https://bedu-api-restaurante.herokuapp.com:80",
   "basePath": "/v1",
   "securityDefinitions": {
     "bearerAuth": {

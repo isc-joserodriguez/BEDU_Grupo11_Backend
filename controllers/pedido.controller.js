@@ -78,7 +78,7 @@ const verHistorialPedidos = (req, res, next) => {
       filter = { idMesero: req.params.id };
       break;
   }
-  Pedido.find(filter).limit(req.params.num).then((filteredPedidos, error) => {
+  Pedido.find(filter).limit(+req.params.num).then((filteredPedidos, error) => {
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],

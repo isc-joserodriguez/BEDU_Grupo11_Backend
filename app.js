@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 mongoose.connect(
   process.env.MONGO_URI
 );
-//mongoose.set('debug', true);
+mongoose.set('debug', true);
 
 // Agregamos el código de nuestro router (routes/index.js)
 app.use('/v1', require('./routes'));

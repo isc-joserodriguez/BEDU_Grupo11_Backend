@@ -1377,12 +1377,6 @@
         "idCliente": {
           "type": "ObjectId"
         },
-        "idChef": {
-          "type": "ObjectId"
-        },
-        "idMesero": {
-          "type": "ObjectId"
-        },
         "info": {
           "type": "array",
           "items": {

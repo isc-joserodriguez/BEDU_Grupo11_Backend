@@ -991,7 +991,7 @@
         }
       }
     },
-    "/pedido/{numReg}":{
+    "/pedido/verHistorial/{numReg}":{
       "get": {
         "security": [{ "bearerAuth": [] }],
         "tags": ["Pedido"],

@@ -1,10 +1,10 @@
 // Importamos las bibliotecas necesarias
-const swaggerUi = require('swagger-ui-express'), 
-swaggerDocument = require('./swagger'), 
-express = require('express'), 
-bodyParser = require('body-parser'),
-cors = require('cors'),
-mongoose = require('mongoose');
+const swaggerUi = require('swagger-ui-express'),
+  swaggerDocument = process.env.NODE_ENV === 'production' ? require('./swagger') : require('./swagger.dev'),
+  express = require('express'),
+  bodyParser = require('body-parser'),
+  cors = require('cors'),
+  mongoose = require('mongoose');
 
 require('dotenv').config();
 require('./models/Usuario.model');
@@ -40,6 +40,6 @@ app.use(function (req, res, next) {
 });
 
 // Iniciando el servidor...
-let server = app.listen(process.env.PORT || 3000, function () {
+let server = app.listen(process.env.PORT || 3001, function () {
   console.log('Escuchando en el puerto ' + server.address().port);
 });

@@ -4,22 +4,22 @@ const passport = require('passport');
 const codeResponses = require("../config").codeResponses;
 
 const registrarse = (req, res, next) => {
-  if(req.body.type){
-    if(req.usuario){
-      if(req.usuario.type!=='admin')
-      return res.status(401).send({
-        ...codeResponses[401],
-        message: `Sólo el administrador puede crear un nuevo ${req.body.type}.`
-      });      
-    }else if(req.body.type!=='cliente'){
+  if (req.body.type) {
+    if (req.usuario) {
+      if (req.usuario.type !== 'admin')
+        return res.status(401).send({
+          ...codeResponses[401],
+          message: `Sólo el administrador puede crear un nuevo ${req.body.type}.`
+        });
+    } else if (req.body.type !== 'cliente') {
       return res.status(401).send({
         ...codeResponses[401],
         message: "No puedes realizar esta acción."
       });
     }
-    }
+  }
   let newUsuario = req.body;
-  let { password } = req.body; 
+  let { password } = req.body;
 
   delete newUsuario.password
   const usuario = new Usuario(newUsuario)
@@ -35,14 +35,13 @@ const registrarse = (req, res, next) => {
 
 const iniciarSesion = (req, res, next) => {
   passport.authenticate('local', { session: false }, function (err, user, info) {
-    if (err) { return next(err); }
+    if (err) return next(err);
 
     if (user) {
-      user.token = user.generarJWT();
       return res.status(200).send(
         {
           ...codeResponses[200],
-          detail: user
+          detail: { ...user._doc, token: user.generarJWT() }
         }
       );
     } else {
@@ -57,19 +56,19 @@ const iniciarSesion = (req, res, next) => {
 }
 
 const verUsuarios = (req, res, next) => {
-  if (req.usuario.type === 'cliente') 
-  return res.status(401).send({
-    ...codeResponses[401],
-    message: "Un usuario cliente no puede ver el listado de usuarios del sistema"
-  });
+  if (req.usuario.type === 'cliente')
+    return res.status(401).send({
+      ...codeResponses[401],
+      message: "Un usuario cliente no puede ver el listado de usuarios del sistema"
+    });
   Usuario.find().then((users, err) => {
     if (!users) {
       return res.status(404).send({
         ...codeResponses[404],
-        message:  "La consulta no arrojó resultados.",
+        message: "La consulta no arrojó resultados.",
       });
     }
-    else if(err){
+    else if (err) {
       return res.status(400).send({
         ...codeResponses[400],
         message: err
@@ -83,11 +82,11 @@ const verUsuarios = (req, res, next) => {
 };
 
 const verUsuario = (req, res, next) => {
-  if (req.usuario.type === 'cliente' && req.usuario.id !== req.params.id) 
-  return res.status(401).send({
-    ...codeResponses[401],
-    message: "Un usuario no puede ver los datos de otro usuario"
-  });
+  if (req.usuario.type === 'cliente' && req.usuario.id !== req.params.id)
+    return res.status(401).send({
+      ...codeResponses[401],
+      message: "Un usuario no puede ver los datos de otro usuario"
+    });
   Usuario.findById(req.params.id).then((user, err) => {
     if (!user) {
       return res.status(404).send({
@@ -95,7 +94,7 @@ const verUsuario = (req, res, next) => {
         message: "La consulta no arrojó resultados.",
       });
     }
-    else if(err){
+    else if (err) {
       return res.status(400).send({
         ...codeResponses[400],
         message: err
@@ -109,24 +108,24 @@ const verUsuario = (req, res, next) => {
 };
 
 const filtrar = (req, res, next) => {
-  if (req.usuario.type === 'cliente') 
-  return res.status(401).send({
-    ...codeResponses[401],
-    message: "Un usuario cliente no puede realizar un filtrado en el listado de usuarios del sistema"
-  });
+  if (req.usuario.type === 'cliente')
+    return res.status(401).send({
+      ...codeResponses[401],
+      message: "Un usuario cliente no puede realizar un filtrado en el listado de usuarios del sistema"
+    });
   let filter = {}
-  if(req.body.firstName) filter.firstName=new RegExp(`${req.body.firstName}`, 'i');
-  if(req.body.lastName) filter.lastName=new RegExp(`${req.body.lastName}`, 'i');
-  if(req.body.email) filter.email=new RegExp(`${req.body.email}`, 'i');
-  if(req.body.type) filter.type=req.body.type;
-  if(req.body.status || req.body.status===0) filter.status=req.body.status;
+  if (req.body.firstName) filter.firstName = new RegExp(`${req.body.firstName}`, 'i');
+  if (req.body.lastName) filter.lastName = new RegExp(`${req.body.lastName}`, 'i');
+  if (req.body.email) filter.email = new RegExp(`${req.body.email}`, 'i');
+  if (req.body.type) filter.type = req.body.type;
+  if (req.body.status || req.body.status === 0) filter.status = req.body.status;
   Usuario.find(filter).then((filteredUsuarios, err) => {
-    if(err){
+    if (err) {
       return res.status(400).send({
         ...codeResponses[400],
         message: err
       });
-    } else if (filteredUsuarios.length===0) {
+    } else if (filteredUsuarios.length === 0) {
       return res.status(404).send({
         ...codeResponses[404],
         message: "La consulta no arrojó resultados.",
@@ -147,12 +146,12 @@ const editar = (req, res, next) => {
   delete req.body.type;
   delete req.body.status;
   Usuario.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true }).then((user, error) => {
-    if(error){
+    if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
       });
-    }else if (!user) {
+    } else if (!user) {
       return res.status(404).send({
         ...codeResponses[404],
         message: "La consulta no arrojó resultados.",
@@ -166,11 +165,11 @@ const editar = (req, res, next) => {
 };
 
 const cambiarRol = (req, res, next) => {
-  if (req.usuario.type !== 'admin') 
-  return res.status(401).send({
-    ...codeResponses[401],
-    message: "Sólo un administrador puede cambiar el rol de otro usuario"
-  });
+  if (req.usuario.type !== 'admin')
+    return res.status(401).send({
+      ...codeResponses[401],
+      message: "Sólo un administrador puede cambiar el rol de otro usuario"
+    });
   Usuario.findOneAndUpdate({ _id: req.params.id }, { $set: { type: req.body.type } }, { new: true }).then((users) => {
     if (!users) {
       return res.status(404).send({
@@ -186,11 +185,11 @@ const cambiarRol = (req, res, next) => {
 };
 
 const cambiarEstatus = (req, res, next) => {
-  if (req.usuario.type !== 'admin') 
-  return res.status(401).send({
-    ...codeResponses[401],
-    message: "Sólo el administrador puede hacer esta acción"
-  });
+  if (req.usuario.type !== 'admin')
+    return res.status(401).send({
+      ...codeResponses[401],
+      message: "Sólo el administrador puede hacer esta acción"
+    });
   Usuario.findOneAndUpdate({ _id: req.params.id }, { $set: { status: req.body.status } }, { new: true }).then((users) => {
     if (!users) {
       return res.status(404).send({

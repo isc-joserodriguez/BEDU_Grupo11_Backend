@@ -17,6 +17,7 @@ const UsuarioSchema = new mongoose.Schema({
     },
     type: { type: String, enum: ['cliente', 'mesero', 'chef', 'admin'], default: 'cliente' },
     status: { type: Number, default: 1 },
+    favs: { type: Array, default: [] },
     hash: String,
     salt: String
 },

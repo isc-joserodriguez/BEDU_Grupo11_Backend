@@ -1602,6 +1602,9 @@
         },
         "email": {
           "type": "string"
+        },
+        "favs": {
+          "type": "array"
         }
       }
     },

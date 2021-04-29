@@ -36,14 +36,26 @@
       "description": "API para pedidos de los clientes."
     }
   ],
-  "schemes": ["http"],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "paths": {
     "/usuarios/signup": {
       "post": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Usuario"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Usuario"
+        ],
         "description": "Autenticado como administrador, se crea cualquier tipo de usuario o sin estar logueado/otro rol, crea nuevos usuarios cliente.",
         "parameters": [
           {
@@ -85,7 +97,9 @@
     },
     "/usuarios/login": {
       "post": {
-        "tags": ["Usuario"],
+        "tags": [
+          "Usuario"
+        ],
         "description": "Inicio de sesión de usuarios.",
         "parameters": [
           {
@@ -97,7 +111,6 @@
             }
           }
         ],
-
         "responses": {
           "200": {
             "description": "Login correcto.",
@@ -116,8 +129,14 @@
     },
     "/usuarios": {
       "get": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Usuario"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Usuario"
+        ],
         "description": "Autenticado como usuario diferente a cliente, muestra a todos los usuarios del sistema.",
         "responses": {
           "200": {
@@ -132,7 +151,6 @@
               "$ref": "#/definitions/FAIL"
             }
           },
-
           "401": {
             "description": "No se cuenta con los permisos suficientes para la operacion.",
             "schema": {
@@ -150,8 +168,14 @@
     },
     "/usuarios/{idUsuario}": {
       "get": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Usuario"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Usuario"
+        ],
         "description": "Autenticado como usuario cliente, sólo muestra la información de su propio usuario. Autenticado como cualquier otro usuario, Muestra al usuario con un determinado ID.",
         "parameters": [
           {
@@ -190,8 +214,14 @@
     },
     "/usuarios/filtrar": {
       "post": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Usuario"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Usuario"
+        ],
         "description": "Autenticado como usuario diferente a cliente, muestra los usuarios que concuerden con la busqueda de uno o más parámetros dados.",
         "parameters": [
           {
@@ -233,8 +263,14 @@
     },
     "/usuarios/editar/{idUsuario}": {
       "put": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Usuario"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Usuario"
+        ],
         "description": "Autenticado como administrador edita usuario (firstName/lastName/email). Autenticado con cualquier otro rol, edita los datos de su propio usuario.",
         "parameters": [
           {
@@ -281,8 +317,14 @@
     },
     "/usuarios/cambiarTipo/{idUsuario}": {
       "put": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Usuario"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Usuario"
+        ],
         "description": "Autenticado como administrador puede cambiar el rol de un usuario.",
         "parameters": [
           {
@@ -329,8 +371,14 @@
     },
     "/usuarios/cambiarEstatus/{idUsuario}": {
       "put": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Usuario"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Usuario"
+        ],
         "description": "Autenticado como administrador puede cambiar el estatus de un usuario.",
         "parameters": [
           {
@@ -377,8 +425,14 @@
     },
     "/categoria": {
       "post": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Categoria"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Categoria"
+        ],
         "description": "Autenticado como administrador crea una categoria nueva.",
         "parameters": [
           {
@@ -418,8 +472,14 @@
         }
       },
       "get": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Categoria"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Categoria"
+        ],
         "description": "Autenticado como un usuario diferente a chef muestra todas las categorias",
         "responses": {
           "200": {
@@ -451,8 +511,14 @@
     },
     "/categoria/{idCategoria}": {
       "get": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Categoria"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Categoria"
+        ],
         "description": "Autenticado como un usuario diferente a chef muestra la categoria con un ID específico.",
         "parameters": [
           {
@@ -497,8 +563,14 @@
     },
     "/categoria/filtrar": {
       "post": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Categoria"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Categoria"
+        ],
         "description": "Autenticado como un usuario diferente a chef, muestra los usuarios que concuerden con la busqueda de uno o más párametros dados.",
         "parameters": [
           {
@@ -546,8 +618,14 @@
     },
     "/categoria/editar/{idCategoria}": {
       "put": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Categoria"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Categoria"
+        ],
         "description": "Autenticado como administrador, permite edita una categoria específica.",
         "parameters": [
           {
@@ -600,8 +678,14 @@
     },
     "/categoria/cambiarEstatus/{idCategoria}": {
       "put": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Categoria"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Categoria"
+        ],
         "description": "Autenticado como administrador, permite cambiar el estatus de una categoria específica.",
         "parameters": [
           {
@@ -654,8 +738,14 @@
     },
     "/productos": {
       "post": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Producto"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Producto"
+        ],
         "description": "Autenticado como administrador, permite crear un producto nuevo.",
         "parameters": [
           {
@@ -701,8 +791,14 @@
         }
       },
       "get": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Producto"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Producto"
+        ],
         "description": "Muestra todos los productos del sistema.",
         "responses": {
           "200": {
@@ -737,12 +833,17 @@
           }
         }
       }
-      
     },
     "/productos/{idProducto}": {
       "get": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Producto"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Producto"
+        ],
         "description": "Muestra un producto con determinado ID.",
         "parameters": [
           {
@@ -787,8 +888,14 @@
     },
     "/productos/filtrar": {
       "post": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Producto"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Producto"
+        ],
         "description": "Muestra los productos que concuerden con la busqueda de uno o más párametros dados.",
         "parameters": [
           {
@@ -836,8 +943,14 @@
     },
     "/productos/editar/{idProducto}": {
       "put": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Producto"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Producto"
+        ],
         "description": "Autenticado como administrador, permite editar un determinado producto.",
         "parameters": [
           {
@@ -890,8 +1003,14 @@
     },
     "/productos/cambiarEstatus/{idProducto}": {
       "put": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Producto"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Producto"
+        ],
         "description": "Autenticado como administrador, permite cambiar el estatus de un determinado producto.",
         "parameters": [
           {
@@ -944,8 +1063,14 @@
     },
     "/pedido": {
       "post": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Pedido"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Pedido"
+        ],
         "description": "Autenticado como admnistrador o como cliente, crea un pedido nuevo.",
         "parameters": [
           {
@@ -991,10 +1116,16 @@
         }
       }
     },
-    "/pedido/verHistorial/{numReg}":{
+    "/pedido/verHistorial/{numReg}": {
       "get": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Pedido"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Pedido"
+        ],
         "description": "Autenticado como administrador, muestra todos los pedidos del sistema. Autenticado como chef o mesero, muestra los pedidos donde participaron. Autenticado como cliente, muestra los pedidos realizados. Limitado al número de registros indicado por el usuario",
         "parameters": [
           {
@@ -1039,8 +1170,14 @@
     },
     "/pedido/{idPedido}": {
       "get": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Pedido"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Pedido"
+        ],
         "description": "Autenticado como un usuario diferente a cliente, muestra un pedido con un determinado ID. Autenticado como cliente, muestra un pedido del cliente con un determinado ID",
         "parameters": [
           {
@@ -1083,8 +1220,14 @@
         }
       },
       "delete": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Pedido"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Pedido"
+        ],
         "description": "Autenticado como administrador, elimina un pedido especifico SÓLO SI ESTÁ CANCELADO (status 0).",
         "parameters": [
           {
@@ -1129,8 +1272,14 @@
     },
     "/pedido/filtrar": {
       "post": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Pedido"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Pedido"
+        ],
         "description": "Muestra los pedidos que concuerden con la busqueda de uno o más párametros dados.",
         "parameters": [
           {
@@ -1178,8 +1327,14 @@
     },
     "/pedido/editar/{idPedido}": {
       "put": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Pedido"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Pedido"
+        ],
         "description": "Autenticado como administrador, edita un pedido específico.",
         "parameters": [
           {
@@ -1232,8 +1387,14 @@
     },
     "/pedido/cambiarEstatus/{idPedido}": {
       "put": {
-        "security": [{ "bearerAuth": [] }],
-        "tags": ["Pedido"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Pedido"
+        ],
         "description": "Autenticado como chef, sólo puede cambiar pedidos de status 1 a status 2 y de status 2 a status 3. Autenticado como mesero, sólo puede cambiar pedidos de status 3 a status 4. Autenticado como administrador sólo puede cambiar pedidos de status 1 a 0 sumado a las reglas del chef y del mesero. (0 - cancelado | 1 - pendiente | 2 - preparando | 3 - preparado | 4 - entregado)",
         "parameters": [
           {
@@ -1287,7 +1448,12 @@
   },
   "definitions": {
     "Signup": {
-      "required": ["firstName", "lastName", "email", "password"],
+      "required": [
+        "firstName",
+        "lastName",
+        "email",
+        "password"
+      ],
       "properties": {
         "firstName": {
           "type": "string"
@@ -1303,12 +1469,20 @@
         },
         "type": {
           "type": "string",
-          "enum": ["cliente", "mesero", "chef", "admin"]
+          "enum": [
+            "cliente",
+            "mesero",
+            "chef",
+            "admin"
+          ]
         }
       }
     },
     "Login": {
-      "required": ["email", "password"],
+      "required": [
+        "email",
+        "password"
+      ],
       "properties": {
         "email": {
           "type": "string"
@@ -1319,7 +1493,12 @@
       }
     },
     "Usuario": {
-      "required": ["firstName", "lastName", "email", "type"],
+      "required": [
+        "firstName",
+        "lastName",
+        "email",
+        "type"
+      ],
       "properties": {
         "firstName": {
           "type": "string"
@@ -1333,7 +1512,12 @@
         },
         "type": {
           "type": "string",
-          "enum": ["cliente", "mesero", "chef", "admin"]
+          "enum": [
+            "cliente",
+            "mesero",
+            "chef",
+            "admin"
+          ]
         },
         "status": {
           "type": "integer"
@@ -1344,7 +1528,10 @@
       }
     },
     "Categoria": {
-      "required": ["name", "description"],
+      "required": [
+        "name",
+        "description"
+      ],
       "properties": {
         "name": {
           "type": "string"
@@ -1358,7 +1545,12 @@
       }
     },
     "Producto": {
-      "required": ["name", "idCategoria", "description", "cost"],
+      "required": [
+        "name",
+        "idCategoria",
+        "description",
+        "cost"
+      ],
       "properties": {
         "name": {
           "type": "string"
@@ -1378,7 +1570,10 @@
       }
     },
     "Pedido": {
-      "required": ["idCliente", "info"],
+      "required": [
+        "idCliente",
+        "info"
+      ],
       "properties": {
         "idCliente": {
           "type": "ObjectId"
@@ -1407,10 +1602,13 @@
         },
         "email": {
           "type": "string"
+        },
+        "favs": {
+          "type": "array"
         }
       }
     },
-    "CategoriaEditar":{
+    "CategoriaEditar": {
       "properties": {
         "name": {
           "type": "string"
@@ -1421,7 +1619,9 @@
       }
     },
     "PedidoEditar": {
-      "required": ["info"],
+      "required": [
+        "info"
+      ],
       "properties": {
         "info": {
           "type": "array",
@@ -1433,41 +1633,51 @@
     },
     "PedidoFiltro": {
       "properties": {
-        "fechaIni":{
-          "type":"string",
+        "fechaIni": {
+          "type": "string",
           "pattern": "YYYY-MM-DD"
         },
-        "fechaFin":{
-          "type":"string",
+        "fechaFin": {
+          "type": "string",
           "pattern": "YYYY-MM-DD"
         },
-        "idCliente":{
-          "type":"ObjectId"
+        "idCliente": {
+          "type": "ObjectId"
         },
-        "idChef":{
-          "type":"ObjectId"
-        },"idMesero":{
-          "type":"ObjectId"
+        "idChef": {
+          "type": "ObjectId"
         },
-        "status":{
-          "type":"number"
+        "idMesero": {
+          "type": "ObjectId"
         },
-        "cost":{
-          "type":"number"
+        "status": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
         }
       }
     },
     "TipoNuevo": {
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["cliente", "mesero", "chef", "admin"]
+          "enum": [
+            "cliente",
+            "mesero",
+            "chef",
+            "admin"
+          ]
         }
       }
     },
     "EstatusNuevo": {
-      "required": ["status"],
+      "required": [
+        "status"
+      ],
       "properties": {
         "status": {
           "type": "integer"

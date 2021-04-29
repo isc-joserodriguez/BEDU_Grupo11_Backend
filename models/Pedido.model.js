@@ -12,7 +12,6 @@ const PedidoSchema = new mongoose.Schema(
         idMesero: { type: mongoose.ObjectId, default: null },
         info: { type: Array, required: [true, "no puede estar vacío"] },
         cost: { type: Number, required: [true, "no puede estar vacío"] },
-        image: { type: String },
         status: { type: Number, default: 1 }
         /*
         Status

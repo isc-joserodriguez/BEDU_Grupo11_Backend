@@ -18,6 +18,7 @@ const ProductoSchema = new mongoose.Schema({
         required: [true, 'no puede estar vacío'],
     },
     status: { type: Number, default: 1 },
+    image: { type: String }
 },
     { timestamps: true }
 );

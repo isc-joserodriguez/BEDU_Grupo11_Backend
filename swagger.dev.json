@@ -1337,6 +1337,9 @@
         },
         "status": {
           "type": "integer"
+        },
+        "favs": {
+          "type": "array"
         }
       }
     },
@@ -1368,6 +1371,9 @@
         },
         "cost": {
           "type": "integer"
+        },
+        "image": {
+          "type": "string"
         }
       }
     },

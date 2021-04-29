@@ -13,9 +13,9 @@ const {
 } = require('../controllers/producto.controller');
 
 //Rutas definidas de las funciones
-router.get('/:id', auth.requerido, verProducto);
-router.get('/', auth.requerido, verProductos);
-router.post('/filtrar', auth.requerido, filtrarProducto);
+router.get('/:id', verProducto);
+router.get('/', verProductos);
+router.post('/filtrar', filtrarProducto);
 router.post('/', auth.requerido, crearProducto);
 router.put('/cambiarEstatus/:id', auth.requerido, cambiarEstatusProducto);
 router.put('/editar/:id', auth.requerido, editarProducto);

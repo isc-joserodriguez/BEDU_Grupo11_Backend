@@ -4,13 +4,13 @@ const mongoose = require("mongoose"); // exportacion de mongoose
 const PedidoSchema = new mongoose.Schema(
     {
         idCliente: {
-            type: mongoose.ObjectId,
+            type: mongoose.ObjectId, ref:'Usuario',
             required: [true, "no puede estar vacío"],
             index: true,
         },
-        idChef: { type: mongoose.ObjectId, default: null },
-        idMesero: { type: mongoose.ObjectId, default: null },
-        info: { type: Array, required: [true, "no puede estar vacío"] },
+        idChef: { type: mongoose.ObjectId, default: null, ref:'Usuario' },
+        idMesero: { type: mongoose.ObjectId, default: null, ref:'Usuario' },
+        info: [{ type: mongoose.ObjectId, ref:'Producto'}],
         cost: { type: Number, required: [true, "no puede estar vacío"] },
         status: { type: Number, default: 1 }
         /*

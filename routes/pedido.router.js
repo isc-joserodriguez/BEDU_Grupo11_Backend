@@ -5,7 +5,7 @@ const auth = require('../middlewares/auth');
 const {
   crearPedido,
   verPedido,
-  verHistorialPedidos,
+  verPedidos,
   editarPedido,
   cambiarEstatusPedido,
   filtrarPedido,
@@ -14,7 +14,7 @@ const {
 
 //Asignamos las rutas para cada método
 router.get('/:id', auth.requerido, verPedido)//N
-router.get('/verHistorial/:num', auth.requerido, verHistorialPedidos)//N
+router.get('/', auth.requerido, verPedidos)//N
 router.post('/filtrar', auth.requerido, filtrarPedido)//N
 router.post('/', auth.requerido, crearPedido)//N
 router.put('/editar/:id', auth.requerido, editarPedido)//N

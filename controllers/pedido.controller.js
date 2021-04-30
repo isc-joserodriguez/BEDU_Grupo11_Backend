@@ -8,7 +8,7 @@ const crearPedido = (req, res, next) => {
     ...codeResponses[401],
     message: "No puedes crear un pedido."
   });
-  if(req.usuario.type === "cliente") req.body.idCliente=req.usuario.id;
+  if (req.usuario.type === "cliente") req.body.idCliente = req.usuario.id;
   let pedido = new Pedido(req.body);
   pedido.save().then((pedido, error) => {
     if (error) return res.status(400).send({
@@ -23,68 +23,59 @@ const crearPedido = (req, res, next) => {
 };
 
 const verPedido = (req, res, next) => {
-  if(req.usuario.type==='cliente' && req.params.id!==req.usuario.id) return res.status(401).send({
+  if (req.usuario.type === 'cliente' && req.params.id !== req.usuario.id) return res.status(401).send({
     ...codeResponses[401],
     message: "No puedes ver los pedidos de otro usuario."
   });
-  Pedido.findById(req.params.id).then((pedido, error) => {
-    if (error){
-      return res.status(400).send({
-        ...codeResponses[400],
-        message: error
-      });
-    }else if(!pedido){
-      return res.status(404).send({
-        ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
-      });
+  Pedido.findById(req.params.id).populate('idCliente').populate('idChef').populate('idMesero').populate({
+    path: 'info',
+    populate: {
+      path: 'idCategoria'
     }
-    pedido.info.map((id) => mongoose.Types.ObjectId(id));
-    Producto.find({ _id: { $in: pedido.info } }).then((productos, error) => {
-      if (error){
-        return res.status(400).send({
-          ...codeResponses[400],
-          message: error
-        });
-      }else if(!productos){
-        return res.status(404).send({
-          ...codeResponses[404],
-          message: "La consulta no arrojó resultados.",
-        });
-      }
-      pedido.info = productos;
-      return res.status(200).send({
-        ...codeResponses[200],
-        detail: pedido
-      });
-    });
-  }).catch(next);
-};
-
-const verHistorialPedidos = (req, res, next) => {
-  let filter = {};
-  switch (req.usuario.type) {
-    case "cliente":
-      if (req.usuario.id !== req.params.id) return res.status(401).send({
-        ...codeResponses[401],
-        message: "Un usuario cliente solo puede ver su historial de pedidos"
-      });
-      filter = { idCliente: req.params.id };
-      break;
-    case "chef":
-      filter = { idChef: req.params.id };
-      break;
-    case "mesero":
-      filter = { idMesero: req.params.id };
-      break;
-  }
-  Pedido.find(filter).limit(+req.params.num).then((filteredPedidos, error) => {
+  }).then((pedido, error) => {
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
       });
-    } else if (filteredPedidos.length===0) {
+    } else if (!pedido) {
+      return res.status(404).send({
+        ...codeResponses[404],
+        message: "La consulta no arrojó resultados.",
+      });
+    }
+    return res.status(200).send({
+      ...codeResponses[200],
+      detail: pedido
+    });
+  }).catch(next);
+};
+
+const verPedidos = (req, res, next) => {
+  let filter = {};
+  switch (req.usuario.type) {
+    case "cliente":
+      filter = { idCliente: req.usuario.id };
+      break;
+    case "chef":
+      filter = { idChef: req.usuario.id };
+      break;
+    case "mesero":
+      filter = { idMesero: req.usuario.id };
+      break;
+  }
+  Pedido.find(filter).populate('idCliente').populate('idChef').populate('idMesero').populate({
+    path: 'info',
+    populate: {
+      path: 'idCategoria'
+    }
+  }).then((filteredPedidos, error) => {
+    if (error) {
+      return res.status(400).send({
+        ...codeResponses[400],
+        message: error
+      });
+    } else if (filteredPedidos.length === 0) {
       return res.status(404).send({
         ...codeResponses[404],
         message: "La consulta no arrojó resultados.",
@@ -134,18 +125,18 @@ function cambiarEstatusPedido(req, res, next) {
     message: "Un usuario cliente no puede cambiar el estatus de un pedido."
   });
   let filter = { _id: req.params.id };
-  let edit={};
+  let edit = {};
   switch (req.usuario.type) {
     case "admin":
       if (req.body.status === 0 || req.body.status === 2) {
         filter.status = 1;
-        edit={ $set: { status: req.body.status }};
+        edit = { $set: { status: req.body.status } };
       } else if (req.body.status === 3) {
         filter.status = 2;
-        edit={ $set: { status: req.body.status }};
+        edit = { $set: { status: req.body.status } };
       } else if (req.body.status === 4) {
         filter.status = 3;
-        edit={ $set: { status: req.body.status }};
+        edit = { $set: { status: req.body.status } };
       }
       break;
     case "mesero":
@@ -156,7 +147,7 @@ function cambiarEstatusPedido(req, res, next) {
         });
       } else if (req.body.status === 4) {
         filter.status = 3;
-        edit={ $set: { status: req.body.status, idMesero:req.usuario.id }};
+        edit = { $set: { status: req.body.status, idMesero: req.usuario.id } };
       }
       break;
     case "chef":
@@ -167,15 +158,15 @@ function cambiarEstatusPedido(req, res, next) {
         });
       } else if (req.body.status === 2) {
         filter.status = 1;
-        edit={ $set: { status: req.body.status, idChef:req.usuario.id }};
+        edit = { $set: { status: req.body.status, idChef: req.usuario.id } };
       } else if (req.body.status === 3) {
         filter.status = 2;
-        filter.idChef=req.usuario.id
-        edit={ $set: { status: req.body.status, idChef:req.usuario.id }};
+        filter.idChef = req.usuario.id
+        edit = { $set: { status: req.body.status, idChef: req.usuario.id } };
       }
       break;
   }
-  
+
   Pedido.findOneAndUpdate(filter, edit, { new: true }).then((pedido, error) => {
     if (error) {
       return res.status(400).send({
@@ -205,16 +196,21 @@ const filtrarPedido = (req, res, next) => {
   if (req.body.idCliente) filter.idCliente = mongoose.Types.ObjectId(idCliente);
   if (req.body.idChef) filter.idChef = mongoose.Types.ObjectId(idChef);
   if (req.body.idMesero) filter.idMesero = mongoose.Types.ObjectId(idMesero);
-  if (req.body.status || req.body.status===0) filter.status = req.body.status;
-  if (req.body.cost || req.body.cost===0) filter.cost = req.body.cost;
+  if (req.body.status || req.body.status === 0) filter.status = req.body.status;
+  if (req.body.cost || req.body.cost === 0) filter.cost = req.body.cost;
 
-  Pedido.find(filter).then((pedidos, error) => {
-    if (error){
+  Pedido.find(filter).populate('idCliente').populate('idChef').populate('idMesero').populate({
+    path: 'info',
+    populate: {
+      path: 'idCategoria'
+    }
+  }).then((pedidos, error) => {
+    if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
       });
-    } else if (pedidos.lenght===0) {
+    } else if (pedidos.lenght === 0) {
       return res.status(404).send({
         ...codeResponses[404],
         message: "La consulta no arrojó resultados.",
@@ -235,12 +231,12 @@ const eliminarPedido = (req, res, next) => {
     });
   }
   Pedido.findOneAndDelete({ _id: req.params.id, status: 0 }).then((pedido, error) => { //Elimina sólo los cancelados
-    if (error){
+    if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
       });
-    }else if(!pedido){
+    } else if (!pedido) {
       return res.status(404).send({
         ...codeResponses[404],
         message: "La consulta no arrojó resultados.",
@@ -257,7 +253,7 @@ const eliminarPedido = (req, res, next) => {
 module.exports = {
   crearPedido,
   verPedido,
-  verHistorialPedidos,
+  verPedidos,
   editarPedido,
   cambiarEstatusPedido,
   filtrarPedido,

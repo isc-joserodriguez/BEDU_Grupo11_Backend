@@ -1114,9 +1114,7 @@
             }
           }
         }
-      }
-    },
-    "/pedido/verHistorial/{numReg}": {
+      },
       "get": {
         "security": [
           {
@@ -1127,13 +1125,6 @@
           "Pedido"
         ],
         "description": "Autenticado como administrador, muestra todos los pedidos del sistema. Autenticado como chef o mesero, muestra los pedidos donde participaron. Autenticado como cliente, muestra los pedidos realizados. Limitado al número de registros indicado por el usuario",
-        "parameters": [
-          {
-            "name": "numReg",
-            "in": "path",
-            "description": "Número de registros a mostrar."
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",

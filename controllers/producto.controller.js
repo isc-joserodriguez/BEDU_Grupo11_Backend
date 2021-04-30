@@ -21,7 +21,7 @@ function crearProducto(req, res, next) {
   }
 
 function verProducto(req, res, next) {                              
-    Producto.findById(req.params.id).then((producto,error) => {
+    Producto.findById(req.params.id).populate('idCategoria').then((producto,error) => {
       if(error){
         return res.status(400).send({
           ...codeResponses[400],
@@ -41,7 +41,7 @@ function verProducto(req, res, next) {
   }
 
 function verProductos(req, res, next) {                              
-    Producto.find().then((productos, error) => { 
+    Producto.find().populate('idCategoria').then((productos, error) => { 
       if (error){
         return res.status(400).send({
           ...codeResponses[400],
@@ -118,7 +118,7 @@ function filtrarProducto(req, res, next) {
   if(req.body.cost || req.body.cost===0) filter.cost=req.body.cost;
   if(req.body.idCategoria) filter.idCategoria=req.body.idCategoria;
   
-  Producto.find(filter).then ((filteredProductos,error) => {
+  Producto.find(filter).populate('idCategoria').then ((filteredProductos,error) => {
     if(error){
       return res.status(400).send({
         ...codeResponses[400],

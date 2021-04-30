@@ -167,7 +167,12 @@ function cambiarEstatusPedido(req, res, next) {
       break;
   }
 
-  Pedido.findOneAndUpdate(filter, edit, { new: true }).then((pedido, error) => {
+  Pedido.findOneAndUpdate(filter, edit, { new: true }).populate('idCliente').populate('idChef').populate('idMesero').populate({
+    path: 'info',
+    populate: {
+      path: 'idCategoria'
+    }
+  }).then((pedido, error) => {
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],

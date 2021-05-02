@@ -208,7 +208,7 @@ const filtrarPedido = (req, res, next) => {
   if (req.body.idCliente) filter.idCliente = mongoose.Types.ObjectId(idCliente);
   if (req.body.idChef) filter.idChef = mongoose.Types.ObjectId(idChef);
   if (req.body.idMesero) filter.idMesero = mongoose.Types.ObjectId(idMesero);
-  if (req.body.status || req.body.status === 0) filter.status = req.body.status;
+  if ((req.body.status || req.body.status === 0) && (req.body.status !== -1)) filter.status = req.body.status;
   if (req.body.cost || req.body.cost === 0) filter.cost = req.body.cost;
 
   if (special) {
@@ -225,11 +225,16 @@ const filtrarPedido = (req, res, next) => {
       filter = {
         $or: [
           { idMesero: req.usuario.id },
-          { ...filter, idMesero: null, status:3 }
+          { ...filter, idMesero: null, status: 3 }
         ]
       }
     }
   }
+
+  if (req.body.status === -1) {
+    filter = { $and: [{ status: { $ne: 4 } }, { status: { $ne: 0 } }] }
+  }
+
   console.log(filter);
   Pedido.find(filter).populate('idCliente').populate('idChef').populate('idMesero').populate({
     path: 'info',

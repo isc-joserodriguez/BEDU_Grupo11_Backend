@@ -1,14 +1,14 @@
 // controllers/categoria.js
-const mongoose = require("mongoose");
-const Categoria = mongoose.model("Categoria");
-const codeResponses = require("../config").codeResponses;
+const mongoose = require('mongoose');
+const Categoria = mongoose.model('Categoria');
+const codeResponses = require('../config').codeResponses;
 
 //--------------------------------------------------------------------
 const crearCategoria = (req, res, next) => {
-  if (req.usuario.type !== "admin")
+  if (req.usuario.type !== 'admin')
     return res.status(401).send({
       ...codeResponses[401],
-      message: "Sólo el administrador puede crear una nueva categoría"
+      message: 'Sólo el administrador puede crear una nueva categoría'
     });
   // Instanciaremos una nueva categoria utilizando el modelo de categoría
   let categoria = new Categoria(req.body);
@@ -25,10 +25,10 @@ const crearCategoria = (req, res, next) => {
 }
 
 function verCategoria(req, res, next) { //Obteniendo categoria desde MongoDB.
-  if (req.usuario.type === "chef") {
+  if (req.usuario.type === 'chef') {
     return res.status(401).send({
       ...codeResponses[401],
-      message: "No puedes ver esta opción."
+      message: 'No puedes ver esta opción.'
     });
   }
   Categoria.findById(req.params.id).then((categoria, error) => {
@@ -40,7 +40,7 @@ function verCategoria(req, res, next) { //Obteniendo categoria desde MongoDB.
     } else if (!categoria) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
+        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({
@@ -52,11 +52,11 @@ function verCategoria(req, res, next) { //Obteniendo categoria desde MongoDB.
 
 
 function verCategorias(req, res, next) {
-  if (req.usuario.type === "chef") {
+  if (req.usuario.type === 'chef') {
     return res.status(401).send(
       {
         ...codeResponses[401],
-        message: "No puedes ver esta opción."
+        message: 'No puedes ver esta opción.'
       }
     );
   }                           
@@ -69,7 +69,7 @@ function verCategorias(req, res, next) {
     } else if (categorias.length===0) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
+        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({
@@ -81,10 +81,10 @@ function verCategorias(req, res, next) {
 
 function editarCategoria(req, res, next) {
   delete req.body.status;
-  if (req.usuario.type !== "admin") {
+  if (req.usuario.type !== 'admin') {
     return res.status(401).send({
       ...codeResponses[401],
-      message: "Sólo el administrador puede editar una categoría."
+      message: 'Sólo el administrador puede editar una categoría.'
     });
   }
   Categoria.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true }).then((updatedCategoria, error) => {
@@ -96,7 +96,7 @@ function editarCategoria(req, res, next) {
     } else if (!updatedCategoria) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
+        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({
@@ -106,10 +106,10 @@ function editarCategoria(req, res, next) {
   }).catch(next);
 }
 function cambiarEstatusCategoria(req, res, next) {
-  if (req.usuario.type !== "admin") {
+  if (req.usuario.type !== 'admin') {
     return res.status(401).send({
       ...codeResponses[401],
-      message: "Sólo el administrador puede editar una categoría."
+      message: 'Sólo el administrador puede editar una categoría.'
     });
   }
   Categoria.findOneAndUpdate({ _id: req.params.id }, { $set: {status:req.body.status} }, { new: true }).then((updatedCategoria, error) => {
@@ -121,7 +121,7 @@ function cambiarEstatusCategoria(req, res, next) {
     } else if (!updatedCategoria) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
+        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({
@@ -132,10 +132,10 @@ function cambiarEstatusCategoria(req, res, next) {
 }
 
 function filtrarCategoria(req, res, next) {
-  if (req.usuario.type === "chef") {
+  if (req.usuario.type === 'chef') {
     return res.status(401).send({
       ...codeResponses[401],
-      message: "No puedes ver esta opción."
+      message: 'No puedes ver esta opción.'
     });
   }
   let filter = {}
@@ -152,7 +152,7 @@ function filtrarCategoria(req, res, next) {
     } else if (filteredCategorias.length===0) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
+        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({

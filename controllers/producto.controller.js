@@ -1,13 +1,13 @@
-const mongoose = require("mongoose")
-const Producto = mongoose.model("Producto")
-const codeResponses = require("../config").codeResponses;
+const mongoose = require('mongoose')
+const Producto = mongoose.model('Producto')
+const codeResponses = require('../config').codeResponses;
 
 function crearProducto(req, res, next) {
-  if (req.usuario.type !== "admin") {
+  if (req.usuario.type !== 'admin') {
     return res.status(401).send(
       {
         ...codeResponses[401],
-        message: "Sólo el administrador puede crear un producto"
+        message: 'Sólo el administrador puede crear un producto'
       }
     );
   }
@@ -30,7 +30,7 @@ function verProducto(req, res, next) {
       }else  if (!producto) {
         return res.status(404).send({
           ...codeResponses[404],
-          message: "La consulta no arrojó resultados.",
+          message: 'La consulta no arrojó resultados.',
         });
       }
       return res.status(200).send({
@@ -50,7 +50,7 @@ function verProductos(req, res, next) {
       } else if(productos.length==0){
         return res.status(404).send({
           ...codeResponses[404],
-          message: "La consulta no arrojó resultados."
+          message: 'La consulta no arrojó resultados.'
         });
       }
       return res.status(200).send({
@@ -62,9 +62,9 @@ function verProductos(req, res, next) {
 
 function editarProducto(req, res, next) {
   delete req.body.status;
-  if (req.usuario.type !== "admin") return res.status(401).send({
+  if (req.usuario.type !== 'admin') return res.status(401).send({
     ...codeResponses[401],
-    message: "Sólo el administrador puede editar un producto"
+    message: 'Sólo el administrador puede editar un producto'
   });
   Producto.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true }).then((producto,error) => {
     if(error){
@@ -75,7 +75,7 @@ function editarProducto(req, res, next) {
     }else  if (!producto) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
+        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({
@@ -86,9 +86,9 @@ function editarProducto(req, res, next) {
 }
 
 function cambiarEstatusProducto(req, res, next) {
-  if (req.usuario.type !== "admin") return res.status(401).send({
+  if (req.usuario.type !== 'admin') return res.status(401).send({
     ...codeResponses[401],
-    message: "Sólo el administrador puede cambiar el estatus de un producto"
+    message: 'Sólo el administrador puede cambiar el estatus de un producto'
   });
   Producto.findOneAndUpdate({ _id: req.params.id }, { $set: {status:req.body.status} }, { new: true }).then((updatedProducto, error) => {
     if(error){
@@ -100,7 +100,7 @@ function cambiarEstatusProducto(req, res, next) {
     if (!updatedProducto) {
       return res.status(404).send({
         ...codeResponses[404],
-        message:  "La consulta no arrojó resultados.",
+        message:  'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({
@@ -127,7 +127,7 @@ function filtrarProducto(req, res, next) {
     }else  if (filteredProductos.length===0) { 
       return res.status(404).send({
         ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
+        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({

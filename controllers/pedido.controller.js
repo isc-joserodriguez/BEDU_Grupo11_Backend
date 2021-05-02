@@ -1,14 +1,13 @@
-const mongoose = require("mongoose"); // exportacion de mongoose
-const Pedido = mongoose.model("Pedido");
-const Producto = mongoose.model("Producto");
-const codeResponses = require("../config").codeResponses;
+const mongoose = require('mongoose'); // exportacion de mongoose
+const Pedido = mongoose.model('Pedido');
+const codeResponses = require('../config').codeResponses;
 
 const crearPedido = (req, res, next) => {
-  if (req.usuario.type === "chef" || req.usuario.type === "mesero") return res.status(401).send({
+  if (req.usuario.type === 'chef' || req.usuario.type === 'mesero') return res.status(401).send({
     ...codeResponses[401],
-    message: "No puedes crear un pedido."
+    message: 'No puedes crear un pedido.'
   });
-  if (req.usuario.type === "cliente") req.body.idCliente = req.usuario.id;
+  if (req.usuario.type === 'cliente') req.body.idCliente = req.usuario.id;
   let pedido = new Pedido(req.body);
   pedido.save().then((pedido, error) => {
     if (error) return res.status(400).send({
@@ -25,7 +24,7 @@ const crearPedido = (req, res, next) => {
 const verPedido = (req, res, next) => {
   if (req.usuario.type === 'cliente' && req.params.id !== req.usuario.id) return res.status(401).send({
     ...codeResponses[401],
-    message: "No puedes ver los pedidos de otro usuario."
+    message: 'No puedes ver los pedidos de otro usuario.'
   });
   Pedido.findById(req.params.id).populate('idCliente').populate('idChef').populate('idMesero').populate({
     path: 'info',
@@ -41,7 +40,7 @@ const verPedido = (req, res, next) => {
     } else if (!pedido) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
+        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({
@@ -54,13 +53,13 @@ const verPedido = (req, res, next) => {
 const verPedidos = (req, res, next) => {
   let filter = {};
   switch (req.usuario.type) {
-    case "cliente":
+    case 'cliente':
       filter = { idCliente: req.usuario.id };
       break;
-    case "chef":
+    case 'chef':
       filter = { idChef: req.usuario.id };
       break;
-    case "mesero":
+    case 'mesero':
       filter = { idMesero: req.usuario.id };
       break;
   }
@@ -78,7 +77,7 @@ const verPedidos = (req, res, next) => {
     } else if (filteredPedidos.length === 0) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
+        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({
@@ -92,10 +91,10 @@ const editarPedido = (req, res, next) => {
   delete req.body.status;
   let filter = {};
   switch (req.usuario.type) {
-    case "cliente":
+    case 'cliente':
       filter = { _id: req.params.id, idCliente: req.usuario.id, status: 1 };
       break;
-    case "admin":
+    case 'admin':
       filter = { _id: req.params.id, status: 1 };
       break;
   }
@@ -109,7 +108,7 @@ const editarPedido = (req, res, next) => {
     } else if (!editedPedido) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
+        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({
@@ -120,14 +119,14 @@ const editarPedido = (req, res, next) => {
 };
 
 function cambiarEstatusPedido(req, res, next) {
-  if (req.usuario.type === "cliente") return res.status(401).send({
+  if (req.usuario.type === 'cliente' && req.body.status !== 0) return res.status(401).send({
     ...codeResponses[401],
-    message: "Un usuario cliente no puede cambiar el estatus de un pedido."
+    message: 'Un usuario cliente no puede cambiar el estatus de un pedido.'
   });
   let filter = { _id: req.params.id };
   let edit = {};
   switch (req.usuario.type) {
-    case "admin":
+    case 'admin':
       if (req.body.status === 0 || req.body.status === 2) {
         filter.status = 1;
         edit = { $set: { status: req.body.status } };
@@ -139,22 +138,22 @@ function cambiarEstatusPedido(req, res, next) {
         edit = { $set: { status: req.body.status } };
       }
       break;
-    case "mesero":
+    case 'mesero':
       if (req.body.status === 2 || req.body.status === 3) {
         return res.status(401).send({
           ...codeResponses[401],
-          message: "Un usuario mesero no puede cambiar el estatus de un pedido a preparando o preparado"
+          message: 'Un usuario mesero no puede cambiar el estatus de un pedido a preparando o preparado'
         });
       } else if (req.body.status === 4) {
         filter.status = 3;
         edit = { $set: { status: req.body.status, idMesero: req.usuario.id } };
       }
       break;
-    case "chef":
+    case 'chef':
       if (req.body.status === 4 || req.body.status === 0) {
         return res.status(401).send({
           ...codeResponses[401],
-          message: "Un usuario chef no puede cambiar el estatus de un pedido a entregado o cancelado."
+          message: 'Un usuario chef no puede cambiar el estatus de un pedido a entregado o cancelado.'
         });
       } else if (req.body.status === 2) {
         filter.status = 1;
@@ -164,6 +163,10 @@ function cambiarEstatusPedido(req, res, next) {
         filter.idChef = req.usuario.id
         edit = { $set: { status: req.body.status, idChef: req.usuario.id } };
       }
+      break;
+    default:
+      filter.status = 1;
+      edit = { $set: { status: req.body.status } };
       break;
   }
 
@@ -181,7 +184,7 @@ function cambiarEstatusPedido(req, res, next) {
     } else if (!pedido) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
+        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({
@@ -195,8 +198,8 @@ const filtrarPedido = (req, res, next) => {
   let filter = {};
   if (req.body.fechaIni || req.body.fechaFin) {
     filter.createdAt = {};
-    if (req.body.fechaIni) filter.createdAt["$gte"] = new Date(req.body.fechaIni);
-    if (req.body.fechaFin) filter.createdAt["$lt"] = new Date(req.body.fechaFin);
+    if (req.body.fechaIni) filter.createdAt['$gte'] = new Date(req.body.fechaIni);
+    if (req.body.fechaFin) filter.createdAt['$lt'] = new Date(req.body.fechaFin);
   }
   if (req.body.idCliente) filter.idCliente = mongoose.Types.ObjectId(idCliente);
   if (req.body.idChef) filter.idChef = mongoose.Types.ObjectId(idChef);
@@ -218,7 +221,7 @@ const filtrarPedido = (req, res, next) => {
     } else if (pedidos.lenght === 0) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
+        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({
@@ -229,10 +232,10 @@ const filtrarPedido = (req, res, next) => {
 };
 
 const eliminarPedido = (req, res, next) => {
-  if (req.usuario.type !== "admin") {
+  if (req.usuario.type !== 'admin') {
     return res.status(401).send({
       ...codeResponses[401],
-      message: "Solo un administrador eliminar un pedido"
+      message: 'Solo un administrador eliminar un pedido'
     });
   }
   Pedido.findOneAndDelete({ _id: req.params.id, status: 0 }).then((pedido, error) => { //Elimina sólo los cancelados
@@ -244,7 +247,7 @@ const eliminarPedido = (req, res, next) => {
     } else if (!pedido) {
       return res.status(404).send({
         ...codeResponses[404],
-        message: "La consulta no arrojó resultados.",
+        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({

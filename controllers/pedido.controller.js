@@ -196,6 +196,9 @@ function cambiarEstatusPedido(req, res, next) {
 
 const filtrarPedido = (req, res, next) => {
   let filter = {};
+  if (req.usuario.type === 'cliente') {
+    filter.idCliente = req.usuario.id
+  }
   if (req.body.fechaIni || req.body.fechaFin) {
     filter.createdAt = {};
     if (req.body.fechaIni) filter.createdAt['$gte'] = new Date(req.body.fechaIni);

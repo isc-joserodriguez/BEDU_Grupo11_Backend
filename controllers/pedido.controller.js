@@ -229,13 +229,16 @@ const filtrarPedido = (req, res, next) => {
         ]
       }
     }
-  }
-
-  if (req.body.status === -1) {
+  } 
+    if (req.body.status === -1) {
+      if (req.usuario.type === 'admin') {
     filter = { $and: [{ status: { $ne: 4 } }, { status: { $ne: 0 } }] }
+      }else if (req.usuario.type === 'chef') {
+      filter = { $and: [{ idChef: req.usuario.id }, { status: { $ne: 4 } }] }
+    }else if (req.usuario.type === 'mesero') {
+      filter = { $and: [{ idMesero: req.usuario.id }, { status: { $ne: 4 } }] }
+    }
   }
-
-  console.log(filter);
   Pedido.find(filter).populate('idCliente').populate('idChef').populate('idMesero').populate({
     path: 'info',
     populate: {

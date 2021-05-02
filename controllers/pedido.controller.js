@@ -209,6 +209,29 @@ const filtrarPedido = (req, res, next) => {
   if (req.body.idMesero) filter.idMesero = mongoose.Types.ObjectId(idMesero);
   if (req.body.status || req.body.status === 0) filter.status = req.body.status;
   if (req.body.cost || req.body.cost === 0) filter.cost = req.body.cost;
+  filter = { client: 123123, sldj: 123123 }
+  if (req.usuario.type === 'chef') {
+    filter = {
+      $or: [
+        { idChef: req.usuario.id },
+        filter
+      ]
+    }
+  }
+
+  if (req.usuario.type === 'mesero') {
+    filter = {
+      $or: [
+        { idMesero: req.usuario.id },
+        filter
+      ]
+    }
+  }
+
+  db.pedidos.find({
+    $or: [{ idChef: null }, { idChef: ObjectId("607b26ecc0a31133143e4b44") }]
+  },
+    { idCliente: 1 })
 
   Pedido.find(filter).populate('idCliente').populate('idChef').populate('idMesero').populate({
     path: 'info',

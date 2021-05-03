@@ -143,8 +143,19 @@ const editar = (req, res, next) => {
     ...codeResponses[401],
     message: 'Sólo puedes editar tus datos de usuario'
   });
-  delete req.body.type;
-  delete req.body.status;
+  if (req.usuario.type !== 'admin') {
+    delete req.body.type;
+    delete req.body.status;
+  }
+  if (req.password) {
+    let newUsuario = req.body;
+    let { password } = req.body;
+
+    delete newUsuario.password
+    const usuario = new Usuario(newUsuario)
+    usuario.hashPassword(password)
+    req.body.password = usuario.hashPassword;
+  }
   Usuario.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true }).then((user, error) => {
     if (error) {
       return res.status(400).send({

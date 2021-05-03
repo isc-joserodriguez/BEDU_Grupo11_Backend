@@ -12,7 +12,7 @@ function crearProducto(req, res, next) {
     );
   }
   const producto = new Producto(req.body)
-  producto.save().then(producto => { //Guardando nuevo producto en MongoDB.
+  producto.save().then(producto => {
     return res.status(201).send({
       ...codeResponses[201],
       detail: producto

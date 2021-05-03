@@ -22,10 +22,6 @@ const crearPedido = (req, res, next) => {
 };
 
 const verPedido = (req, res, next) => {
-  if (req.usuario.type === 'cliente' && req.params.id !== req.usuario.id) return res.status(401).send({
-    ...codeResponses[401],
-    message: 'No puedes ver los pedidos de otro usuario.'
-  });
   Pedido.findById(req.params.id).populate('idCliente').populate('idChef').populate('idMesero').populate({
     path: 'info',
     populate: {

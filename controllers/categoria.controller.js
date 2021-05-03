@@ -10,7 +10,6 @@ const crearCategoria = (req, res, next) => {
       ...codeResponses[401],
       message: 'Sólo el administrador puede crear una nueva categoría'
     });
-  // Instanciaremos una nueva categoria utilizando el modelo de categoría
   let categoria = new Categoria(req.body);
   categoria.save().then((categoria, error) => {
     if (error) return res.status(400).send({ 

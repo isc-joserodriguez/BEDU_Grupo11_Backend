@@ -147,14 +147,15 @@ const editar = (req, res, next) => {
     delete req.body.type;
     delete req.body.status;
   }
-  if (req.password) {
+  if (req.body.password) {
     let newUsuario = req.body;
     let { password } = req.body;
 
     delete newUsuario.password
-    const usuario = new Usuario(newUsuario)
+    const usuario = new Usuario(newUsuario);
     usuario.hashPassword(password)
-    req.body.password = usuario.hashPassword;
+    req.body.hash = usuario.hash;
+    req.body.salt = usuario.salt;
   }
   Usuario.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true }).then((user, error) => {
     if (error) {

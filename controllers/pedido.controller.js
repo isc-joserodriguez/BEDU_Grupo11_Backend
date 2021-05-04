@@ -233,6 +233,8 @@ const filtrarPedido = (req, res, next) => {
       filter = { $and: [{ idChef: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 3 } }] }
     } else if (req.usuario.type === 'mesero') {
       filter = { $and: [{ idMesero: req.usuario.id }, { status: { $ne: 4 } }] }
+    }else if (req.usuario.type === 'cliente') {
+      filter = { $and: [{ idCliente: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 0 } }] }
     }
   }
   Pedido.find(filter).populate('idCliente').populate('idChef').populate('idMesero').populate({

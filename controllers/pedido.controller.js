@@ -47,18 +47,13 @@ const verPedido = (req, res, next) => {
 };
 
 const verPedidos = (req, res, next) => {
-  let filter = {};
-  switch (req.usuario.type) {
-    case 'cliente':
-      filter = { idCliente: req.usuario.id };
-      break;
-    case 'chef':
-      filter = { idChef: req.usuario.id };
-      break;
-    case 'mesero':
-      filter = { idMesero: req.usuario.id };
-      break;
+  const filters = {
+    'cliente': { idCliente: req.usuario.id },
+    'chef': { idChef: req.usuario.id },
+    'mesero': { idMesero: req.usuario.id }
   }
+  let filter = filters[req.usuario.type];
+
   Pedido.find(filter).populate('idCliente').populate('idChef').populate('idMesero').populate({
     path: 'info',
     populate: {
@@ -85,15 +80,12 @@ const verPedidos = (req, res, next) => {
 
 const editarPedido = (req, res, next) => {
   delete req.body.status;
-  let filter = {};
-  switch (req.usuario.type) {
-    case 'cliente':
-      filter = { _id: req.params.id, idCliente: req.usuario.id, status: 1 };
-      break;
-    case 'admin':
-      filter = { _id: req.params.id, status: 1 };
-      break;
+  const filters = {
+    'cliente': { _id: req.params.id, idCliente: req.usuario.id, status: 1 },
+    'admin': { _id: req.params.id, status: 1 }
   }
+  let filter = filters[req.usuario.type];
+  
   let datos = req.body;
   Pedido.findOneAndUpdate(filter, { $set: datos }, { new: true }).then((editedPedido, error) => {
     if (error) {
@@ -233,7 +225,7 @@ const filtrarPedido = (req, res, next) => {
       filter = { $and: [{ idChef: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 3 } }] }
     } else if (req.usuario.type === 'mesero') {
       filter = { $and: [{ idMesero: req.usuario.id }, { status: { $ne: 4 } }] }
-    }else if (req.usuario.type === 'cliente') {
+    } else if (req.usuario.type === 'cliente') {
       filter = { $and: [{ idCliente: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 0 } }] }
     }
   }

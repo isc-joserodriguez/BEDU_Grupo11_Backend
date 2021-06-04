@@ -9,6 +9,7 @@ const {
   editarPedido,
   cambiarEstatusPedido,
   filtrarPedido,
+  verPedidoProcesando,
   eliminarPedido
 } = require('../controllers/pedido.controller')
 
@@ -16,10 +17,11 @@ const {
 router.get('/:id', auth.requerido, verPedido)//N
 router.get('/', auth.requerido, verPedidos)//N
 router.post('/filtrar', auth.requerido, filtrarPedido)//N
+router.post('/procesando', auth.requerido, verPedidoProcesando)//N
 router.post('/', auth.requerido, crearPedido)//N
 router.put('/editar/:id', auth.requerido, editarPedido)//N
 router.put('/cambiarEstatus/:id', auth.requerido, cambiarEstatusPedido)//N
-router.delete('/:id', auth.requerido,eliminarPedido)
+router.delete('/:id', auth.requerido, eliminarPedido)
 
 
 module.exports = router;

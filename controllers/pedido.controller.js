@@ -85,7 +85,7 @@ const editarPedido = (req, res, next) => {
     'admin': { _id: req.params.id, status: 1 }
   }
   let filter = filters[req.usuario.type];
-  
+
   let datos = req.body;
   Pedido.findOneAndUpdate(filter, { $set: datos }, { new: true }).then((editedPedido, error) => {
     if (error) {
@@ -182,9 +182,86 @@ function cambiarEstatusPedido(req, res, next) {
   }).catch(next);
 }
 
+const verPedidoProcesando = (req, res, next) => {
+  const actions = {
+    'chef': { $and: [{ idChef: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 3 } }] },
+    'cliente': { $and: [{ idCliente: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 0 } }] }
+  }
+  Pedido.find(actions[req.usuario.type]).populate('idCliente').populate('idChef').populate('idMesero').populate({
+    path: 'info',
+    populate: {
+      path: 'idCategoria'
+    }
+  }).then((pedidos, error) => {
+    if (error) {
+      return res.status(400).send({
+        ...codeResponses[400],
+        message: error
+      });
+    } else if (!!pedidos.lenght) {
+      return res.status(404).send({
+        ...codeResponses[404],
+        message: 'La consulta no arrojó resultados.',
+      });
+    }
+    return res.status(200).send({
+      ...codeResponses[200],
+      detail: pedidos
+    });
+  }).catch(next);
+};
+
 const filtrarPedido = (req, res, next) => {
   let filter = {};
-  let { special } = req.body;
+  /* {
+  cancelado: false,
+  pendiente: false,
+  preparando: false,
+  preparado: false,
+  entregado: false,
+  minDate: '',
+  maxDate: '',
+  minPrice: '',
+  maxPrice: '',
+  platillo: '',
+  chef: '',
+  mesero: '',
+  cliente: '',
+  special: true
+} */
+  const {
+    cancelado,
+    pendiente,
+    preparando,
+    preparado,
+    entregado,
+    minDate,
+    maxDate,
+    minPrice,
+    maxPrice,
+    platillo,
+    chef,
+    mesero,
+    cliente,
+    special,
+  } = req.body;
+
+  const status = [];
+
+  if (cancelado) status.push(0);
+  if (pendiente) status.push(1);
+  if (preparando) status.push(2);
+  if (preparado) status.push(3);
+  if (entregado) status.push(4);
+  /* minDate,
+    maxDate,
+    minPrice,
+    maxPrice,
+    platillo,
+    chef,
+    mesero,
+    cliente,
+    special */
   if (req.usuario.type === 'cliente') {
     filter.idCliente = req.usuario.id
   }
@@ -240,7 +317,126 @@ const filtrarPedido = (req, res, next) => {
         ...codeResponses[400],
         message: error
       });
-    } else if (pedidos.lenght === 0) {
+    } else if (!!pedidos.lenght) {
+      return res.status(404).send({
+        ...codeResponses[404],
+        message: 'La consulta no arrojó resultados.',
+      });
+    }
+    return res.status(200).send({
+      ...codeResponses[200],
+      detail: pedidos
+    });
+  }).catch(next);
+};
+
+const verPedidosPropios = (req, res, next) => {
+  let filter = {};
+  /* {
+  cancelado: false,
+  pendiente: false,
+  preparando: false,
+  preparado: false,
+  entregado: false,
+  minDate: '',
+  maxDate: '',
+  minPrice: '',
+  maxPrice: '',
+  platillo: '',
+  chef: '',
+  mesero: '',
+  cliente: '',
+  special: true
+} */
+  const {
+    cancelado,
+    pendiente,
+    preparando,
+    preparado,
+    entregado,
+    minDate,
+    maxDate,
+    minPrice,
+    maxPrice,
+    platillo,
+    chef,
+    mesero,
+    cliente,
+    special,
+  } = req.body;
+
+  const status = [];
+
+  if (cancelado) status.push(0);
+  if (pendiente) status.push(1);
+  if (preparando) status.push(2);
+  if (preparado) status.push(3);
+  if (entregado) status.push(4);
+  /* minDate,
+    maxDate,
+    minPrice,
+    maxPrice,
+    platillo,
+    chef,
+    mesero,
+    cliente,
+    special */
+  if (req.usuario.type === 'cliente') {
+    filter.idCliente = req.usuario.id
+  }
+  if (req.body.fechaIni || req.body.fechaFin) {
+    filter.createdAt = {};
+    if (req.body.fechaIni) filter.createdAt['$gte'] = new Date(req.body.fechaIni);
+    if (req.body.fechaFin) filter.createdAt['$lt'] = new Date(req.body.fechaFin);
+  }
+  if (req.body.idCliente) filter.idCliente = mongoose.Types.ObjectId(idCliente);
+  if (req.body.idChef) filter.idChef = mongoose.Types.ObjectId(idChef);
+  if (req.body.idMesero) filter.idMesero = mongoose.Types.ObjectId(idMesero);
+  if ((req.body.status || req.body.status === 0) && (req.body.status !== -1)) filter.status = req.body.status;
+  if (req.body.cost || req.body.cost === 0) filter.cost = req.body.cost;
+
+  if (special) {
+    if (req.usuario.type === 'chef') {
+      filter = {
+        $or: [
+          { idChef: req.usuario.id },
+          { ...filter, idChef: null }
+        ]
+      }
+    }
+
+    if (req.usuario.type === 'mesero') {
+      filter = {
+        $or: [
+          { idMesero: req.usuario.id },
+          { ...filter, idMesero: null, status: 3 }
+        ]
+      }
+    }
+  }
+  if (req.body.status === -1) {
+    if (req.usuario.type === 'admin') {
+      filter = { $and: [{ status: { $ne: 4 } }, { status: { $ne: 0 } }] }
+    } else if (req.usuario.type === 'chef') {
+      filter = { $and: [{ idChef: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 3 } }] }
+    } else if (req.usuario.type === 'mesero') {
+      filter = { $and: [{ idMesero: req.usuario.id }, { status: { $ne: 4 } }] }
+    } else if (req.usuario.type === 'cliente') {
+      filter = { $and: [{ idCliente: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 0 } }] }
+    }
+  }
+  Pedido.find(filter).populate('idCliente').populate('idChef').populate('idMesero').populate({
+    path: 'info',
+    populate: {
+      path: 'idCategoria'
+    }
+  }).then((pedidos, error) => {
+    if (error) {
+      return res.status(400).send({
+        ...codeResponses[400],
+        message: error
+      });
+    } else if (!!pedidos.lenght) {
       return res.status(404).send({
         ...codeResponses[404],
         message: 'La consulta no arrojó resultados.',
@@ -288,4 +484,5 @@ module.exports = {
   cambiarEstatusPedido,
   filtrarPedido,
   eliminarPedido,
+  verPedidoProcesando
 };

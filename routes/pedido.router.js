@@ -14,10 +14,10 @@ const {
 } = require('../controllers/pedido.controller')
 
 //Asignamos las rutas para cada método
+router.get('/procesando', auth.requerido, verPedidoProcesando)//N
 router.get('/:id', auth.requerido, verPedido)//N
 router.get('/', auth.requerido, verPedidos)//N
 router.post('/filtrar', auth.requerido, filtrarPedido)//N
-router.post('/procesando', auth.requerido, verPedidoProcesando)//N
 router.post('/', auth.requerido, crearPedido)//N
 router.put('/editar/:id', auth.requerido, editarPedido)//N
 router.put('/cambiarEstatus/:id', auth.requerido, cambiarEstatusPedido)//N

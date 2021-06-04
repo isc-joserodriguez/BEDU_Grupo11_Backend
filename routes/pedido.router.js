@@ -10,11 +10,15 @@ const {
   cambiarEstatusPedido,
   filtrarPedido,
   verPedidoProcesando,
-  eliminarPedido
+  verPedidosPropios,
+  verPendientes,
+  eliminarPedido,
 } = require('../controllers/pedido.controller')
 
 //Asignamos las rutas para cada método
 router.get('/procesando', auth.requerido, verPedidoProcesando)//N
+router.get('/propios', auth.requerido, verPedidosPropios)//N
+router.get('/pendientes', auth.requerido, verPendientes)//N
 router.get('/:id', auth.requerido, verPedido)//N
 router.get('/', auth.requerido, verPedidos)//N
 router.post('/filtrar', auth.requerido, filtrarPedido)//N

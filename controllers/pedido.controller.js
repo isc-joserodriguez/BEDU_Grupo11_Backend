@@ -211,102 +211,15 @@ const verPedidoProcesando = (req, res, next) => {
   }).catch(next);
 };
 
-const filtrarPedido = (req, res, next) => {
-  let filter = {};
-  /* {
-  cancelado: false,
-  pendiente: false,
-  preparando: false,
-  preparado: false,
-  entregado: false,
-  minDate: '',
-  maxDate: '',
-  minPrice: '',
-  maxPrice: '',
-  platillo: '',
-  chef: '',
-  mesero: '',
-  cliente: '',
-  special: true
-} */
-  const {
-    cancelado,
-    pendiente,
-    preparando,
-    preparado,
-    entregado,
-    minDate,
-    maxDate,
-    minPrice,
-    maxPrice,
-    platillo,
-    chef,
-    mesero,
-    cliente,
-    special,
-  } = req.body;
-
-  const status = [];
-
-  if (cancelado) status.push(0);
-  if (pendiente) status.push(1);
-  if (preparando) status.push(2);
-  if (preparado) status.push(3);
-  if (entregado) status.push(4);
-  /* minDate,
-    maxDate,
-    minPrice,
-    maxPrice,
-    platillo,
-    chef,
-    mesero,
-    cliente,
-    special */
-  if (req.usuario.type === 'cliente') {
-    filter.idCliente = req.usuario.id
+const verPedidosPropios = (req, res, next) => {
+  const actions = {
+    'chef': { idChef: req.usuario.id },
+    'mesero': { idMesero: req.usuario.id },
+    'cliente': { idCliente: req.usuario.id },
+    'admin': {},
   }
-  if (req.body.fechaIni || req.body.fechaFin) {
-    filter.createdAt = {};
-    if (req.body.fechaIni) filter.createdAt['$gte'] = new Date(req.body.fechaIni);
-    if (req.body.fechaFin) filter.createdAt['$lt'] = new Date(req.body.fechaFin);
-  }
-  if (req.body.idCliente) filter.idCliente = mongoose.Types.ObjectId(idCliente);
-  if (req.body.idChef) filter.idChef = mongoose.Types.ObjectId(idChef);
-  if (req.body.idMesero) filter.idMesero = mongoose.Types.ObjectId(idMesero);
-  if ((req.body.status || req.body.status === 0) && (req.body.status !== -1)) filter.status = req.body.status;
-  if (req.body.cost || req.body.cost === 0) filter.cost = req.body.cost;
 
-  if (special) {
-    if (req.usuario.type === 'chef') {
-      filter = {
-        $or: [
-          { idChef: req.usuario.id },
-          { ...filter, idChef: null }
-        ]
-      }
-    }
-
-    if (req.usuario.type === 'mesero') {
-      filter = {
-        $or: [
-          { idMesero: req.usuario.id },
-          { ...filter, idMesero: null, status: 3 }
-        ]
-      }
-    }
-  }
-  if (req.body.status === -1) {
-    if (req.usuario.type === 'admin') {
-      filter = { $and: [{ status: { $ne: 4 } }, { status: { $ne: 0 } }] }
-    } else if (req.usuario.type === 'chef') {
-      filter = { $and: [{ idChef: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 3 } }] }
-    } else if (req.usuario.type === 'mesero') {
-      filter = { $and: [{ idMesero: req.usuario.id }, { status: { $ne: 4 } }] }
-    } else if (req.usuario.type === 'cliente') {
-      filter = { $and: [{ idCliente: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 0 } }] }
-    }
-  }
-  Pedido.find(filter).populate('idCliente').populate('idChef').populate('idMesero').populate({
+  Pedido.find(actions[req.usuario.type]).populate('idCliente').populate('idChef').populate('idMesero').populate({
     path: 'info',
     populate: {
       path: 'idCategoria'
@@ -330,25 +243,40 @@ const filtrarPedido = (req, res, next) => {
   }).catch(next);
 };
 
-const verPedidosPropios = (req, res, next) => {
-  let filter = {};
-  /* {
-  cancelado: false,
-  pendiente: false,
-  preparando: false,
-  preparado: false,
-  entregado: false,
-  minDate: '',
-  maxDate: '',
-  minPrice: '',
-  maxPrice: '',
-  platillo: '',
-  chef: '',
-  mesero: '',
-  cliente: '',
-  special: true
-} */
-  const {
+const verPendientes = (req, res, next) => {
+  const actions = {
+    'admin': { $and: [{ status: { $ne: 4 } }, { status: { $ne: 0 } }] },
+    'chef': { $and: [{ idChef: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 3 } }] },
+    'mesero': { $and: [{ idMesero: req.usuario.id }, { status: { $ne: 4 } }] },
+    'cliente': { $and: [{ idCliente: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 0 } }] }
+  }
+  Pedido.find(actions[req.usuario.type]).populate('idCliente').populate('idChef').populate('idMesero').populate({
+    path: 'info',
+    populate: {
+      path: 'idCategoria'
+    }
+  }).then((pedidos, error) => {
+    if (error) {
+      return res.status(400).send({
+        ...codeResponses[400],
+        message: error
+      });
+    } else if (!!pedidos.lenght) {
+      return res.status(404).send({
+        ...codeResponses[404],
+        message: 'La consulta no arrojó resultados.',
+      });
+    }
+    return res.status(200).send({
+      ...codeResponses[200],
+      detail: pedidos
+    });
+  }).catch(next);
+};
+
+const filtrarPedido = (req, res, next) => {
+  /* req.usuario.type */
+  let {
     cancelado,
     pendiente,
     preparando,
@@ -362,69 +290,117 @@ const verPedidosPropios = (req, res, next) => {
     chef,
     mesero,
     cliente,
-    special,
   } = req.body;
-
   const status = [];
+
+  //Status Management
 
   if (cancelado) status.push(0);
   if (pendiente) status.push(1);
   if (preparando) status.push(2);
   if (preparado) status.push(3);
   if (entregado) status.push(4);
-  /* minDate,
-    maxDate,
-    minPrice,
-    maxPrice,
-    platillo,
+  let statusFilter = {};
+  if (!!status.length) {
+    statusFilter = {
+      $or: status.map(status => ({ status }))
+    }
+  }
+
+  //Date Management
+  let dateFilter = {};
+  if (!!minDate && !!maxDate) {
+    minDate = new Date(minDate);
+    maxDate = new Date(maxDate);
+    maxDate.setDate(maxDate.getDate() + 1);
+    dateFilter = {
+      createdAt: {
+        $gte: minDate,
+        $lt: maxDate
+      }
+    }
+  }
+
+  //Price Management
+  let priceFilter = {};
+  if (!!minPrice && !!maxPrice) {
+    priceFilter = {
+      cost: {
+        $gte: +minPrice,
+        $lt: +maxPrice
+      }
+    }
+  }
+
+  //Chef Management
+
+  /* 
+  platillo,
     chef,
     mesero,
     cliente,
-    special */
-  if (req.usuario.type === 'cliente') {
-    filter.idCliente = req.usuario.id
-  }
-  if (req.body.fechaIni || req.body.fechaFin) {
-    filter.createdAt = {};
-    if (req.body.fechaIni) filter.createdAt['$gte'] = new Date(req.body.fechaIni);
-    if (req.body.fechaFin) filter.createdAt['$lt'] = new Date(req.body.fechaFin);
-  }
-  if (req.body.idCliente) filter.idCliente = mongoose.Types.ObjectId(idCliente);
-  if (req.body.idChef) filter.idChef = mongoose.Types.ObjectId(idChef);
-  if (req.body.idMesero) filter.idMesero = mongoose.Types.ObjectId(idMesero);
-  if ((req.body.status || req.body.status === 0) && (req.body.status !== -1)) filter.status = req.body.status;
-  if (req.body.cost || req.body.cost === 0) filter.cost = req.body.cost;
-
-  if (special) {
-    if (req.usuario.type === 'chef') {
-      filter = {
-        $or: [
-          { idChef: req.usuario.id },
-          { ...filter, idChef: null }
-        ]
+   */
+  let chefFilter = {};
+  if (!!chef) {
+    if (mongoose.isValidObjectId(chef) && chef.length === 24) {
+      chefFilter = {
+        idChef: mongoose.Types.ObjectId(chef)
       }
-    }
-
-    if (req.usuario.type === 'mesero') {
-      filter = {
+    } else {
+      chefFilter = {
         $or: [
-          { idMesero: req.usuario.id },
-          { ...filter, idMesero: null, status: 3 }
+          { firstName: chef },
+          { lastName: chef }
         ]
       }
     }
   }
-  if (req.body.status === -1) {
-    if (req.usuario.type === 'admin') {
-      filter = { $and: [{ status: { $ne: 4 } }, { status: { $ne: 0 } }] }
-    } else if (req.usuario.type === 'chef') {
-      filter = { $and: [{ idChef: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 3 } }] }
-    } else if (req.usuario.type === 'mesero') {
-      filter = { $and: [{ idMesero: req.usuario.id }, { status: { $ne: 4 } }] }
-    } else if (req.usuario.type === 'cliente') {
-      filter = { $and: [{ idCliente: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 0 } }] }
+
+  let clienteFilter = {};
+  if (!!cliente) {
+    if (mongoose.isValidObjectId(cliente) && cliente.length === 24) {
+      clienteFilter = {
+        idCliente: mongoose.Types.ObjectId(cliente)
+      }
+    } else {
+      clienteFilter = {
+        $or: [
+          { firstName: cliente },
+          { lastName: cliente }
+        ]
+      }
     }
   }
+
+  let meseroFilter = {};
+  if (!!mesero) {
+    if (mongoose.isValidObjectId(mesero) && mesero.length === 24) {
+      meseroFilter = {
+        idMesero: mongoose.Types.ObjectId(mesero)
+      }
+    } else {
+      meseroFilter = {
+        $or: [
+          { firstName: mesero },
+          { lastName: mesero }
+        ]
+      }
+    }
+  }
+
+  const filter = {
+    $and: [
+      statusFilter,
+      dateFilter,
+      priceFilter,
+      chefFilter,
+      clienteFilter,
+      meseroFilter
+    ]
+  }
+
+  console.log(JSON.stringify(filter));
+
   Pedido.find(filter).populate('idCliente').populate('idChef').populate('idMesero').populate({
     path: 'info',
     populate: {
@@ -484,5 +460,7 @@ module.exports = {
   cambiarEstatusPedido,
   filtrarPedido,
   eliminarPedido,
-  verPedidoProcesando
+  verPedidoProcesando,
+  verPedidosPropios,
+  verPendientes
 };

@@ -246,9 +246,8 @@ const verPedidosPropios = (req, res, next) => {
 const verPendientes = (req, res, next) => {
   const actions = {
     'admin': { $and: [{ status: { $ne: 4 } }, { status: { $ne: 0 } }] },
-    'chef': { $and: [{ idChef: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 3 } }] },
-    'mesero': { $and: [{ idMesero: req.usuario.id }, { status: { $ne: 4 } }] },
-    'cliente': { $and: [{ idCliente: req.usuario.id }, { status: { $ne: 4 } }, { status: { $ne: 0 } }] }
+    'chef': { idChef: null, status: 1 },
+    'mesero': { idMesero: null, status: 3 }
   }
   Pedido.find(actions[req.usuario.type]).populate('idCliente').populate('idChef').populate('idMesero').populate({
     path: 'info',

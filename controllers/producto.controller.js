@@ -112,22 +112,82 @@ function cambiarEstatusProducto(req, res, next) {
 
 //Filtrar productos
 function filtrarProducto(req, res, next) {
-  let filter = {}
-  if (req.body.name) filter.name = new RegExp(`${req.body.name}`, 'i');
+  let {
+    inactivo,
+    activo,
+    minPrice,
+    maxPrice,
+    nombre,
+    descripcion,
+    categoria
+  } = req.body;
+  const status = [];
+  if (inactivo) status.push(0);
+  if (activo) status.push(1);
+
+  let statusFilter = {};
+  if (!!status.length) {
+    statusFilter = {
+      $or: status.map(status => ({ status }))
+    }
+  }
+
+  //Price Management
+  let priceFilter = {};
+  if (!!minPrice && !!maxPrice) {
+    priceFilter = {
+      cost: {
+        $gte: +minPrice,
+        $lte: +maxPrice
+      }
+    }
+  }
+
+  //Name Management
+  let nameFilter = {};
+  if (!!nombre) {
+    nameFilter = { name: nombre };
+  }
+
+  //Description Management
+  let descriptionFilter = {};
+  if (!!descripcion) {
+    descriptionFilter = { description: descripcion };
+  }
+
+  //Category Management
+  let categoryFilter = {};
+  if (!!categoria) {
+    if (mongoose.isValidObjectId(categoria) && categoria.length === 24) {
+      categoryFilter = {
+        idCategoria: mongoose.Types.ObjectId(categoria)
+      }
+    } else {
+      categoryFilter = { category: categoria }
+    }
+  }
+
+  const filter = {
+    $and: [
+      statusFilter,
+      priceFilter,
+      nameFilter,
+      descriptionFilter,
+      categoryFilter
+    ]
+  }
+
+  /* if (req.body.name) filter.name = new RegExp(`${req.body.name}`, 'i');
   if (req.body.description) filter.description = new RegExp(`${req.body.description}`, 'i');
   if (req.body.cost || req.body.cost === 0) filter.cost = req.body.cost;
-  if (req.body.idCategoria) filter.idCategoria = req.body.idCategoria;
+  if (req.body.idCategoria) filter.idCategoria = req.body.idCategoria; */
 
+  /* console.log(filter) */
   Producto.find(filter).populate('idCategoria').then((filteredProductos, error) => {
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
-      });
-    } else if (filteredProductos.length === 0) {
-      return res.status(404).send({
-        ...codeResponses[404],
-        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({

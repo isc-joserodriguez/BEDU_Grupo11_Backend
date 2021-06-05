@@ -113,24 +113,85 @@ const filtrar = (req, res, next) => {
       ...codeResponses[401],
       message: 'Un usuario cliente no puede realizar un filtrado en el listado de usuarios del sistema'
     });
-  let filter = {}
+
+  let {
+    inactivo,
+    activo,
+    admin,
+    chef,
+    mesero,
+    cliente,
+    nombre,
+    apellido,
+    mail
+  } = req.body;
+
+  const status = [];
+  if (inactivo) status.push(0);
+  if (activo) status.push(1);
+
+  let statusFilter = {};
+  if (!!status.length) {
+    statusFilter = {
+      $or: status.map(status => ({ status }))
+    }
+  }
+
+  // Type Management
+  const type = [];
+  if (admin) type.push('admin');
+  if (chef) type.push('chef');
+  if (mesero) type.push('mesero');
+  if (cliente) type.push('cliente');
+
+  let typeFilter = {};
+  if (!!type.length) {
+    typeFilter = {
+      $or: type.map(type => ({ type }))
+    }
+  }
+
+  //Name Management
+  let nameFilter = {};
+  if (!!nombre) {
+    nameFilter = { firstName: nombre };
+  }
+
+  //Lastname Management
+  let lastnameFilter = {};
+  if (!!apellido) {
+    lastnameFilter = { lastName: apellido };
+  }
+
+  //Mail Management
+  let mailFilter = {};
+  if (!!mail) {
+    mailFilter = { email: mail };
+  }
+
+  const filter = {
+    $and: [
+      statusFilter,
+      typeFilter,
+      nameFilter,
+      lastnameFilter,
+      mailFilter
+    ]
+  }
+
+  /* let filter = {}
   if (req.body.firstName) filter.firstName = new RegExp(`${req.body.firstName}`, 'i');
   if (req.body.lastName) filter.lastName = new RegExp(`${req.body.lastName}`, 'i');
   if (req.body.email) filter.email = new RegExp(`${req.body.email}`, 'i');
   if (req.body.type) filter.type = req.body.type;
-  if (req.body.status || req.body.status === 0) filter.status = req.body.status;
+  if (req.body.status || req.body.status === 0) filter.status = req.body.status; */
   Usuario.find(filter).then((filteredUsuarios, err) => {
     if (err) {
       return res.status(400).send({
         ...codeResponses[400],
         message: err
       });
-    } else if (filteredUsuarios.length === 0) {
-      return res.status(404).send({
-        ...codeResponses[404],
-        message: 'La consulta no arrojó resultados.',
-      });
-    }
+    } 
     return res.status(200).send({
       ...codeResponses[200],
       detail: filteredUsuarios

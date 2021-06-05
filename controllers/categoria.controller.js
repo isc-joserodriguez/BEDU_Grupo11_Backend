@@ -12,7 +12,7 @@ const crearCategoria = (req, res, next) => {
     });
   let categoria = new Categoria(req.body);
   categoria.save().then((categoria, error) => {
-    if (error) return res.status(400).send({ 
+    if (error) return res.status(400).send({
       ...codeResponses[400],
       message: error
     });
@@ -58,14 +58,14 @@ function verCategorias(req, res, next) {
         message: 'No puedes ver esta opción.'
       }
     );
-  }                           
+  }
   Categoria.find().then((categorias, error) => { //Obteniendo categorias desde MongoDB.
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
       });
-    } else if (categorias.length===0) {
+    } else if (categorias.length === 0) {
       return res.status(404).send({
         ...codeResponses[404],
         message: 'La consulta no arrojó resultados.',
@@ -111,7 +111,7 @@ function cambiarEstatusCategoria(req, res, next) {
       message: 'Sólo el administrador puede editar una categoría.'
     });
   }
-  Categoria.findOneAndUpdate({ _id: req.params.id }, { $set: {status:req.body.status} }, { new: true }).then((updatedCategoria, error) => {
+  Categoria.findOneAndUpdate({ _id: req.params.id }, { $set: { status: req.body.status } }, { new: true }).then((updatedCategoria, error) => {
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],
@@ -137,21 +137,54 @@ function filtrarCategoria(req, res, next) {
       message: 'No puedes ver esta opción.'
     });
   }
-  let filter = {}
+  let {
+    inactivo,
+    activo,
+    nombre,
+    descripcion
+  } = req.body;
+
+  const status = [];
+  if (inactivo) status.push(0);
+  if (activo) status.push(1);
+
+  let statusFilter = {};
+  if (!!status.length) {
+    statusFilter = {
+      $or: status.map(status => ({ status }))
+    }
+  }
+
+  //Name Management
+  let nameFilter = {};
+  if (!!nombre) {
+    nameFilter = { name: nombre };
+  }
+
+  //Description Management
+  let descriptionFilter = {};
+  if (!!descripcion) {
+    descriptionFilter = { description: descripcion };
+  }
+
+  const filter = {
+    $and: [
+      statusFilter,
+      nameFilter,
+      descriptionFilter
+    ]
+  }
+
+  /* let filter = {}
   if(req.body.name) filter.name=new RegExp(`${req.body.name}`, 'i');
   if(req.body.description) filter.description=new RegExp(`${req.body.description}`, 'i');
-  if(req.body.status || req.body.status===0) filter.status=req.body.status;
-  
+  if(req.body.status || req.body.status===0) filter.status=req.body.status; */
+
   Categoria.find(filter).then((filteredCategorias, error) => {
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
-      });
-    } else if (filteredCategorias.length===0) {
-      return res.status(404).send({
-        ...codeResponses[404],
-        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({

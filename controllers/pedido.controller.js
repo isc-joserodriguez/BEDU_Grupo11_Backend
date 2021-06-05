@@ -326,19 +326,12 @@ const filtrarPedido = (req, res, next) => {
     priceFilter = {
       cost: {
         $gte: +minPrice,
-        $lt: +maxPrice
+        $lte: +maxPrice
       }
     }
   }
 
   //Chef Management
-
-  /* 
-  platillo,
-    chef,
-    mesero,
-    cliente,
-   */
   let chefFilter = {};
   if (!!chef) {
     if (mongoose.isValidObjectId(chef) && chef.length === 24) {
@@ -410,11 +403,6 @@ const filtrarPedido = (req, res, next) => {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
-      });
-    } else if (!!pedidos.lenght) {
-      return res.status(404).send({
-        ...codeResponses[404],
-        message: 'La consulta no arrojó resultados.',
       });
     }
     return res.status(200).send({

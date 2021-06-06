@@ -311,7 +311,7 @@ const filtrarPedido = (req, res, next) => {
   if (!!minDate && !!maxDate) {
     minDate = new Date(minDate);
     maxDate = new Date(maxDate);
-    maxDate.setDate(maxDate.getDate() + 1);
+    minDate.setDate(minDate.getDate() - 1);
     dateFilter = {
       createdAt: {
         $gte: minDate,

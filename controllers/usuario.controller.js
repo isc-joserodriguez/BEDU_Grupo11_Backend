@@ -154,19 +154,19 @@ const filtrar = (req, res, next) => {
   //Name Management
   let nameFilter = {};
   if (!!nombre) {
-    nameFilter = { firstName: nombre };
+    nameFilter = { firstName: new RegExp(`${nombre}`, 'i') };
   }
 
   //Lastname Management
   let lastnameFilter = {};
   if (!!apellido) {
-    lastnameFilter = { lastName: apellido };
+    lastnameFilter = { lastName: new RegExp(`${apellido}`, 'i') };
   }
 
   //Mail Management
   let mailFilter = {};
   if (!!mail) {
-    mailFilter = { email: mail };
+    mailFilter = { email: new RegExp(`${mail}`, 'i') };
   }
 
   const filter = {
@@ -191,7 +191,7 @@ const filtrar = (req, res, next) => {
         ...codeResponses[400],
         message: err
       });
-    } 
+    }
     return res.status(200).send({
       ...codeResponses[200],
       detail: filteredUsuarios

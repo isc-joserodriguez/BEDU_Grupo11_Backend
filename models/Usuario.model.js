@@ -58,6 +58,7 @@ UsuarioSchema.methods.generarJWT = function () {
 
 UsuarioSchema.methods.toAuthJSON = function () {
     return {
+        id: this._id,
         username: this.username,
         email: this.email,
         type: this.type,

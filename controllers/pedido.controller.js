@@ -274,7 +274,6 @@ const verPendientes = (req, res, next) => {
 };
 
 const filtrarPedido = (req, res, next) => {
-  /* req.usuario.type */
   let {
     cancelado,
     pendiente,

@@ -178,13 +178,6 @@ const filtrar = (req, res, next) => {
       mailFilter
     ]
   }
-
-  /* let filter = {}
-  if (req.body.firstName) filter.firstName = new RegExp(`${req.body.firstName}`, 'i');
-  if (req.body.lastName) filter.lastName = new RegExp(`${req.body.lastName}`, 'i');
-  if (req.body.email) filter.email = new RegExp(`${req.body.email}`, 'i');
-  if (req.body.type) filter.type = req.body.type;
-  if (req.body.status || req.body.status === 0) filter.status = req.body.status; */
   Usuario.find(filter).then((filteredUsuarios, err) => {
     if (err) {
       return res.status(400).send({

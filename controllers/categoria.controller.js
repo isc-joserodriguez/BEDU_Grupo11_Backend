@@ -158,13 +158,13 @@ function filtrarCategoria(req, res, next) {
   //Name Management
   let nameFilter = {};
   if (!!nombre) {
-    nameFilter = { name: nombre };
+    nameFilter = { name: new RegExp(`${nombre}`, 'i') };
   }
 
   //Description Management
   let descriptionFilter = {};
   if (!!descripcion) {
-    descriptionFilter = { description: descripcion };
+    descriptionFilter = { description: new RegExp(`${descripcion}`, 'i') };
   }
 
   const filter = {
@@ -174,11 +174,6 @@ function filtrarCategoria(req, res, next) {
       descriptionFilter
     ]
   }
-
-  /* let filter = {}
-  if(req.body.name) filter.name=new RegExp(`${req.body.name}`, 'i');
-  if(req.body.description) filter.description=new RegExp(`${req.body.description}`, 'i');
-  if(req.body.status || req.body.status===0) filter.status=req.body.status; */
 
   Categoria.find(filter).then((filteredCategorias, error) => {
     if (error) {

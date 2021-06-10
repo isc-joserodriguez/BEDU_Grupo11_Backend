@@ -333,51 +333,44 @@ const filtrarPedido = (req, res, next) => {
 
   //Chef Management
   let chefFilter = {};
+  let inChefFilter = false;
   if (!!chef) {
     if (mongoose.isValidObjectId(chef) && chef.length === 24) {
       chefFilter = {
         idChef: mongoose.Types.ObjectId(chef)
       }
     } else {
-      chefFilter = {
-        $or: [
-          { firstName: chef },
-          { lastName: chef }
-        ]
-      }
+      inChefFilter = true;
     }
   }
 
   let clienteFilter = {};
+  let inClienteFilter = false;
   if (!!cliente) {
     if (mongoose.isValidObjectId(cliente) && cliente.length === 24) {
       clienteFilter = {
         idCliente: mongoose.Types.ObjectId(cliente)
       }
     } else {
-      clienteFilter = {
-        $or: [
-          { firstName: cliente },
-          { lastName: cliente }
-        ]
-      }
+      inClienteFilter = true;
     }
   }
 
   let meseroFilter = {};
+  let inMeseroFilter = false;
   if (!!mesero) {
     if (mongoose.isValidObjectId(mesero) && mesero.length === 24) {
       meseroFilter = {
         idMesero: mongoose.Types.ObjectId(mesero)
       }
     } else {
-      meseroFilter = {
-        $or: [
-          { firstName: mesero },
-          { lastName: mesero }
-        ]
-      }
+      inMeseroFilter = true;
     }
+  }
+
+  let inPlatilloFilter = false;
+  if (!!platillo) {
+    inPlatilloFilter = true;
   }
 
   const filter = {
@@ -391,8 +384,6 @@ const filtrarPedido = (req, res, next) => {
     ]
   }
 
-  console.log(JSON.stringify(filter));
-
   Pedido.find(filter).populate('idCliente').populate('idChef').populate('idMesero').populate({
     path: 'info',
     populate: {
@@ -405,6 +396,49 @@ const filtrarPedido = (req, res, next) => {
         message: error
       });
     }
+    pedidos = pedidos.filter((pedido, index) => {
+      let flag = true;
+      if (!!inChefFilter) {
+        if (!!!pedido.idChef) {
+          flag = false;
+        } else {
+          if (chef.split(' ').length === 2) {
+            flag = flag && (((`${pedido.idChef.firstName} ${pedido.idChef.lastName}`).toLowerCase()).includes(chef.toLowerCase()))
+          } else {
+            flag = flag && (((pedido.idChef.firstName).toLowerCase()).includes(chef.toLowerCase()) || ((pedido.idChef.lastName).toLowerCase()).includes(chef.toLowerCase()))
+          }
+        }
+      }
+      if (!!inClienteFilter) {
+        if (!!!pedido.idCliente) {
+          flag = false;
+        } else {
+          if (cliente.split(' ').length === 2) {
+            flag = flag && (((`${pedido.idCliente.firstName} ${pedido.idCliente.lastName}`).toLowerCase()).includes(cliente.toLowerCase()))
+          } else {
+            flag = flag && (((pedido.idCliente.firstName).toLowerCase()).includes(cliente.toLowerCase()) || ((pedido.idCliente.lastName).toLowerCase()).includes(cliente.toLowerCase()))
+          }
+        }
+      }
+      if (!!inMeseroFilter) {
+        if (!!!pedido.idMesero) {
+          flag = false;
+        } else {
+          if (mesero.split(' ').length === 2) {
+            flag = flag && (((`${pedido.idMesero.firstName} ${pedido.idMesero.lastName}`).toLowerCase()).includes(mesero.toLowerCase()))
+          } else {
+            flag = flag && (((pedido.idMesero.firstName).toLowerCase()).includes(mesero.toLowerCase()) || ((pedido.idMesero.lastName).toLowerCase()).includes(mesero.toLowerCase()))
+          }
+        }
+      }
+      if (inPlatilloFilter) {
+        flag = flag && pedido.info
+          .map(producto => (producto.name.toLowerCase()).includes(platillo.toLowerCase()))
+          .reduce((act, nxt) => (act || nxt), false)
+      }
+      return flag;
+    })
+
     return res.status(200).send({
       ...codeResponses[200],
       detail: pedidos

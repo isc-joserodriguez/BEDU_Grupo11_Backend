@@ -146,24 +146,25 @@ function filtrarProducto(req, res, next) {
   //Name Management
   let nameFilter = {};
   if (!!nombre) {
-    nameFilter = { name: nombre };
+    nameFilter = { name: new RegExp(`${nombre}`, 'i') };
   }
 
   //Description Management
   let descriptionFilter = {};
   if (!!descripcion) {
-    descriptionFilter = { description: descripcion };
+    descriptionFilter = { description: new RegExp(`${descripcion}`, 'i') };
   }
 
   //Category Management
   let categoryFilter = {};
+  let inCategoryFilter = false;
   if (!!categoria) {
     if (mongoose.isValidObjectId(categoria) && categoria.length === 24) {
       categoryFilter = {
         idCategoria: mongoose.Types.ObjectId(categoria)
       }
     } else {
-      categoryFilter = { category: categoria }
+      inCategoryFilter = true;
     }
   }
 
@@ -176,19 +177,15 @@ function filtrarProducto(req, res, next) {
       categoryFilter
     ]
   }
-
-  /* if (req.body.name) filter.name = new RegExp(`${req.body.name}`, 'i');
-  if (req.body.description) filter.description = new RegExp(`${req.body.description}`, 'i');
-  if (req.body.cost || req.body.cost === 0) filter.cost = req.body.cost;
-  if (req.body.idCategoria) filter.idCategoria = req.body.idCategoria; */
-
-  /* console.log(filter) */
   Producto.find(filter).populate('idCategoria').then((filteredProductos, error) => {
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
       });
+    }
+    if (inCategoryFilter) {
+      filteredProductos = filteredProductos.filter(producto => producto.idCategoria.name.toLowerCase().includes(categoria.toLowerCase()));
     }
     return res.status(200).send({
       ...codeResponses[200],

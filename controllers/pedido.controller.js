@@ -396,7 +396,7 @@ const filtrarPedido = (req, res, next) => {
         message: error
       });
     }
-    pedidos = pedidos.filter((pedido, index) => {
+    pedidos = pedidos.filter(pedido => {
       let flag = true;
       if (!!inChefFilter) {
         if (!!!pedido.idChef) {

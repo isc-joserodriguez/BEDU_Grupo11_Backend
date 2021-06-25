@@ -41,13 +41,17 @@ function verProducto(req, res, next) {
 }
 
 function verProductos(req, res, next) {
-  Producto.find().populate('idCategoria').then((productos, error) => {
+  const filter = {}
+  if (req.usuario.type === 'cliente') {
+    filter.status = 1;
+  }
+  Producto.find(filter).populate('idCategoria').then((productos, error) => {
     if (error) {
       return res.status(400).send({
         ...codeResponses[400],
         message: error
       });
-    } else if (productos.length == 0) {
+    } else if (productos.length === 0) {
       return res.status(404).send({
         ...codeResponses[404],
         message: 'La consulta no arrojó resultados.'
@@ -55,7 +59,9 @@ function verProductos(req, res, next) {
     }
     return res.status(200).send({
       ...codeResponses[200],
-      detail: productos
+      detail: (req.usuario.type === 'cliente') ?
+        productos.filter(producto => !!producto.idCategoria.status) :
+        productos
     });
   }).catch(next);
 }

@@ -15,7 +15,7 @@ const {
 //Rutas definidas de las funciones
 router.get('/:id', auth.opcional, verProducto);
 router.get('/', auth.opcional, verProductos);
-router.post('/filtrar', filtrarProducto);
+router.post('/filtrar', auth.opcional, filtrarProducto);
 router.post('/', auth.requerido, crearProducto);
 router.put('/cambiarEstatus/:id', auth.requerido, cambiarEstatusProducto);
 router.put('/editar/:id', auth.requerido, editarProducto);

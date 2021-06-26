@@ -174,13 +174,19 @@ function filtrarProducto(req, res, next) {
     }
   }
 
+  const clienteFilter = {};
+  if (req.usuario.type === 'cliente') {
+    clienteFilter.status = 1;
+  }
+
   const filter = {
     $and: [
       statusFilter,
       priceFilter,
       nameFilter,
       descriptionFilter,
-      categoryFilter
+      categoryFilter,
+      clienteFilter
     ]
   }
   Producto.find(filter).populate('idCategoria').then((filteredProductos, error) => {
@@ -195,7 +201,9 @@ function filtrarProducto(req, res, next) {
     }
     return res.status(200).send({
       ...codeResponses[200],
-      detail: filteredProductos
+      detail: (req.usuario.type === 'cliente') ?
+        filteredProductos.filter(producto => !!producto.idCategoria.status) :
+        filteredProductos
     });
   }).catch(next);
 }

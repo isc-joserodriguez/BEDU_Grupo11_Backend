@@ -7,7 +7,7 @@ const ProductoSchema = new mongoose.Schema({
         required: [true, 'no puede estar vacío'],
         index: true
     },
-    idCategoria: { type: mongoose.ObjectId, required: true, ref:'Categoria' },
+    idCategoria: { type: mongoose.ObjectId, required: true, ref: 'Categoria' },
     description: {
         type: String,
         required: [true, 'no puede estar vacío'],

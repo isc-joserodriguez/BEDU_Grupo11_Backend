@@ -37,21 +37,25 @@ const iniciarSesion = (req, res, next) => {
   passport.authenticate('local', { session: false }, function (err, user, info) {
     if (err) return next(err);
 
-    if (user) {
-      return res.status(200).send(
-        {
-          ...codeResponses[200],
-          detail: { ...user._doc, token: user.generarJWT() }
-        }
-      );
-    } else {
-      return res.status(400).send(
-        {
-          ...codeResponses[400],
-          message: info.errors
-        }
-      );
-    }
+    if (!user) return res.status(400).send(
+      {
+        ...codeResponses[400],
+        message: info.errors
+      }
+    );
+
+    if (!user._doc.status) return res.status(403).send(
+      {
+        ...codeResponses[403],
+        message: 'Usuario desactivado'
+      }
+    );
+    return res.status(200).send(
+      {
+        ...codeResponses[200],
+        detail: { ...user._doc, token: user.generarJWT() }
+      }
+    );
   })(req, res, next);
 }
 

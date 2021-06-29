@@ -14,6 +14,9 @@ module.exports = {
         401: {
             response: 'Unauthorized'
         },
+        403: {
+            response: 'Forbidden'
+        },
         404: {
             response: 'Not Found'
         },

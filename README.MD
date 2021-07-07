@@ -2,9 +2,9 @@
 
 ## Contenido
 
-- [Postwork Sesión 03](https://github.com/joanrodriguezhe/BEDU_Grupo11_Backend/tree/postWorks/postwork-sesion03-models)
-- [Postwork Sesión 05](https://github.com/joanrodriguezhe/BEDU_Grupo11_Backend/tree/postWorks/postwork-sesion05)
-- [Postwork Sesión 06](https://github.com/joanrodriguezhe/BEDU_Grupo11_Backend/tree/postWorks/postwork-sesion06)
+- [Postwork Sesión 03](https://github.com/isc-joserodriguez/BEDU_Grupo11_Backend/tree/postWorks/postwork-sesion03-models)
+- [Postwork Sesión 05](https://github.com/isc-joserodriguez/BEDU_Grupo11_Backend/tree/postWorks/postwork-sesion05)
+- [Postwork Sesión 06](https://github.com/isc-joserodriguez/BEDU_Grupo11_Backend/tree/postWorks/postwork-sesion06)
 - [Proyecto Final - API-RESTaurant](https://bedu-api-restaurante.herokuapp.com/v1)
   - [Objetivo](#objetivo)
   - [Desarrollo](#desarrollo)
@@ -197,7 +197,7 @@ Como cliente, filtrar productos para poder conocer el menú.
 
 ## Entregables
 
-- [Reposiorio](https://github.com/joanrodriguezhe/BEDU_Grupo11_Backend)
+- [Reposiorio](https://github.com/isc-joserodriguez/BEDU_Grupo11_Backend)
 - [Video en YouTube](https://youtu.be/2r2hJyf2w6s)
 - [API en Heroku](https://bedu-api-restaurante.herokuapp.com/v1/)
   - Variables de Entorno
@@ -220,4 +220,4 @@ Como cliente, filtrar productos para poder conocer el menú.
 
 - ##### [Adrian-BT](https://github.com/Adrian-BT)
 - ##### [NathalyNDC](https://github.com/NathalyNDC)
-- ##### [joanrodriguezhe](https://github.com/joanrodriguezhe)
+- ##### [isc-joserodriguez](https://github.com/isc-joserodriguez)

@@ -7,7 +7,7 @@ router.get('/', (req, res)=>{
   <h1>Welcome to Api-RESTaurant</h1>
   <a href="https://bedu-api-restaurante.herokuapp.com/api-docs/"> Swagger API-DOCS</a>
   <br>
-  <a href="https://github.com/joanrodriguezhe/BEDU_Grupo11_Backend"> Repositorio</a>
+  <a href="https://github.com/isc-joserodriguez/BEDU_Grupo11_Backend"> Repositorio</a>
   `);
 });
 
